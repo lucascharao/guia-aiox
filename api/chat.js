@@ -93,17 +93,30 @@ export default async function handler(req, res) {
           config: {
             systemInstruction: SYSTEM_INSTRUCTION,
             temperature: 0.4,
-            maxOutputTokens: 1024,
+            maxOutputTokens: 2048,
+            // Desliga "thinking mode" do 2.5 Flash — evita resposta vazia/cortada
+            thinkingConfig: { thinkingBudget: 0 },
           },
         });
 
+        let finishReason = null;
         for await (const chunk of stream) {
           const text = chunk?.text;
           if (text) {
             streamed = true;
             res.write(`data: ${safeJson({ delta: text })}\n\n`);
           }
+          const fr = chunk?.candidates?.[0]?.finishReason;
+          if (fr) finishReason = fr;
         }
+
+        // Se terminou sem produzir nenhum texto, trata como falha pra retry/fallback
+        if (!streamed) {
+          lastErr = new Error(`empty_response finishReason=${finishReason || "unknown"}`);
+          // Sai do loop de tentativas e vai pro próximo modelo
+          break;
+        }
+
         res.write(`data: ${safeJson({ done: true })}\n\n`);
         res.end();
         return;
