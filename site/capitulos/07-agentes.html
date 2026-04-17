@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap 07 — Conhecendo Seus Agentes · AIOX Squad</title>
+<meta name="description" content="Os 11 agentes oficiais do AIOX com persona, skills, autoridade delimitada e memória persistente. Quem chamar e quando.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="../assets/chat.css">
+<link rel="icon" type="image/svg+xml" href="../assets/logo-aiox.svg">
+</head>
+<body data-chapter="7">
+
+<div class="app">
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html"><img src="../assets/logo-aiox.svg" alt="AIOX Squad"></a>
+      <span class="sidebar-badge">Guia Técnico</span>
+      <div class="sidebar-title">AIOX Squad</div>
+      <div class="sidebar-subtitle">17 capítulos · Synkra</div>
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="sidebar-progress-label"><span>Progresso</span><span id="sb-pct">0/17</span></div>
+      <div class="progress-bar"><div id="sb-bar"></div></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Capítulos</div>
+      <div id="sidebar-chapters"></div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="../index.html">← Voltar à home</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="top-nav">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="../index.html">Capítulos</a>
+        <span class="sep">/</span>
+        <span class="current">Cap 07</span>
+      </div>
+      <div class="top-actions">
+        <button class="gsearch-trigger" data-gsearch-open aria-label="Buscar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <span class="hint">Buscar</span>
+          <kbd>/</kbd>
+        </button>
+        <a class="btn-sm" href="06-instalacao.html">← Anterior</a>
+        <a class="btn-sm" href="08-sdc.html">Próximo →</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section class="hero">
+        <span class="hero-tag">Capítulo 07 · INTERMEDIARIO</span>
+        <h1 class="hero-title">Conhecendo Seus Agentes</h1>
+        <p class="hero-subtitle">Os 11 agentes oficiais do AIOX com persona, skills, autoridade delimitada e memória persistente. Quem chamar e quando.</p>
+        <div class="meta-row">
+          <span class="meta-chip">⏱ <strong>45 min</strong> de leitura</span>
+          <span class="meta-chip">🎯 <strong>4</strong> objetivos</span>
+          <span class="meta-chip">🧩 <strong>6</strong> conceitos-chave</span>
+          <span class="meta-chip">⌨ <strong>6</strong> comandos CLI</span>
+        </div>
+      </section>
+
+      <div class="tldr">
+        <div class="tldr-label">TL;DR</div>
+        <div class="tldr-text">Os 11 agentes oficiais do AIOX com persona, skills, autoridade delimitada e memória persistente. Quem chamar e quando.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Você vai aprender</h3>
+          <ul><li>Conhecer os 11 agentes e suas personas</li><li>Dominar a matriz de autoridade</li><li>Usar handoff protocol para economizar contexto</li><li>Escolher o agente certo para cada situação</li></ul>
+        </div>
+        <div class="card">
+          <h3>Conceitos-chave</h3>
+          <div class="chips"><span class="chip">Persona + Skills + Autoridade + Memória</span><span class="chip">11 Agentes</span><span class="chip">Matriz de Autoridade</span><span class="chip">MEMORY.md</span><span class="chip">Handoff Protocol</span><span class="chip">Slash (/) vs Arroba (@)</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin: 28px 0;"><h3>Comandos deste capítulo</h3><ul><li><code>/pm *create-epic</code></li><li><code>/po *validate-story-draft</code></li><li><code>/sm *create-story</code></li><li><code>/dev *task dev-develop-story</code></li><li><code>/qa *task qa-gate</code></li><li><code>/devops *push</code></li></ul></div>
+
+      <article class="prose">
+        <hr />
+<h3 id="71-o-que-e-um-agente-de-verdade">7.1 O Que É Um Agente de Verdade</h3>
+<p>Existe uma confusão comum quando pessoas começam a trabalhar com sistemas de agentes de IA: a tendência de pensar em agentes como "chatbots com nomes diferentes". O agente de desenvolvimento é como o ChatGPT mas chamado de Dex. O agente de qualidade é como o Claude mas chamado de Quinn. Você muda o nome, a IA por baixo é a mesma.</p>
+<p>Essa visão está fundamentalmente errada — e entender por que ela está errada é o que vai permitir que você use os agentes do AIOX de forma eficaz.</p>
+<p>Um agente no AIOX tem quatro propriedades que, juntas, criam uma entidade com comportamento previsível, autoridade delimitada, e conhecimento acumulado:</p>
+<h4 id="persona-mais-que-nome-e-personalidade">Persona: Mais Que Nome e Personalidade</h4>
+<p>A persona de um agente é frequentemente reduzida a "a personalidade dele" — Dex é direto, Quinn é rigoroso, Aria é sistêmica. Mas isso é só a superfície. A persona define como o agente <strong>interpreta contexto ambíguo</strong> e <strong>prioriza quando há conflitos</strong>.</p>
+<p>Considere um momento de ambiguidade: <code>@dev</code> está implementando uma story e percebe que para satisfazer um critério de aceite de forma elegante, precisaria refatorar um módulo que não está no escopo da story. O critério pode ser satisfeito de forma menos elegante sem a refatoração — mas a qualidade técnica seria inferior.</p>
+<p>Um agente sem persona clara vai: ou refatorar o módulo (violando o escopo), ou produzir código de qualidade inferior sem comentar (violando a transparência). Dex, com sua persona de desenvolvedor que prioriza clareza de implementação dentro dos limites do escopo, vai: satisfazer o critério de aceite da forma mais limpa possível sem sair do escopo, <strong>e</strong> registrar na story uma nota: "Identificada oportunidade de refatoração no módulo X que melhoraria a qualidade — proposta para story futura."</p>
+<p>Esse comportamento não é programado explicitamente para essa situação. É derivado de uma persona consistente. Persona cria comportamento previsível em situações não antecipadas.</p>
+<h4 id="skills-o-mapa-de-competencias">Skills: O Mapa de Competências</h4>
+<p>Skills são o conjunto de capacidades que o agente tem: o que ele sabe fazer, as tasks que pode executar, o conhecimento de domínio que aplica. Um agente sem skills claras é um agente genérico. Um agente com skills bem definidas tem expertise que pode ser confiada.</p>
+<p>A diferença prática: quando você pede para Dex refatorar um módulo complexo, você não precisa explicar o que é refatoração, quais são as boas práticas, como manter a retrocompatibilidade. Essas informações estão nas skills de Dex. Quando você pede para Aria avaliar a complexidade de uma feature, você não precisa explicar como fazer uma análise de complexidade. Está nas skills de Aria.</p>
+<p>Skills acumuladas ao longo de um projeto — documentadas no MEMORY.md — são a expertise específica do seu domínio. Com o tempo, Dex não só sabe como refatorar código em geral: sabe como refatorar <em>seu</em> código, seguindo <em>seus</em> padrões, evitando os <em>seus</em> anti-padrões específicos.</p>
+<h4 id="autoridade-a-fronteira-que-nao-se-cruza">Autoridade: A Fronteira Que Não Se Cruza</h4>
+<p>Autoridade é o conjunto de operações que o agente pode fazer — e as que ele explicitamente não pode. Essa é a dimensão mais mal compreendida e mais importante do sistema de agentes.</p>
+<p>A autoridade não existe para limitar os agentes por limitação técnica. Existe para criar <strong>accountability clara</strong>. Quando Gage (<code>@devops</code>) é o único responsável por git push, você sabe que qualquer coisa que vai para o repositório passou por Gage. Se algo errado chegou ao repositório, você investiga o que aconteceu com Gage. Não com Dex, não com Quinn, não com ninguém mais.</p>
+<p>Essa clareza de responsabilidade é impossível em sistemas onde "todo mundo pode fazer tudo". Quando qualquer agente pode fazer qualquer operação, a primeira pergunta após um problema é "quem fez isso?" — e a resposta raramente é clara.</p>
+<h4 id="memoria-o-acumulo-de-experiencia">Memória: O Acúmulo de Experiência</h4>
+<p>A memória de cada agente é armazenada no arquivo <code>agents/{nome}/MEMORY.md</code>. Esse arquivo é o único lugar no AIOX que combina as características de L3 (editável) e de ativo de projeto (deve ser versionado).</p>
+<p>O <code>MEMORY.md</code> serve como a mente de longo prazo do agente — informações que ele precisa reter entre sessões. Sem isso, cada sessão começa do zero: você explica o contexto, o agente entende, produz resultado, a sessão termina, e no dia seguinte você explica tudo de novo.</p>
+<p>Com MEMORY.md bem mantido, você começa a segunda sessão onde a primeira terminou. Decisões tomadas estão documentadas. Padrões estabelecidos estão registrados. O agente "lembra" o que importa.</p>
+<h4 id="ativacao-e-comandos">Ativação e Comandos</h4>
+<p>Agentes são ativados com o prefixo <code>@</code>:</p>
+<pre><code>@dev
+@qa
+@architect
+@devops
+</code></pre>
+<p>Uma vez ativo, o agente responde a commands com o prefixo <code>*</code>:</p>
+<pre><code>@dev *help
+@qa *qa-gate
+@sm *create-story
+@devops *push
+</code></pre>
+<p>Essa sintaxe não é apenas convenção — é um marcador semântico que distingue comandos executáveis de instrução de conversação. Quando você diz <code>@dev *task dev-develop-story</code>, você está executando um processo definido com comportamento especificado. Quando você diz "Dex, me ajuda a entender esse bug?", você está tendo uma conversa. A distinção importa para reprodutibilidade.</p>
+<h4 id="slash-vs-arroba-a-diferenca-critica">Slash (/) vs Arroba (@) — A Diferença Crítica</h4>
+<p>Uma das confusões mais comuns do cohort merece um destaque especial. No Claude Code, existe uma diferença fundamental entre <code>/</code> e <code>@</code>:</p>
+<p><strong><code>@agente</code></strong> apenas carrega o arquivo <code>.md</code> do agente. Ele lê o markdown, mas <strong>NÃO executa</strong> os scripts auxiliares (Greeting Builder, Context Detector, Workflow Navigator). A IA "finge" que está tudo bem — ela "rebola" para parecer que chamou o agente corretamente.</p>
+<p><strong><code>/agente</code></strong> executa o comando completo: carrega persona + scripts + dependências + puxa core-config + verifica ambiente Git + detecta contexto. É o único jeito correto de ativar agentes no Claude Code.</p>
+<p>Como detectar o problema: quando você vê apenas sequências de "Read, Read, Read" nos tool calls, sem nenhum script de execução, é porque usou <code>@</code> em vez de <code>/</code>.</p>
+<p>Cada ambiente funciona diferente. No Claude Code, use sempre <code>/</code>. No Cursor, <code>@</code> funciona diferente. No Gemini, <code>@</code> tem outro comportamento. Não misture as convenções.</p>
+<h4 id="escolhendo-o-modelo-por-agente">Escolhendo o Modelo por Agente</h4>
+<p>Uma prática avançada que o cohort validou: <strong>usar modelos diferentes para agentes diferentes</strong>, otimizando custo e qualidade.</p>
+<table>
+<thead>
+<tr>
+<th>Agente</th>
+<th>Modelo Recomendado</th>
+<th>Razão</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@architect</code>, <code>@pm</code></td>
+<td>Opus</td>
+<td>Decisões estratégicas que justificam custo</td>
+</tr>
+<tr>
+<td><code>@dev</code>, <code>@qa</code></td>
+<td>Sonnet</td>
+<td>Equilíbrio qualidade/custo para execução</td>
+</tr>
+<tr>
+<td><code>@sm</code>, <code>@analyst</code></td>
+<td>Haiku</td>
+<td>Tasks bem definidas que não exigem modelo pesado</td>
+</tr>
+<tr>
+<td><code>@ux-design-expert</code></td>
+<td>Gemini</td>
+<td>Melhor performance em tarefas visuais/UI</td>
+</tr>
+<tr>
+<td><code>@dev</code> (debugging)</td>
+<td>Codex</td>
+<td>Otimizado para código, 2x tokens do Claude</td>
+</tr>
+</tbody>
+</table>
+<p>Pedro Valério validou: 24 de 26 tasks do Squad Creator funcionam com Haiku. Só 2 precisam de Opus. Modelo mais caro nem sempre é melhor — determinismo compensa.</p>
+<h4 id="agent-teams-desenvolvimento-paralelo">Agent Teams — Desenvolvimento Paralelo</h4>
+<p>Uma feature experimental do Claude Code permite rodar agentes em instâncias verdadeiramente separadas com comunicação real entre elas. Ativada com a variável de ambiente <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</code>.</p>
+<p>Na prática, isso habilita o conceito de <strong>Waves</strong> — desenvolvimento paralelo onde múltiplos agentes trabalham em tasks independentes simultaneamente, consolidando os resultados ao final. Alan testou e recomenda GitHub worktrees como base para Waves.</p>
+<hr />
+<h3 id="72-os-11-agentes-perfis-completos">7.2 Os 11 Agentes: Perfis Completos</h3>
+<h4 id="pm-morgan-o-estrategista-de-produto">@pm — Morgan: O Estrategista de Produto</h4>
+<p><strong>Persona:</strong> Morgan opera como um Product Manager experiente que pensa em produto antes de pensar em feature. Estratégico, orientado a outcomes, sempre perguntando "por que isso importa?" antes de "como fazemos isso?". Comunicação direta e estruturada, com preferência por dados sobre opiniões.</p>
+<p><strong>Escopo principal:</strong> Morgan cuida de tudo que vive antes da implementação: transformar visões de negócio em requisitos executáveis, gerenciar epics, e orquestrar o Spec Pipeline para features complexas.</p>
+<p><strong>Commands exclusivos:</strong>
+- <code>*create-epic</code> — Cria um novo epic com contexto, objetivos, e critérios de sucesso
+- <code>*execute-epic</code> — Orquestra a execução de um epic inteiro, criando e priorizando as stories necessárias
+- <code>*spec-pipeline</code> — Inicia o Spec Pipeline para transformar requisitos informais em spec executável</p>
+<p><strong>Operações bloqueadas:</strong> Morgan não implementa código, não faz QA, e não tem acesso a operações de Git.</p>
+<p><strong>Quando usar:</strong> Quando você tem uma ideia de negócio que precisa ser traduzida em requisitos. Quando um epic precisa ser criado ou gerenciado. Quando uma feature é complexa o suficiente para precisar de especificação formal antes de virar stories. Quando há conflitos de prioridade que precisam de mediação baseada em valor de produto.</p>
+<p><strong>Sinal de mau uso:</strong> Se você está usando Morgan para escrever código ou para decisões técnicas de implementação, você está no agente errado.</p>
+<hr />
+<h4 id="po-pax-o-guardiao-do-valor">@po — Pax: O Guardião do Valor</h4>
+<p><strong>Persona:</strong> Pax é o Product Owner — rigoroso, orientado a valor entregue, e incansável na defesa de clareza de critérios. Não aceita ambiguidade, não aprova stories mal especificadas, e constantemente pergunta "isso vai gerar valor para o usuário?". Pax é o agente que mais frequentemente diz "não" — e por boas razões.</p>
+<p><strong>Escopo principal:</strong> Validar stories antes da implementação, gerenciar o backlog, e garantir que o trabalho que entra na implementação tem critérios de aceite claros e rastreáveis.</p>
+<p><strong>Commands exclusivos:</strong>
+- <code>*validate-story-draft</code> — Executa o checklist de 10 pontos para uma story em status Draft
+- <code>*backlog-review</code> — Revisa e reprioriza o backlog com base no valor de produto
+- <code>*accept-story</code> — Aceita uma story completada, verificando se os critérios de aceite foram satisfeitos</p>
+<p><strong>O Checklist de 10 Pontos de Pax:</strong>
+1. Os critérios de aceite são mensuráveis e verificáveis? (Não "funcionando bem" — "retorna HTTP 200 em menos de 200ms")
+2. Todos os critérios rastreiam a FR-<em> ou NFR-</em> documentados?
+3. O contexto é suficiente para implementar sem perguntas adicionais?
+4. As dependências estão identificadas e em status adequado?
+5. O escopo está claramente delimitado (o que está FORA é tão importante quanto o que está dentro)?
+6. Os riscos técnicos foram identificados?
+7. A estimativa de esforço é razoável para o escopo?
+8. Os critérios de teste estão contemplados?
+9. A documentação necessária foi identificada?
+10. Um desenvolvedor lendo a story saberia exatamente o que fazer?</p>
+<p><strong>Score mínimo:</strong> 7/10 para avançar para Ready. Stories com 5-6 voltam com lista específica de melhorias. Stories com 4 ou menos são rejeitadas e precisam de reescrita.</p>
+<p><strong>Quando usar:</strong> Sempre que uma story precisa de validação antes de ir para implementação. Quando há dúvida sobre se os critérios de aceite são suficientemente claros. Quando uma story completada precisa de aceite formal.</p>
+<hr />
+<h4 id="sm-river-o-facilitador-de-processo">@sm — River: O Facilitador de Processo</h4>
+<p><strong>Persona:</strong> River tem a mentalidade de um Scrum Master experiente: focado em remover bloqueios, garantir que o processo flua, e que o time tem o que precisa para trabalhar. Não tem ego de produto (esse é o Morgan) nem ego técnico (esse é o Dex). O papel do River é tornar o processo possível.</p>
+<p><strong>Escopo principal:</strong> Criar stories a partir de épicos e PRDs, facilitar cerimônias de sprint, e garantir que o processo de desenvolvimento segue as regras estabelecidas.</p>
+<p><strong>Commands exclusivos:</strong>
+- <code>*draft</code> — Cria o rascunho de uma nova story a partir do epic ativo
+- <code>*create-story</code> — Versão completa do processo de criação, com elicitação de contexto
+- <code>*sprint-review</code> — Facilita a revisão do sprint, coletando métricas de velocity e entregáveis</p>
+<p><strong>O Processo de Criação de Story:</strong>
+Quando River cria uma story, ele não simplesmente preenche um template. Ele garante que:
+1. O epic de origem está identificado
+2. O número sequencial está correto (sem pular ou duplicar)
+3. As dependências foram verificadas
+4. O contexto é suficiente para que Pax valide
+5. O arquivo está no formato correto (Front Matter + corpo Markdown)</p>
+<p><strong>Quando usar:</strong> Sempre que você precisa criar uma nova story. Quando o processo de sprint precisa de facilitação ou revisão. Quando há confusão sobre qual story deve ser trabalhada a seguir dado o estado atual do backlog.</p>
+<hr />
+<h4 id="dev-dex-o-implementador">@dev — Dex: O Implementador</h4>
+<p><strong>Persona:</strong> Dex é o desenvolvedor do time. Técnico, focado em qualidade de código, e disciplinado em relação ao escopo. Dex não adiciona features que não foram pedidas, não refatora módulos que não estão no escopo da story, e sempre explica as decisões técnicas que toma.</p>
+<p><strong>Escopo principal:</strong> Implementar stories, escrever código, criar testes, e manter o código limpo dentro do escopo definido.</p>
+<p><strong>Commands disponíveis:</strong>
+- <code>*develop</code> ou <code>*dev-story</code> — Inicia a implementação da story ativa
+- <code>*pre-flight</code> — Analisa a story e produz um plano de implementação sem executar nada
+- <code>*commit</code> — Cria um commit com mensagem seguindo as convenções do projeto
+- <code>*test</code> — Roda os testes do projeto e reporta resultados</p>
+<p><strong>Operações permitidas em Git:</strong></p>
+<pre><code>git add
+git commit
+git status
+git diff
+git log
+git branch
+git checkout
+git merge (local)
+git stash
+</code></pre>
+<p><strong>Operações BLOQUEADAS em Git:</strong></p>
+<pre><code>git push → Delegue para @devops
+</code></pre>
+<p><strong>Operações BLOQUEADAS via GitHub CLI:</strong></p>
+<pre><code>gh pr create → Delegue para @devops
+gh pr merge → Delegue para @devops
+</code></pre>
+<p><strong>O Comportamento Característico de Dex:</strong>
+Quando Dex identifica algo fora do escopo que deveria ser feito — uma oportunidade de refatoração, uma melhoria de performance que não foi pedida, uma feature adjacente que "faria sentido" — ele não implementa. Ele documenta: uma nota na story sugerindo a adição ao backlog, uma observação técnica na seção de decisões.</p>
+<p>Isso é o Artigo IV da Constitution em ação: No Invention. Dex implementa o que foi especificado. O que vai além é sugestão para o próximo ciclo.</p>
+<p><strong>Quando usar:</strong> Para toda implementação de stories. Para análise técnica de viabilidade (modo Pre-Flight). Para debugging de problemas específicos. Para refatorações que estão dentro do escopo de uma story.</p>
+<hr />
+<h4 id="qa-quinn-o-rigoroso">@qa — Quinn: O Rigoroso</h4>
+<p><strong>Persona:</strong> Quinn é o agente de qualidade — meticuloso, sistemático, e sem condescendência. Quinn não aprova código que não satisfaz os critérios. Quinn não faz exceções por pressão de prazo. Quinn é o último gate antes do código ir para produção, e leva essa responsabilidade a sério.</p>
+<p>Quinn tem uma distinção importante: ele é rigoroso mas construtivo. Quando rejeita, explica exatamente o que precisa ser corrigido, em qual arquivo, com qual critério de aceite não satisfeito. Não existe rejeição sem direcionamento claro.</p>
+<p><strong>Escopo principal:</strong> Executar o gate de qualidade ao final de cada story, revisar código para conformidade com padrões, e iniciar o QA Loop para iterações de correção.</p>
+<p><strong>Commands disponíveis:</strong>
+- <code>*qa-gate</code> — Executa as 7 verificações de qualidade na story ativa
+- <code>*qa-loop {storyId}</code> — Inicia o loop de revisão iterativa
+- <code>*review-code</code> — Review de código sem o gate formal de story
+- <code>*qa-report</code> — Gera relatório de qualidade do sprint</p>
+<p><strong>As 7 Verificações do QA Gate:</strong></p>
+<ol>
+<li><strong>Testes passando:</strong> Todos os testes automatizados da story passam. Zero exceções.</li>
+<li><strong>Lint sem erros:</strong> O linter do projeto não reporta erros (warnings aceitáveis, dependendo da configuração).</li>
+<li><strong>Type checking limpo:</strong> Se o projeto usa TypeScript, zero erros de tipo.</li>
+<li><strong>Critérios de aceite:</strong> Cada critério de aceite da story foi satisfeito. Quinn verifica um a um.</li>
+<li><strong>Sem regressões:</strong> Funcionalidades existentes não foram quebradas pela implementação.</li>
+<li><strong>Documentação atualizada:</strong> Se a implementação mudou comportamentos documentados, a documentação foi atualizada.</li>
+<li><strong>Sem scope creep:</strong> Nada além do escopo da story foi implementado (Artigo IV).</li>
+</ol>
+<p><strong>Decisões do Gate:</strong>
+- <strong>PASS:</strong> Todos os 7 pontos satisfeitos. Story pode avançar para Done.
+- <strong>CONCERNS:</strong> 5-6 pontos satisfeitos, problemas menores identificados. Pode avançar com registro de concerns para endereçar na próxima sprint.
+- <strong>FAIL:</strong> Menos de 5 pontos satisfeitos. Retorna para Dex com lista específica de correções.
+- <strong>WAIVED:</strong> Contexto especial (proof-of-concept, ambiente de dev apenas) onde alguns critérios são intencionalmente relaxados. Requer justificativa documentada.</p>
+<p><strong>Quando usar:</strong> Ao final de toda implementação de story antes de marcar como Done. Quando há dúvida sobre qualidade de código já implementado. Para revisar PRs de colaboradores externos.</p>
+<hr />
+<h4 id="architect-aria-a-visionaria-sistemica">@architect — Aria: A Visionária Sistêmica</h4>
+<p><strong>Persona:</strong> Aria pensa em sistemas, não em features. Sua perspectiva é sempre de longo prazo: como essa decisão afeta a manutenibilidade em um ano? Como esse componente vai escalar? Quais trade-offs estamos aceitando e por quê? Aria é a pessoa que faz as perguntas desconfortáveis antes de comprometer decisões arquiteturais.</p>
+<p><strong>Escopo principal:</strong> Decisões de arquitetura de sistema, avaliação de complexidade técnica, seleção de tecnologia, e design de integrações.</p>
+<p><strong>Commands disponíveis:</strong>
+- <code>*assess-complexity</code> — Avalia a complexidade de uma feature ou mudança nas 5 dimensões
+- <code>*architecture-decision</code> — Documenta uma Architecture Decision Record (ADR)
+- <code>*tech-review</code> — Revisão técnica de uma proposta de implementação</p>
+<p><strong>O Que Aria Decide vs. O Que Aria Delega:</strong></p>
+<p>Aria decide:
+- Qual tecnologia usar (PostgreSQL vs. MongoDB, REST vs. GraphQL)
+- Como os sistemas se integram (padrões de comunicação, formatos de API)
+- Quais são as constraints arquiteturais do projeto (CON-TECH-*)
+- A arquitetura de alto nível (diagrama de componentes, diagrama de sequência)</p>
+<p>Aria delega para <code>@data-engineer</code> (Dara):
+- Design detalhado de schema (DDL específico, indexes, constraints)
+- Otimização de queries
+- Implementação de políticas de RLS (Row Level Security)
+- Detalhes de migração de dados</p>
+<p>Essa separação reflete uma separação real de expertise: a decisão de usar PostgreSQL é arquitetural. O design das tabelas de usuários com particionamento por data e índices GIN para busca full-text é especialidade de engenharia de dados.</p>
+<p><strong>Quando usar:</strong> Quando uma nova feature tem impacto arquitetural. Quando há trade-offs tecnológicos para decidir. Quando o Spec Pipeline precisa de avaliação de complexidade (Phase 2). Quando uma decisão arquitetural precisa ser documentada formalmente como ADR.</p>
+<hr />
+<h4 id="data-engineer-dara-a-especialista-em-dados">@data-engineer — Dara: A Especialista em Dados</h4>
+<p><strong>Persona:</strong> Dara combina rigor matemático com pragmatismo de produção. Ela sabe que um schema mal projetado vai custar meses de dívida técnica, e não tem medo de complicar um pouco o design hoje para evitar uma migração dolorosa amanhã. Mas também sabe quando "bom o suficiente" é melhor que "perfeito mas impossível de implementar".</p>
+<p><strong>Escopo principal:</strong> Design detalhado de schema de banco de dados, implementação de políticas de acesso, otimização de queries, e planejamento de migrações.</p>
+<p><strong>Commands disponíveis:</strong>
+- <code>*design-schema</code> — Cria o DDL detalhado para um módulo de dados
+- <code>*migration-plan</code> — Planeja uma migração de dados com rollback estratégia
+- <code>*optimize-query</code> — Analisa e otimiza uma query específica
+- <code>*audit-schema</code> — Auditoria de schema existente para problemas de performance e design</p>
+<p><strong>O Domínio Exclusivo de Dara:</strong>
+- Schema design com DDL completo (CREATE TABLE, constraints, indexes)
+- RLS policies (Row Level Security) para controle de acesso em nível de linha
+- Index strategy: quais indexes criar, quais evitar, como monitorar uso
+- Migration planning: ordem de operações, estratégia de rollback, impacto em produção</p>
+<p><strong>O Que Dara NÃO faz:</strong>
+- Decisões arquiteturais (qual banco de dados usar) → Aria
+- Código de aplicação → Dex
+- Git operations → Gage</p>
+<p><strong>Quando usar:</strong> Quando uma story tem impacto no banco de dados. Quando o schema precisa ser revisado por performance. Quando há uma migração complexa para planejar. Quando políticas de acesso precisam ser implementadas no nível do banco.</p>
+<hr />
+<h4 id="analyst-alex-o-investigador">@analyst — Alex: O Investigador</h4>
+<p><strong>Persona:</strong> Alex é movido por curiosidade e rigor. Quando recebe uma questão, ele a decompõe, busca evidências, triangula fontes, e só apresenta conclusões quando tem base suficiente para defendê-las. Alex é o agente mais desconfortável com incerteza — o que o torna excelente em pesquisa, mas às vezes paralisante em situações que requerem decisão rápida.</p>
+<p><strong>Escopo principal:</strong> Pesquisa técnica e de mercado, análise de dados, geração de relatórios e insights.</p>
+<p><strong>Commands disponíveis:</strong>
+- <code>*research {topic}</code> — Pesquisa aprofundada sobre um tópico técnico ou de negócio
+- <code>*analyze-data</code> — Análise de um conjunto de dados com insights estruturados
+- <code>*technical-report</code> — Gera um relatório técnico sobre um tema específico
+- <code>*competitive-analysis</code> — Análise de ferramentas ou abordagens concorrentes</p>
+<p><strong>Quando usar:</strong> Quando você precisa de pesquisa técnica para embasar uma decisão arquitetural. Quando dados de uso precisam ser analisados para informar priorização. Quando o Spec Pipeline precisa da fase de Research (Phase 3). Quando um relatório técnico precisa ser produzido para stakeholders.</p>
+<hr />
+<h4 id="ux-design-expert-uma-a-defensora-da-experiencia">@ux-design-expert — Uma: A Defensora da Experiência</h4>
+<p><strong>Persona:</strong> Uma é empática por definição. Ela não consegue olhar para um fluxo de UX sem se colocar no lugar do usuário. Frequentemente é a voz que diz "tecnicamente funciona, mas o usuário vai se perder aqui" — e frequentemente está certa.</p>
+<p><strong>Escopo principal:</strong> Especificação de UX/UI, revisão de flows de usuário, e avaliação de usabilidade.</p>
+<p><strong>Commands disponíveis:</strong>
+- <code>*ux-spec</code> — Cria a especificação de UX para uma feature
+- <code>*review-ux</code> — Revisa a UX de uma implementação contra os critérios de usabilidade
+- <code>*frontend-spec</code> — Cria a especificação detalhada de frontend para implementação</p>
+<p><strong>Quando usar:</strong> Quando uma story tem componente de interface de usuário e precisa de especificação de UX antes da implementação. No Brownfield Discovery (Phase 3) para mapear o estado atual da UX. Quando há questionamentos sobre usabilidade de um flow existente.</p>
+<hr />
+<h4 id="devops-gage-o-guardiao-do-repositorio">@devops — Gage: O Guardião do Repositório</h4>
+<p><strong>Persona:</strong> Gage é sistemático, cuidadoso, e tem fobia de "funciona na minha máquina". Cada deploy é tratado como um evento de alto risco que exige verificação prévia. Gage não apressa, não pula etapas, e não faz push de código que não passou pelos gates.</p>
+<p>Gage tem a distinção de ser o <strong>único agente com autoridade exclusiva sobre operações que afetam o repositório remoto e o pipeline de CI/CD</strong>.</p>
+<p><strong>Comandos exclusivos (nenhum outro agente pode executar):</strong>
+- <code>git push</code> / <code>git push --force</code>
+- <code>gh pr create</code> / <code>gh pr merge</code>
+- Gerenciamento de MCP servers
+- Configuração de CI/CD pipelines
+- Release management</p>
+<p><strong>Commands disponíveis:</strong>
+- <code>*push</code> — Faz push do branch atual para o remoto após verificações
+- <code>*create-pr</code> — Cria um Pull Request com descrição gerada a partir da story
+- <code>*deploy</code> — Executa o processo de deploy (quando configurado)
+- <code>*release</code> — Gerencia o processo de criação de release</p>
+<p><strong>O Fluxo de Push do Gage:</strong>
+Quando <code>*push</code> é executado, Gage não simplesmente roda <code>git push</code>. Ele:
+1. Verifica que todos os testes locais passam
+2. Verifica que o lint está limpo
+3. Verifica que a story está marcada como Done
+4. Verifica que o branch está atualizado com a base
+5. Executa o push
+6. Verifica que o CI/CD passou (quando configurado)</p>
+<p>Somente quando todos esses pontos são satisfeitos o código vai para o remoto.</p>
+<p><strong>Por Que Gage É Exclusivo:</strong>
+A exclusividade de Gage em operações de repositório não é uma limitação técnica — é uma decisão de governance. Qualquer pessoa que quiser investigar "o que foi para o repositório e quando" tem um único agente para auditar: Gage. Isso cria uma linha clara de responsabilidade.</p>
+<p><strong>Quando usar:</strong> Sempre que código precisar ir para o repositório remoto. Sempre que um PR precisar ser criado. Para configurações de CI/CD e releases.</p>
+<hr />
+<h4 id="aiox-master-o-governador-do-framework">@aiox-master — O Governador do Framework</h4>
+<p>O <code>@aiox-master</code> é diferente de todos os outros agentes em um aspecto fundamental: ele não tem um escopo restrito. Ele pode executar qualquer operação, contornar qualquer boundary, e override qualquer gate — quando necessário para a saúde do framework.</p>
+<p><strong>Quando usar <code>@aiox-master</code>:</strong>
+- Quando dois agentes têm conflito de autoridade que não pode ser resolvido pelas regras normais
+- Quando o framework está em estado inconsistente que nenhum agente consegue resolver
+- Para operações de governance do framework (atualizar configurações globais, migrar versões)
+- Quando uma violação da Constitution foi detectada e precisa de resolução</p>
+<p><strong>Quando NÃO usar <code>@aiox-master</code>:</strong>
+- Como atalho para pular gates de qualidade
+- Para fazer operações que você sabe que outro agente deveria fazer
+- Como substituto para aprender qual agente é o correto</p>
+<p><code>@aiox-master</code> não é um "modo deus" para quando você quer ignorar as regras. É um mecanismo de governance para quando as regras encontram suas limitações.</p>
+<hr />
+<h3 id="73-a-matriz-de-autoridade">7.3 A Matriz de Autoridade</h3>
+<p>A matriz de autoridade do AIOX define, para cada operação crítica, qual agente pode executá-la, quais não podem, e quais condições especiais se aplicam.</p>
+<h4 id="operacoes-exclusivas-por-agente">Operações Exclusivas por Agente</h4>
+<table>
+<thead>
+<tr>
+<th>Operação</th>
+<th>Agente Exclusivo</th>
+<th>Outros Agentes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git push</code></td>
+<td><code>@devops</code> (Gage)</td>
+<td>BLOQUEADO</td>
+</tr>
+<tr>
+<td><code>git push --force</code></td>
+<td><code>@devops</code> (Gage)</td>
+<td>BLOQUEADO</td>
+</tr>
+<tr>
+<td><code>gh pr create</code></td>
+<td><code>@devops</code> (Gage)</td>
+<td>BLOQUEADO</td>
+</tr>
+<tr>
+<td><code>gh pr merge</code></td>
+<td><code>@devops</code> (Gage)</td>
+<td>BLOQUEADO</td>
+</tr>
+<tr>
+<td>Configuração de MCP</td>
+<td><code>@devops</code> (Gage)</td>
+<td>BLOQUEADO</td>
+</tr>
+<tr>
+<td><code>*execute-epic</code></td>
+<td><code>@pm</code> (Morgan)</td>
+<td>BLOQUEADO</td>
+</tr>
+<tr>
+<td><code>*create-epic</code></td>
+<td><code>@pm</code> (Morgan)</td>
+<td>BLOQUEADO</td>
+</tr>
+<tr>
+<td><code>*validate-story-draft</code></td>
+<td><code>@po</code> (Pax)</td>
+<td>BLOQUEADO</td>
+</tr>
+<tr>
+<td><code>*draft</code> / <code>*create-story</code></td>
+<td><code>@sm</code> (River)</td>
+<td>BLOQUEADO</td>
+</tr>
+</tbody>
+</table>
+<h4 id="operacoes-compartilhadas-com-restricoes">Operações Compartilhadas com Restrições</h4>
+<table>
+<thead>
+<tr>
+<th>Operação</th>
+<th>Agentes Permitidos</th>
+<th>Restrições</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git add</code>, <code>git commit</code></td>
+<td><code>@dev</code>, <code>@aiox-master</code></td>
+<td><code>@qa</code> não commita código de implementação</td>
+</tr>
+<tr>
+<td><code>git branch</code>, <code>git checkout</code></td>
+<td><code>@dev</code>, <code>@devops</code></td>
+<td>Outros só leitura</td>
+</tr>
+<tr>
+<td>Story file updates</td>
+<td><code>@dev</code> (checkboxes, File List), <code>@po</code> (AC, scope, title), <code>@sm</code> (criação)</td>
+<td>Separação de responsabilidade</td>
+</tr>
+<tr>
+<td>Modificar <code>MEMORY.md</code></td>
+<td>Cada agente no seu próprio</td>
+<td>Agentes não modificam memória uns dos outros</td>
+</tr>
+</tbody>
+</table>
+<h4 id="padroes-de-delegacao">Padrões de Delegação</h4>
+<p><strong>Git Push Flow:</strong> Qualquer agente que produziu commits → <code>@devops *push</code></p>
+<pre><code>@dev faz commits locais
+     ↓
+@dev não pode fazer push
+     ↓
+Delegação explícita para @devops
+     ↓
+@devops *push (com todas as verificações)
+</code></pre>
+<p><strong>Schema Design Flow:</strong> Decisão arquitetural → Implementação especializada</p>
+<pre><code>@architect decide: &quot;vamos usar PostgreSQL com particionamento por tenant&quot;
+     ↓
+@architect define constraints de alto nível (CON-DB-003)
+     ↓
+Delegação para @data-engineer
+     ↓
+@data-engineer *design-schema (DDL completo, indexes, RLS policies)
+</code></pre>
+<p><strong>Story Flow:</strong> O ciclo completo de uma story</p>
+<pre><code>@sm *create-story → Draft
+     ↓
+@po *validate-story-draft → Ready (se score ≥ 7)
+     ↓
+@dev *develop → InProgress → InReview
+     ↓
+@qa *qa-gate → Done (se PASS)
+     ↓
+@devops *push → PR criado → merge
+</code></pre>
+<p><strong>Epic Flow:</strong> De ideia a histórias implementáveis</p>
+<pre><code>@pm *create-epic → Epic definido
+     ↓
+@pm *execute-epic → Priorização e sequenciamento
+     ↓
+@sm *draft (para cada story do epic) → Stories criadas
+     ↓
+Story Flow para cada story
+</code></pre>
+<hr />
+<h3 id="74-memoria-de-agente-o-memorymd">7.4 Memória de Agente: O MEMORY.md</h3>
+<p>Cada agente tem um arquivo <code>MEMORY.md</code> em <code>agents/{nome}/MEMORY.md</code>. Esse arquivo é o mecanismo de persistência de contexto entre sessões.</p>
+<h4 id="o-que-armazenar-no-memorymd">O Que Armazenar no MEMORY.md</h4>
+<p><strong>Decisões arquiteturais:</strong> "Em 12/03/2025, decidimos usar UUIDs v4 em vez de auto-increment IDs após análise de Aria. Motivação: facilita sincronização futura entre ambientes e evita enumeração de recursos."</p>
+<p><strong>Padrões estabelecidos:</strong> "Todos os endpoints de API seguem o padrão <code>/api/v1/{recurso}/{id}</code>. Exceção aprovada por Aria para o endpoint <code>/auth/token</code> (conveniência de integração com OAuth)."</p>
+<p><strong>Anti-padrões identificados:</strong> "Evitar nested transactions no módulo de pagamento — causa deadlocks intermitentes com a versão atual do Prisma. Ver issue #234 para contexto."</p>
+<p><strong>Preferências do projeto:</strong> "O cliente prefere mensagens de erro em português do Brasil em todos os endpoints públicos. Mensagens de log internas podem ser em inglês."</p>
+<p><strong>Contexto de domínio:</strong> "No domínio de negócio desse projeto, 'transação' refere-se especificamente a transações financeiras via PIX e TED. Não usar para operações de banco de dados."</p>
+<h4 id="o-que-nao-armazenar-no-memorymd">O Que NÃO Armazenar no MEMORY.md</h4>
+<p><strong>Informações temporárias:</strong> "Estamos trabalhando na story 3.2 agora" — isso muda constantemente e deve ficar no estado da story, não na memória.</p>
+<p><strong>Detalhes de implementação específicos:</strong> O código em si não vai no MEMORY.md. A <em>decisão</em> de usar aquela abordagem de código vai.</p>
+<p><strong>Informações sensíveis:</strong> Credenciais, tokens de acesso, ou qualquer dado que não deveria estar em um arquivo de texto versionado.</p>
+<h4 id="o-ciclo-de-vida-do-memorymd">O Ciclo de Vida do MEMORY.md</h4>
+<p>O MEMORY.md começa vazio na instalação e cresce gradualmente. Cada agente é responsável por manter o seu próprio. As boas práticas incluem:</p>
+<ul>
+<li>Adicionar entradas ao MEMORY.md ao final de cada sessão com decisões relevantes</li>
+<li>Revisar o MEMORY.md periodicamente para remover informações obsoletas</li>
+<li>Usar headings para organizar por categoria (Decisões Arquiteturais, Padrões, Anti-padrões, Contexto de Domínio)</li>
+</ul>
+<hr />
+<h3 id="75-o-protocolo-de-handoff-eficiencia-na-troca-de-agentes">7.5 O Protocolo de Handoff: Eficiência na Troca de Agentes</h3>
+<p>Em sessões longas onde múltiplos agentes são usados em sequência, o contexto acumulado pode se tornar um problema. Cada agente carrega sua persona, suas instruções, seu conjunto de skills — e ao trocar de agente, você potencialmente acumula todo esse contexto.</p>
+<p>O Handoff Protocol resolve isso com uma abordagem de compactação: ao invés de carregar o perfil completo do agente anterior junto com o novo, você substitui o perfil completo por um artefato de handoff compacto.</p>
+<h4 id="o-artefato-de-handoff">O Artefato de Handoff</h4>
+<p>Quando você troca de agente, o agente que está sendo encerrado produz mentalmente um artefato de handoff com aproximadamente 379 tokens (comparado aos 3.000-5.000 tokens do perfil completo):</p>
+<pre><code class="language-yaml">handoff:
+  from_agent: &quot;dev&quot;
+  to_agent: &quot;qa&quot;
+  story_context:
+    story_id: &quot;3.2&quot;
+    story_path: &quot;docs/stories/3.2.story.md&quot;
+    story_status: &quot;InReview&quot;
+    current_task: &quot;qa-gate&quot;
+    branch: &quot;feat/story-3-2&quot;
+  decisions:
+    - &quot;Optei por usar cursor-based pagination em vez de offset por performance&quot;
+    - &quot;Abstração de repositório criada para facilitar testes unitários&quot;
+  files_modified:
+    - &quot;src/modules/reports/report.service.ts&quot;
+    - &quot;src/modules/reports/report.repository.ts&quot;
+    - &quot;tests/unit/report.service.test.ts&quot;
+  blockers: []
+  next_action: &quot;Executar *qa-gate na story 3.2&quot;
+</code></pre>
+<h4 id="o-que-e-preservado-vs-descartado">O Que É Preservado vs. Descartado</h4>
+<p><strong>SEMPRE preservar:</strong>
+- Story ID e caminho do arquivo
+- Status atual da story
+- Branch Git ativo
+- Decisões arquiteturais tomadas na sessão
+- Arquivos criados ou modificados
+- Bloqueios ativos</p>
+<p><strong>NUNCA carregar para o próximo agente:</strong>
+- Perfil completo do agente anterior (persona, comandos, dependências)
+- Templates e checklists do agente anterior
+- Configurações de ferramentas específicas do agente anterior</p>
+<h4 id="os-numeros-da-eficiencia">Os Números da Eficiência</h4>
+<p>O impacto dessa compactação é mensurável:</p>
+<p><strong>Primeira troca (@sm → @dev):</strong>
+- Perfil do <code>@sm</code> descartado: ~3.000 tokens
+- Artefato de handoff: ~379 tokens
+- Perfil do <code>@dev</code> carregado: ~5.000 tokens
+- <strong>Total de contexto:</strong> ~5.400 tokens (vs. ~8.000 sem compactação)
+- <strong>Redução:</strong> 33%</p>
+<p><strong>Segunda troca (@dev → @qa):</strong>
+- Perfil do <code>@dev</code> descartado: ~5.000 tokens
+- Handoff <code>@dev</code>: ~379 tokens adicionado ao handoff <code>@sm</code> (~379 tokens)
+- Perfil do <code>@qa</code> carregado: ~4.000 tokens
+- <strong>Total de contexto:</strong> ~4.758 tokens (vs. ~12.000 sem compactação)
+- <strong>Redução:</strong> 57%</p>
+<p>Em sessões com múltiplas trocas de agente, a compactação progressiva pode reduzir o contexto total em 60-70% — o que se traduz diretamente em menos tokens consumidos e respostas mais rápidas.</p>
+<h4 id="limite-de-artefatos-retidos">Limite de Artefatos Retidos</h4>
+<p>O sistema mantém um máximo de 3 artefatos de handoff simultaneamente. Na quarta troca de agente, o artefato mais antigo é descartado. Esse limite existe porque artefatos de handoffs muito antigos frequentemente se tornam irrelevantes — as decisões descritas neles já foram implementadas, os arquivos já foram commitados, o contexto já evoluiu.</p>
+<hr />
+<h3 id="76-quem-chamar-e-quando-o-mapa-de-decisao">7.6 Quem Chamar e Quando: O Mapa de Decisão</h3>
+<p>A pergunta mais comum dos alunos que chegam ao AIOX pela primeira vez não é "como funciona o Spec Pipeline?" ou "o que é um Handoff Protocol?". É mais simples e mais honesta do que isso: <strong>"Eu sei que os agentes existem, mas não sei por onde começar."</strong></p>
+<p>Esse mapa existe para resolver exatamente isso.</p>
+<h4 id="a-tabela-de-decisao">A Tabela de Decisão</h4>
+<table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Agente</th>
+<th>Por quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Você tem uma ideia vaga, sem clareza sobre mercado ou viabilidade</td>
+<td><code>@analyst</code> (Alex)</td>
+<td>Alex faz pesquisa de mercado, análise de concorrentes, valida premissas com dados antes de você investir tempo</td>
+</tr>
+<tr>
+<td>Você sabe o que quer, precisa documentar formalmente</td>
+<td><code>@pm</code> (Morgan)</td>
+<td>Morgan cria o PRD — a "lei" do projeto. Requisitos, critérios de aceite, restrições técnicas</td>
+</tr>
+<tr>
+<td>Você tem um PRD, precisa quebrá-lo em partes implementáveis</td>
+<td><code>@sm</code> (River)</td>
+<td>River cria Stories a partir do PRD/Epic, com critérios de aceite claros e dependências mapeadas</td>
+</tr>
+<tr>
+<td>Você tem Stories prontas, precisa implementar</td>
+<td><code>@dev</code> (Dex)</td>
+<td>Dex implementa exatamente o que a story especifica — nem mais, nem menos</td>
+</tr>
+<tr>
+<td>A implementação está pronta, precisa de validação de qualidade</td>
+<td><code>@qa</code> (Quinn)</td>
+<td>Quinn executa o QA Gate de 7 pontos. Código que reprova não vai para produção</td>
+</tr>
+<tr>
+<td>Você precisa de copy, branding, conteúdo específico do nicho</td>
+<td>Squad Creator</td>
+<td>Crie um Squad externo (ex: Squad de Copywriting). Squads NÃO fazem parte do AIOX Core</td>
+</tr>
+<tr>
+<td>Você precisa enviar código para o GitHub ou fazer deploy</td>
+<td><code>@devops</code> (Gage)</td>
+<td>Autoridade EXCLUSIVA. Nenhum outro agente pode fazer push ou criar PRs</td>
+</tr>
+<tr>
+<td>Você precisa de design de banco de dados, tabelas, políticas de RLS</td>
+<td><code>@data-engineer</code> (Dara)</td>
+<td>Delegado por <code>@architect</code> para DDL detalhado e otimização de queries</td>
+</tr>
+<tr>
+<td>Você precisa de design UX/UI, design system, specs de frontend</td>
+<td><code>@ux-design-expert</code> (Uma)</td>
+<td>Cria design systems, atomiza referências visuais em tokens e componentes</td>
+</tr>
+<tr>
+<td>Você está completamente perdido e não sabe para onde ir</td>
+<td><code>@aiox-master</code> (Orion)</td>
+<td>O orquestrador pode executar qualquer task de qualquer agente e te guiar</td>
+</tr>
+</tbody>
+</table>
+<h4 id="a-diferenca-que-muda-tudo-aiox-core-vs-squads">A Diferença Que Muda Tudo: AIOX Core vs. Squads</h4>
+<p>Existe uma distinção fundamental que confunde quem está começando: a diferença entre os <strong>agentes do AIOX Core</strong> e os <strong>Squads</strong>.</p>
+<p><strong>AIOX Core</strong> é a sua empresa de software já instalada. Quando você instala o AIOX em um projeto, você já tem os 10 agentes da tabela acima prontos para trabalhar: Morgan, Pax, River, Dex, Quinn, Aria, Dara, Alex, Uma e Gage. Eles sabem construir software. Eles sabem orquestrar ciclos de desenvolvimento. Eles têm autoridade definida, memória persistente e workflows validados.</p>
+<p><strong>Squads</strong> são equipes especialistas externas criadas sob demanda para as necessidades específicas do <em>seu</em> projeto. Se você está construindo um produto de nutrição e precisa de conteúdo técnico na área, você cria um Squad de nutrição — com agentes que têm expertise no domínio. Se precisa de copy persuasivo para uma landing page de um SaaS B2B, você cria um Squad de Copywriting especializado nisso.</p>
+<p>A analogia é direta: o AIOX Core é o seu time de engenharia e produto — construção, qualidade, entrega. Os Squads são os especialistas de domínio que você contrata conforme a necessidade do projeto.</p>
+<pre><code>AIOX Core (sempre presente)        Squads (criados sob demanda)
+─────────────────────────────      ─────────────────────────────
+@pm  → Product Management          Squad de Copywriting
+@sm  → Story Creation              Squad de Nutrição
+@dev → Implementation              Squad de Marketing B2B
+@qa  → Quality Gates               Squad de Atendimento ao Cliente
+@devops → Deploy &amp; CI/CD           Squad de CRM Especializado
+...e mais 5 agentes                ...qualquer domínio necessário
+</code></pre>
+<p>Os Squads são criados via Squad Creator — um processo separado que permite definir personas especialistas, conhecimento de domínio específico e workflows adaptados para aquele contexto de negócio.</p>
+<h4 id="cenarios-praticos-por-onde-comecar">Cenários Práticos: Por Onde Começar</h4>
+<p>Algumas situações concretas para calibrar o seu instinto:</p>
+<p><strong>"Quero criar uma landing page"</strong>
+Começa com <code>@pm</code> para o PRD (o que a landing page precisa comunicar, qual o objetivo de conversão, quem é o usuário). Depois <code>@sm</code> quebra em stories implementáveis. Então <code>@dev</code> implementa. <code>@devops</code> faz o deploy. Se precisar de copy especializado, cria um Squad de Copywriting que trabalha em paralelo.</p>
+<p><strong>"Estou entrando em um projeto que já existe"</strong>
+Use o workflow de <strong>Brownfield Discovery</strong> — 10 fases que mapeiam o estado atual do sistema antes de qualquer implementação. <code>@architect</code> lidera a descoberta, com suporte de <code>@data-engineer</code> e <code>@ux-design-expert</code> para as suas respectivas camadas. Não pule essa etapa: construir em cima do que você não entende cria mais dívida técnica do que resolve.</p>
+<p><strong>"Tenho uma feature complexa que precisa de especificação antes de virar story"</strong>
+Use o <strong>Spec Pipeline</strong>, liderado por <code>@pm</code> (Morgan). Morgan orquestra a coleta de requisitos, <code>@architect</code> avalia a complexidade nas 5 dimensões, <code>@analyst</code> faz pesquisa quando necessário, e o resultado é uma spec executável que passa por crítica de <code>@qa</code> antes de ir para implementação.</p>
+<p><strong>"É um bug simples, preciso de agilidade"</strong>
+Use o <strong>Story Development Cycle em modo YOLO</strong> — <code>@dev</code> direto na implementação, sem cerimônia de criação de story completa. Ainda existe uma story (para rastreabilidade), mas o processo é mais enxuto. O QA Gate ainda acontece antes do push.</p>
+<p>A pergunta "por onde começo?" tem uma resposta prática: comece pelo <strong>estado da sua clareza</strong>. Não sabe se a ideia é viável? <code>@analyst</code>. Sabe o que quer mas não está documentado? <code>@pm</code>. Está documentado mas não foi quebrado em stories? <code>@sm</code>. Tem stories prontas? <code>@dev</code>. Implementado? <code>@qa</code>. Aprovado? <code>@devops</code>.</p>
+<p>O AIOX não exige que você entenda tudo antes de começar. Ele foi projetado para você entrar pelo ponto onde a clareza existe e deixar o processo revelar o próximo passo.</p>
+<hr />
+<h3 id="exercicio-do-capitulo-7">Exercício do Capítulo 7</h3>
+<p><strong>Objetivo:</strong> Explorar os agentes na prática e desenvolver intuição sobre quando usar cada um.</p>
+<p><strong>Parte 1: Explorando o <code>*help</code></strong></p>
+<p>Ative cada um dos seguintes agentes e execute <code>*help</code>:</p>
+<pre><code>@dev *help
+@qa *help
+@devops *help
+@pm *help
+@po *help
+</code></pre>
+<p>Para cada agente, anote:
+- Quantos commands estão disponíveis?
+- Qual command você mais provavelmente vai usar?
+- Qual command você ainda não entende o que faz?</p>
+<p><strong>Parte 2: Testando os Bloqueios de Autoridade</strong></p>
+<p>Com <code>@dev</code> ativo, tente executar uma operação que deveria ser bloqueada. Por exemplo, instrua Dex a fazer push para o repositório. Observe:
+- O gate bloqueou?
+- A mensagem de bloqueio foi clara?
+- O agente sugeriu o agente correto para a operação?</p>
+<p><strong>Parte 3: Simulando uma Troca de Agente</strong></p>
+<p>Simule uma troca de <code>@sm</code> para <code>@dev</code> para <code>@qa</code> em um projeto imaginário:
+1. Como <code>@sm</code>, crie o rascunho de um artefato de handoff (não precisa ser real — pode ser inventado)
+2. Como <code>@dev</code>, receba o handoff e identifique o que o agente anterior estava fazendo
+3. Como <code>@qa</code>, receba o handoff do <code>@dev</code> e saiba exatamente o que precisa ser feito</p>
+<p>O objetivo é sentir o fluxo de informação entre agentes.</p>
+<p><strong>Parte 4: Mapa de Agentes por Fase</strong></p>
+<p>Desenhe uma linha do tempo de um projeto fictício com pelo menos 6 semanas. Para cada semana, identifique:
+- Quais agentes estão ativos?
+- Quais são as operações principais?
+- Qual é o estado das stories?</p>
+<p>Esse exercício vai revelar quais agentes aparecem em quais momentos do ciclo de vida do projeto — e onde você pode ter gaps no seu uso atual do sistema.</p>
+<hr />
+<p><em>No próximo capítulo, vamos colocar tudo junto e trabalhar o primeiro ciclo completo de desenvolvimento: da ideia à story pronta para implementar, com todos os gates, handoffs, e verificações que fazem o sistema funcionar.</em></p>
+      </article>
+
+      <div class="nav-footer">
+        <a href="06-instalacao.html" class=""><div class="label">← Anterior</div><div class="title">Cap 06 · Instalação e Configuração</div></a>
+        <a href="08-sdc.html" class="nav-next"><div class="label">Próximo →</div><div class="title">Cap 08 · Seu Primeiro Ciclo: Story Development Cycle</div></a>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<button class="to-top" id="to-top" aria-label="Voltar ao topo">↑</button>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIOX Squad — Guia Técnico Interativo</title>
+<meta name="description" content="Guia técnico completo do AIOX: 17 capítulos, trilhas por nível, referência de agentes, commands e workflows.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/chat.css">
+<link rel="icon" type="image/svg+xml" href="assets/logo-aiox.svg">
+</head>
+<body>
+
+<section class="home-hero">
+  <img src="assets/logo-aiox.svg" alt="AIOX Squad">
+  <h1>Guia Técnico AIOX</h1>
+  <p>17 capítulos para dominar o framework que transforma agentes de IA em times profissionais. Trilhas por nível, exercícios práticos, referência rápida.</p>
+</section>
+
+<section class="home-progress">
+  <div class="home-progress-inner">
+    <span class="label">Seu Progresso</span>
+    <div class="bar"><div id="home-bar"></div></div>
+    <span class="pct" id="home-pct">0/17 · 0%</span>
+  </div>
+</section>
+
+<main class="home-container">
+
+  <div class="section-label">Trilhas Recomendadas</div>
+  <h2 class="section-title">Por onde começar?</h2>
+  <p class="section-sub">Três caminhos diferentes, dependendo do seu objetivo. Não precisa ler tudo em ordem.</p>
+
+  <div class="tracks">
+    <a class="track" href="capitulos/01-o-problema.html">
+      <span class="track-num">Trilha 01</span>
+      <h3>Fundamentos</h3>
+      <p>Entenda o problema que o AIOX resolve, os três pilares, a Constitution e a stack de primitivas. Ideal para quem nunca ouviu falar.</p>
+      <div class="meta">
+        <span>📘 Caps 1–5</span>
+        <span>⏱ ~2h</span>
+      </div>
+    </a>
+    <a class="track" href="capitulos/06-instalacao.html">
+      <span class="track-num">Trilha 02</span>
+      <h3>Mão na Massa</h3>
+      <p>Instalação, conhecimento dos 11 agentes, primeiro Story Development Cycle e QA Loop. Para quem quer executar já.</p>
+      <div class="meta">
+        <span>📘 Caps 6–10</span>
+        <span>⏱ ~3h</span>
+      </div>
+    </a>
+    <a class="track" href="capitulos/11-squad.html">
+      <span class="track-num">Trilha 03</span>
+      <h3>Squads & Produção</h3>
+      <p>Crie seu primeiro squad, produtize como serviço, orquestre épicos e otimize custos. Para operadores avançados.</p>
+      <div class="meta">
+        <span>📘 Caps 11–17</span>
+        <span>⏱ ~5h</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="section-label">Todos os Capítulos</div>
+  <h2 class="section-title">17 Capítulos</h2>
+  <p class="section-sub">Busque por título, conceito ou comando. Seu progresso é salvo automaticamente.</p>
+
+  <div class="search-box">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+    <input id="search" type="text" placeholder="Buscar capítulo, conceito ou comando… (ou pressione /)" autocomplete="off">
+  </div>
+
+  <div class="chapter-list" id="chapter-list"></div>
+
+</main>
+
+<footer class="home-footer">AIOX Squad · Synkra · Guia Técnico v1.0</footer>
+
+<button class="to-top" id="to-top" aria-label="Voltar ao topo">↑</button>
+
+<script src="assets/app.js"></script>
+<script src="assets/chat.js"></script>
+</body>
+</html>

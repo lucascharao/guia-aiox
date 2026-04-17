@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap 10 — Spec Pipeline e Brownfield: Workflows Avançados · AIOX Squad</title>
+<meta name="description" content="SDC não é o único workflow. Spec Pipeline para features com incerteza, Brownfield Discovery para projetos legados. Escolha o certo para cada situação.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="../assets/chat.css">
+<link rel="icon" type="image/svg+xml" href="../assets/logo-aiox.svg">
+</head>
+<body data-chapter="10">
+
+<div class="app">
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html"><img src="../assets/logo-aiox.svg" alt="AIOX Squad"></a>
+      <span class="sidebar-badge">Guia Técnico</span>
+      <div class="sidebar-title">AIOX Squad</div>
+      <div class="sidebar-subtitle">17 capítulos · Synkra</div>
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="sidebar-progress-label"><span>Progresso</span><span id="sb-pct">0/17</span></div>
+      <div class="progress-bar"><div id="sb-bar"></div></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Capítulos</div>
+      <div id="sidebar-chapters"></div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="../index.html">← Voltar à home</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="top-nav">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="../index.html">Capítulos</a>
+        <span class="sep">/</span>
+        <span class="current">Cap 10</span>
+      </div>
+      <div class="top-actions">
+        <button class="gsearch-trigger" data-gsearch-open aria-label="Buscar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <span class="hint">Buscar</span>
+          <kbd>/</kbd>
+        </button>
+        <a class="btn-sm" href="09-qualidade.html">← Anterior</a>
+        <a class="btn-sm" href="11-squad.html">Próximo →</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section class="hero">
+        <span class="hero-tag">Capítulo 10 · AVANCADO</span>
+        <h1 class="hero-title">Spec Pipeline e Brownfield: Workflows Avançados</h1>
+        <p class="hero-subtitle">SDC não é o único workflow. Spec Pipeline para features com incerteza, Brownfield Discovery para projetos legados. Escolha o certo para cada situação.</p>
+        <div class="meta-row">
+          <span class="meta-chip">⏱ <strong>40 min</strong> de leitura</span>
+          <span class="meta-chip">🎯 <strong>4</strong> objetivos</span>
+          <span class="meta-chip">🧩 <strong>6</strong> conceitos-chave</span>
+          <span class="meta-chip">⌨ <strong>3</strong> comandos CLI</span>
+        </div>
+      </section>
+
+      <div class="tldr">
+        <div class="tldr-label">TL;DR</div>
+        <div class="tldr-text">SDC não é o único workflow. Spec Pipeline para features com incerteza, Brownfield Discovery para projetos legados. Escolha o certo para cada situação.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Você vai aprender</h3>
+          <ul><li>Dominar as 6 fases do Spec Pipeline</li><li>Completar um Brownfield Discovery</li><li>Classificar complexidade (SIMPLE/STANDARD/COMPLEX)</li><li>Compor workflows para cenários reais</li></ul>
+        </div>
+        <div class="card">
+          <h3>Conceitos-chave</h3>
+          <div class="chips"><span class="chip">Spec Pipeline</span><span class="chip">6 Fases (Gather/Assess/Research/Write/Critique/Plan)</span><span class="chip">3 Classes</span><span class="chip">Brownfield Discovery</span><span class="chip">10 Fases de Assessment</span><span class="chip">Technical Debt</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin: 28px 0;"><h3>Comandos deste capítulo</h3><ul><li><code>@pm *spec-pipeline</code></li><li><code>@pm *spec-pipeline --class=simple</code></li><li><code>@architect *assess-complexity</code></li></ul></div>
+
+      <article class="prose">
+        <hr />
+<h3 id="introducao-alem-do-sdc">Introdução: Além do SDC</h3>
+<p>O Story Development Cycle é o workflow de referência do AIOX — ele cobre a grande maioria do trabalho de desenvolvimento. Mas existem situações onde o SDC, por si só, não é suficiente.</p>
+<p>Quando você está diante de uma feature complexa que ainda não tem requisitos bem definidos, começar pelo SDC é como tentar construir uma casa sem plantas. Você vai construir algo, mas a probabilidade de precisar demolir e reconstruir é alta.</p>
+<p>Quando você está entrando num projeto existente com dívida técnica acumulada, iniciar stories sem entender a arquitetura atual é como navegar num mapa que não corresponde ao território.</p>
+<p>Para essas situações, o AIOX oferece dois workflows avançados: o <strong>Spec Pipeline</strong> e o <strong>Brownfield Discovery</strong>.</p>
+<hr />
+<h3 id="101-o-spec-pipeline">10.1 O Spec Pipeline</h3>
+<h4 id="o-problema-que-o-spec-pipeline-resolve">O Problema que o Spec Pipeline Resolve</h4>
+<p>Features complexas têm uma propriedade inconveniente: o custo de descobrir os requisitos errados cresce exponencialmente conforme você avança no desenvolvimento. Um erro de requisito descoberto durante o Spec Pipeline custa uma conversa de 30 minutos. O mesmo erro descoberto após três semanas de implementação custa dias de retrabalho.</p>
+<p>O Spec Pipeline é o processo de transformar requisitos informais — uma ideia, um pedido de stakeholder, uma necessidade de produto — em uma especificação executável antes de qualquer linha de código ser escrita.</p>
+<h4 id="as-6-fases-do-spec-pipeline">As 6 Fases do Spec Pipeline</h4>
+<p>O Spec Pipeline tem 6 fases, mas nem sempre todas são executadas. A complexidade da feature determina quais fases são necessárias.</p>
+<p><strong>Fase 1: Gather (@pm)</strong>
+Morgan inicia o processo coletando os requisitos no formato estruturado. O output é <code>requirements.json</code> — um arquivo que registra os requisitos funcionais (FR-<em>), não-funcionais (NFR-</em>), e restrições (CON-*).</p>
+<p>Esta fase nunca é pulada. Não importa a simplicidade da feature — ter requisitos documentados em formato estruturado é o ponto de partida de tudo.</p>
+<p>O processo de gather inclui:
+- Entrevista de stakeholder (simulada pelo Morgan a partir das informações que você fornece)
+- Classificação de requisitos em FR/NFR/CON
+- Identificação de dependências externas
+- Validação de completude básica (cada requisito é rastreável?)</p>
+<p><strong>Fase 2: Assess (@architect)</strong>
+Aria avalia a complexidade da feature com base em 5 dimensões e determina a classe de complexidade. O output é <code>complexity.json</code>.</p>
+<p>Esta fase é pulada apenas quando <code>source=simple</code> — ou seja, quando você está executando o Spec Pipeline a partir de uma fonte que já foi classificada como simples.</p>
+<p><strong>Fase 3: Research (@analyst)</strong>
+Alex pesquisa padrões existentes, soluções de mercado, e considerações técnicas relevantes para a feature. O output é <code>research.json</code>.</p>
+<p>Esta fase é pulada para features de classe SIMPLE. Para STANDARD e COMPLEX, a pesquisa adiciona contexto que melhora significativamente a qualidade da spec resultante.</p>
+<p><strong>Fase 4: Write Spec (@pm)</strong>
+Morgan, agora com contexto completo de requisitos, complexidade, e pesquisa, escreve a especificação formal. O output é <code>spec.md</code>.</p>
+<p>Esta fase nunca é pulada. É o produto central do Spec Pipeline.</p>
+<p>A spec.md inclui:
+- Resumo executivo da feature
+- Requisitos detalhados com rastreabilidade explícita para FR-<em>/NFR-</em>/CON-*
+- Considerações técnicas e arquiteturais
+- Critérios de aceite de alto nível
+- Dependências e riscos identificados</p>
+<p><strong>Fase 5: Critique (@qa)</strong>
+Quinn revisa a spec com o olhar crítico de qualidade. O output é <code>critique.json</code> com scores por dimensão e um verdict.</p>
+<p>Esta fase nunca é pulada. Uma spec não revisada é uma spec que pode ter problemas de qualidade, ambiguidade, ou lacunas que só serão descobertos durante a implementação.</p>
+<p><strong>Fase 6: Plan (@architect)</strong>
+Aria cria o plano de implementação: quais stories serão necessárias, em que ordem, com quais dependências. O output é <code>implementation.yaml</code>.</p>
+<p>Esta fase é pulada apenas se o verdict do Critique for APPROVED — o que significa que a spec está suficientemente detalhada para que o trabalho de planejamento seja simples e possa ser feito como parte do SDC normal.</p>
+<h4 id="as-3-classes-de-complexidade">As 3 Classes de Complexidade</h4>
+<p>A Fase 2 do Spec Pipeline classifica a feature em uma de três classes:</p>
+<p><strong>SIMPLE (score &lt;= 8):</strong> Features que afetam poucos arquivos, não têm integrações externas significativas, não precisam de mudanças de infraestrutura, e a equipe tem familiaridade alta com a área de código. Fluxo: gather → spec → critique (3 fases, sem research e sem plan formal).</p>
+<p><strong>STANDARD (score 9-15):</strong> Features de complexidade moderada com alguma integração externa, mudanças que afetam múltiplos módulos, ou áreas onde a familiaridade da equipe é média. Fluxo: todas as 6 fases.</p>
+<p><strong>COMPLEX (score &gt;= 16):</strong> Features de alta complexidade — múltiplas integrações, mudanças arquiteturais, alto risco, ou baixa familiaridade com o domínio. Fluxo: 6 fases + ciclo de revisão. Após o critique, se o verdict for NEEDS_REVISION, a spec passa por revisão e o critique é executado novamente.</p>
+<h4 id="as-5-dimensoes-de-complexidade">As 5 Dimensões de Complexidade</h4>
+<p>A classificação de complexidade é feita em 5 dimensões, cada uma pontuada de 1 a 5:</p>
+<p><strong>Dimensão 1: Scope (Escopo)</strong>
+Quantos arquivos/módulos serão afetados?</p>
+<table>
+<thead>
+<tr>
+<th>Pontuação</th>
+<th>Critério</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>1-3 arquivos em área isolada</td>
+</tr>
+<tr>
+<td>2</td>
+<td>4-10 arquivos em módulo específico</td>
+</tr>
+<tr>
+<td>3</td>
+<td>10-25 arquivos, múltiplos módulos</td>
+</tr>
+<tr>
+<td>4</td>
+<td>25-50 arquivos, impacto cross-cutting</td>
+</tr>
+<tr>
+<td>5</td>
+<td>&gt; 50 arquivos, mudança arquitetural global</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dimensão 2: Integration (Integração)</strong>
+Quantas integrações externas estão envolvidas?</p>
+<table>
+<thead>
+<tr>
+<th>Pontuação</th>
+<th>Critério</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Nenhuma integração externa</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1 integração com API interna conhecida</td>
+</tr>
+<tr>
+<td>3</td>
+<td>1-2 integrações externas com docs</td>
+</tr>
+<tr>
+<td>4</td>
+<td>3+ integrações ou integração com legacy sem docs</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Múltiplas integrações críticas com incerteza alta</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dimensão 3: Infrastructure (Infraestrutura)</strong>
+Que nível de mudanças de infra são necessárias?</p>
+<table>
+<thead>
+<tr>
+<th>Pontuação</th>
+<th>Critério</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Nenhuma mudança de infra</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Mudança de configuração simples</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Novo serviço ou banco de dados</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Mudança em pipeline de CI/CD ou deploy</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Mudança arquitetural de infraestrutura</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dimensão 4: Knowledge (Conhecimento)</strong>
+Qual é a familiaridade da equipe com a área?</p>
+<table>
+<thead>
+<tr>
+<th>Pontuação</th>
+<th>Critério</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Alta familiaridade, foi feito antes</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Boa familiaridade, área conhecida</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Familiaridade média, alguma exploração necessária</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Pouca familiaridade, domain novo</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Sem familiaridade, área completamente nova</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dimensão 5: Risk (Risco)</strong>
+Qual é o nível de criticidade?</p>
+<table>
+<thead>
+<tr>
+<th>Pontuação</th>
+<th>Critério</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Não-crítico, reversível facilmente</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Baixo risco, rollback possível</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Risco médio, rollback complexo</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Alto risco, afeta dados ou segurança</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Crítico, impacto irreversível ou em produção</td>
+</tr>
+</tbody>
+</table>
+<p>O score total é a soma das 5 dimensões. Uma feature com scope=3, integration=2, infrastructure=1, knowledge=3, risk=2 teria score=11 — classificada como STANDARD.</p>
+<h4 id="os-verdicts-do-critique">Os Verdicts do Critique</h4>
+<p>A Fase 5 (Critique) produz um dos três verdicts:</p>
+<p><strong>APPROVED (average score &gt;= 4.0):</strong> A spec está bem escrita, com rastreabilidade clara, critérios verificáveis, e sem lacunas significativas. O Spec Pipeline termina aqui (exceto o Plan para COMPLEX).</p>
+<p><strong>NEEDS_REVISION (average score 3.0-3.9):</strong> A spec tem qualidade adequada mas precisa de melhorias específicas. Quinn documenta exatamente o que precisa ser melhorado e a spec passa por revisão antes de avançar.</p>
+<p><strong>BLOCKED (average score &lt; 3.0):</strong> A spec tem problemas fundamentais de qualidade — ambiguidades irresolvíveis, lacunas de requisitos que impedem especificação, ou contradições internas. Escalado para <code>@architect</code> para mediação.</p>
+<h4 id="o-gate-do-artigo-iv-nenhuma-invencao">O Gate do Artigo IV: Nenhuma Invenção</h4>
+<p>O gate mais importante do Spec Pipeline está na Fase 5. Quinn verifica que <strong>cada afirmação na spec.md tem rastreabilidade para um requisito documentado</strong>. Não pode haver features na spec que não foram explicitamente solicitadas.</p>
+<p>Isso é o Artigo IV da Constitution em ação: No Invention. Uma feature não solicitada que aparece na spec pode parecer um presente, mas é um risco: não foi priorizada, não foi orçada, pode ter dependências não mapeadas, e não corresponde a um valor de produto validado.</p>
+<p>A regra é simples: cada declaração na spec que descreve comportamento do sistema deve ter a forma <code>[FR-N]</code> ou <code>[NFR-N]</code> ou <code>[CON-N]</code> após ela, indicando de qual requisito documentado esse comportamento se origina.</p>
+<h4 id="iniciando-o-spec-pipeline">Iniciando o Spec Pipeline</h4>
+<pre><code>@pm *spec-pipeline
+</code></pre>
+<p>Morgan vai iniciar o processo de elicitação da Fase 1. Você fornece o contexto inicial — a ideia, o pedido de stakeholder, os objetivos de negócio — e Morgan transforma isso no processo estruturado.</p>
+<hr />
+<h3 id="102-brownfield-discovery">10.2 Brownfield Discovery</h3>
+<h4 id="o-contexto-entrando-num-projeto-existente">O Contexto: Entrando num Projeto Existente</h4>
+<p>Você foi contratado para modernizar um sistema que existe há 8 anos. Ou você está retomando um projeto que ficou parado por meses. Ou você quer usar o AIOX num projeto que já tem código mas foi desenvolvido sem o framework.</p>
+<p>Em todos esses casos, o problema é o mesmo: <strong>você não sabe o que está lá dentro</strong>. Há dívida técnica acumulada, decisões arquiteturais não documentadas, integrações mal entendidas, e esquemas de banco de dados que nunca passaram por review formal.</p>
+<p>Tentar criar stories e implementar sem entender essa realidade é garantia de surpresas. Surpresas no desenvolvimento são bugs e retrabalho.</p>
+<p>O <strong>Brownfield Discovery</strong> é o processo de 10 fases para fazer um assessment técnico completo de um sistema existente antes de iniciar qualquer desenvolvimento com o AIOX.</p>
+<h4 id="as-10-fases-do-brownfield-discovery">As 10 Fases do Brownfield Discovery</h4>
+<h5 id="coleta-de-dados-fases-1-3">Coleta de Dados (Fases 1-3)</h5>
+<p><strong>Fase 1: System Architecture Assessment (@architect)</strong>
+Aria mapeia a arquitetura atual do sistema. O output é <code>system-architecture.md</code>, um documento que registra:
+- Componentes e suas responsabilidades
+- Padrões arquiteturais utilizados (e os que deveriam ter sido utilizados)
+- Fronteiras de domínio
+- Pontos de integração internos e externos
+- Débitos arquiteturais identificados</p>
+<p><strong>Fase 2: Database &amp; Data Assessment (@data-engineer)</strong>
+Dara analisa o banco de dados e o modelo de dados. Os outputs são:
+- <code>SCHEMA.md</code>: Documentação completa do schema atual
+- <code>DB-AUDIT.md</code>: Auditoria de problemas no banco de dados — indices faltantes, inconsistências de nomenclatura, constraints violáveis, queries N+1 identificadas, modelos de dados que não refletem o domínio</p>
+<p>Esta fase só é executada se o projeto tem banco de dados. Para projetos sem persistência própria, é pulada.</p>
+<p><strong>Fase 3: Frontend &amp; UX Assessment (@ux-design-expert)</strong>
+Uma faz a análise do frontend existente. O output é <code>frontend-spec.md</code>:
+- Componentes e sua estrutura atual
+- Padrões de UX utilizados (e os problemas)
+- Estado de acessibilidade
+- Inconsistências de design system
+- Débitos de UX identificados</p>
+<p>Esta fase é executada para qualquer projeto com interface visual.</p>
+<h5 id="rascunho-e-validacao-fases-4-7">Rascunho e Validação (Fases 4-7)</h5>
+<p><strong>Fase 4: Technical Debt Draft (@architect)</strong>
+Com os dados coletados nas três primeiras fases, Aria compila o documento de avaliação de dívida técnica. O output é <code>technical-debt-DRAFT.md</code>.</p>
+<p>Este documento categoriza a dívida técnica em:
+- <strong>Crítica:</strong> Impede features ou causa bugs em produção
+- <strong>Alta:</strong> Aumenta significativamente o custo de mudanças
+- <strong>Média:</strong> Causa fricção no desenvolvimento
+- <strong>Baixa:</strong> Problema estético ou de qualidade sem impacto funcional</p>
+<p><strong>Fase 5: Database Specialist Review (@data-engineer)</strong>
+Dara revisa o draft com foco específico no componente de banco de dados e dados. O output é <code>db-specialist-review.md</code>. Dara verifica se a avaliação de dívida técnica de banco de dados está completa, precisa, e priorizada corretamente.</p>
+<p><strong>Fase 6: UX Specialist Review (@ux-design-expert)</strong>
+Uma revisa o draft com foco no componente de frontend e UX. O output é <code>ux-specialist-review.md</code>. Uma verifica se os problemas de UX foram identificados corretamente e se a priorização reflete o impacto real na experiência do usuário.</p>
+<p><strong>Fase 7: QA Gate (@qa)</strong>
+Quinn revisa o assessment completo — arquitetura, banco de dados, e frontend — e emite um veredicto sobre a qualidade do documento de dívida técnica.</p>
+<p><strong>QA Gate Verdicts na Fase 7:</strong></p>
+<ul>
+<li>
+<p><strong>APPROVED:</strong> O assessment está completo, todos os débitos foram validados, não há lacunas críticas, e as dependências entre débitos foram mapeadas. O Brownfield Discovery avança para a fase de finalização.</p>
+</li>
+<li>
+<p><strong>NEEDS WORK:</strong> Há lacunas significativas no assessment — áreas do sistema não cobertas, débitos identificados mas não avaliados, ou dependências não mapeadas. O documento volta para a Fase 4 para complementação.</p>
+</li>
+</ul>
+<h5 id="finalizacao-fases-8-10">Finalização (Fases 8-10)</h5>
+<p><strong>Fase 8: Final Technical Debt Assessment (@architect)</strong>
+Incorporando o feedback de todas as revisões e do QA Gate, Aria produz o documento final. O output é <code>technical-debt-assessment.md</code> — a versão definitiva e assinada do assessment técnico.</p>
+<p><strong>Fase 9: Executive Report (@analyst)</strong>
+Alex transforma o documento técnico num relatório executivo acessível para stakeholders não-técnicos. O output é <code>TECHNICAL-DEBT-REPORT.md</code>.</p>
+<p>Este documento responde às perguntas que executivos fazem:
+- Qual é o estado do sistema?
+- Quais são os riscos se não agirmos?
+- O que precisa ser feito e em que ordem?
+- Qual é o custo estimado (em esforço) de cada item?</p>
+<p><strong>Fase 10: Epic Planning (@pm)</strong>
+Morgan usa o assessment para criar o backlog de modernização. O output é um epic (ou múltiplos epics) com stories prontas para o SDC normal.</p>
+<p>Esta fase transforma o resultado do Brownfield Discovery num plano de trabalho executável. Ao final da Fase 10, você tem stories em status Ready que podem imediatamente entrar no ciclo normal de desenvolvimento.</p>
+<h4 id="o-qa-gate-da-fase-7-em-detalhe">O QA Gate da Fase 7 em Detalhe</h4>
+<p>O QA Gate do Brownfield Discovery é diferente do QA Gate do SDC porque o que está sendo avaliado é um documento de análise, não código implementado. Quinn verifica:</p>
+<ol>
+<li><strong>Completude:</strong> Todos os componentes do sistema foram analisados?</li>
+<li><strong>Validação dos débitos:</strong> Cada débito identificado tem evidência? (não é apenas uma opinião)</li>
+<li><strong>Sem lacunas críticas:</strong> Há componentes ou áreas que foram ignorados?</li>
+<li><strong>Mapeamento de dependências:</strong> Os débitos que dependem uns dos outros foram mapeados?</li>
+<li><strong>Priorização consistente:</strong> A severidade atribuída a cada débito é consistente com seu impacto real?</li>
+<li><strong>Acionabilidade:</strong> Os débitos são descritos de forma suficientemente clara para gerar stories?</li>
+<li><strong>Estimativas razoáveis:</strong> As estimativas de esforço são realistas e justificadas?</li>
+</ol>
+<hr />
+<h3 id="103-escolhendo-o-workflow-certo">10.3 Escolhendo o Workflow Certo</h3>
+<p>Com três workflows disponíveis (SDC, Spec Pipeline, Brownfield Discovery), a pergunta natural é: como sei qual usar?</p>
+<p>A resposta está num conjunto de perguntas diagnósticas:</p>
+<h4 id="o-guia-de-selecao-de-workflow">O Guia de Seleção de Workflow</h4>
+<table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Workflow</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Você tem uma story clara com requisitos bem definidos</td>
+<td>SDC diretamente</td>
+</tr>
+<tr>
+<td>Feature nova mas simples, critérios óbvios</td>
+<td>SDC com modo YOLO</td>
+</tr>
+<tr>
+<td>Feature complexa com requisitos ainda vagos</td>
+<td>Spec Pipeline → depois SDC</td>
+</tr>
+<tr>
+<td>Feature com múltiplas integrações externas</td>
+<td>Spec Pipeline (STANDARD ou COMPLEX)</td>
+</tr>
+<tr>
+<td>Feature com risco alto ou mudança arquitetural</td>
+<td>Spec Pipeline → review com @architect</td>
+</tr>
+<tr>
+<td>Entrando em projeto existente sem documentação</td>
+<td>Brownfield Discovery primeiro</td>
+</tr>
+<tr>
+<td>Projeto existente com dívida técnica acumulada</td>
+<td>Brownfield Discovery → stories de modernização via SDC</td>
+</tr>
+<tr>
+<td>Bug fix simples com causa identificada</td>
+<td>SDC (YOLO mode)</td>
+</tr>
+<tr>
+<td>Bug intermitente de causa desconhecida</td>
+<td>Spec Pipeline para investigação antes de fix</td>
+</tr>
+<tr>
+<td>Onboarding de novo membro no projeto</td>
+<td>Brownfield Discovery (pode ser parcial)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="os-sinais-de-que-voce-escolheu-o-workflow-errado">Os Sinais de que Você Escolheu o Workflow Errado</h4>
+<p><strong>Sinal de que deveria ter usado Spec Pipeline:</strong>
+- Dex está frequentemente bloqueando por falta de clareza nos requisitos
+- O QA Loop está em 3+ iterações por causa de ambiguidade de critérios
+- O PO está rejeitando stories consistentemente por AC mal definidos</p>
+<p><strong>Sinal de que deveria ter feito Brownfield antes:</strong>
+- Dex está descobrindo surpresas arquiteturais que não estavam na story
+- As stories estão sendo bloqueadas por dependências não mapeadas
+- Cada implementação quebra algo que não estava no escopo</p>
+<p><strong>Sinal de que está complicando desnecessariamente:</strong>
+- Você está usando Spec Pipeline para features de complexidade 1 (escopo de 1 arquivo, sem integração, equipe familiar)
+- O Brownfield Discovery está levando semanas para um projeto de 3 meses de desenvolvimento
+- Você está esperando a spec perfeita antes de começar qualquer coisa</p>
+<p>O Spec Pipeline não é um ritual obrigatório — é uma ferramenta para quando a incerteza de requisitos justifica o investimento de tempo em especificação antes da implementação. Para features simples e bem entendidas, o SDC direto é o caminho certo.</p>
+<h4 id="composicao-de-workflows">Composição de Workflows</h4>
+<p>Os workflows são compostos, não exclusivos. O Brownfield Discovery resulta em stories que entram no SDC. O Spec Pipeline produz uma spec que informa as stories do SDC. O SDC inclui QA Loop como mecanismo iterativo.</p>
+<p>O fluxo de trabalho típico num projeto novo com feature complexa:</p>
+<pre><code>1. Brownfield Discovery (se projeto existente)
+   ↓
+2. Spec Pipeline (para features complexas)
+   ↓
+3. Story Development Cycle (para cada story)
+   ↓ (se QA falhar)
+4. QA Loop (ciclo iterativo)
+   ↓
+5. Entrega (@devops)
+</code></pre>
+<p>Para um projeto greenfield com features simples:</p>
+<pre><code>1. Story Development Cycle diretamente
+   ↓
+2. QA Loop se necessário
+   ↓
+3. Entrega
+</code></pre>
+<p>A beleza do AIOX é que você não precisa escolher um único workflow para o projeto inteiro. Você escolhe o workflow certo para cada situação.</p>
+<hr />
+<h3 id="exercicio-aplicando-o-workflow-correto">Exercício: Aplicando o Workflow Correto</h3>
+<p>Este exercício desenvolve a habilidade de seleção de workflow.</p>
+<p><strong>Cenário 1:</strong> Você precisa adicionar um campo de "bio" ao perfil de usuário. O campo é um textarea com máximo 500 caracteres, exibido na página de perfil público.
+- Qual workflow você usaria?
+- Por quê?
+- Se Spec Pipeline, qual classe de complexidade e quantas fases?</p>
+<p><strong>Cenário 2:</strong> Você precisa integrar um sistema de pagamentos (Stripe) no produto. É a primeira vez que o time trabalha com pagamentos. Há múltiplos cenários: pagamento único, assinatura recorrente, cancelamento, reembolso.
+- Qual workflow você usaria?
+- Justifique cada dimensão de complexidade.
+- Quais fases do Spec Pipeline seriam executadas?</p>
+<p><strong>Cenário 3:</strong> Você assumiu manutenção de um e-commerce em PHP com 7 anos de histórico, sem documentação de arquitetura, com banco de dados MySQL sem migrations versionadas.
+- Qual workflow você iniciaria?
+- O que você esperaria encontrar no output de cada fase?
+- Como você priorizaria os débitos técnicos identificados?</p>
+<p><strong>Parte Prática:</strong> Para o seu projeto atual, execute:</p>
+<pre><code>@pm *spec-pipeline
+</code></pre>
+<p>...para a próxima feature que você planeja implementar. Observe o processo de classificação de complexidade. Observe como Morgan estrutura os requisitos. Observe como o output da spec é diferente de uma story normal.</p>
+<p>Compare: quanto tempo levou o Spec Pipeline versus quanto tempo levou uma story typical no SDC? Para features da mesma complexidade, o Spec Pipeline reduziu o número de QA Loop iterations necessárias?</p>
+      </article>
+
+      <div class="nav-footer">
+        <a href="09-qualidade.html" class=""><div class="label">← Anterior</div><div class="title">Cap 09 · Qualidade Sem Compromisso: Gates e QA Loop</div></a>
+        <a href="11-squad.html" class="nav-next"><div class="label">Próximo →</div><div class="title">Cap 11 · O Conceito de Squad</div></a>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<button class="to-top" id="to-top" aria-label="Voltar ao topo">↑</button>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+</body>
+</html>

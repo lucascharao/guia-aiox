@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap 15 — Otimização: Tokens, Contexto e Performance · AIOX Squad</title>
+<meta name="description" content="80% dos tokens vêm de 20% das operações. Audit, determinize, gerencie contexto agressivamente e faça routing multi-modelo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="../assets/chat.css">
+<link rel="icon" type="image/svg+xml" href="../assets/logo-aiox.svg">
+</head>
+<body data-chapter="15">
+
+<div class="app">
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html"><img src="../assets/logo-aiox.svg" alt="AIOX Squad"></a>
+      <span class="sidebar-badge">Guia Técnico</span>
+      <div class="sidebar-title">AIOX Squad</div>
+      <div class="sidebar-subtitle">17 capítulos · Synkra</div>
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="sidebar-progress-label"><span>Progresso</span><span id="sb-pct">0/17</span></div>
+      <div class="progress-bar"><div id="sb-bar"></div></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Capítulos</div>
+      <div id="sidebar-chapters"></div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="../index.html">← Voltar à home</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="top-nav">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="../index.html">Capítulos</a>
+        <span class="sep">/</span>
+        <span class="current">Cap 15</span>
+      </div>
+      <div class="top-actions">
+        <button class="gsearch-trigger" data-gsearch-open aria-label="Buscar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <span class="hint">Buscar</span>
+          <kbd>/</kbd>
+        </button>
+        <a class="btn-sm" href="14-epicos.html">← Anterior</a>
+        <a class="btn-sm" href="16-patterns.html">Próximo →</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section class="hero">
+        <span class="hero-tag">Capítulo 15 · AVANCADO</span>
+        <h1 class="hero-title">Otimização: Tokens, Contexto e Performance</h1>
+        <p class="hero-subtitle">80% dos tokens vêm de 20% das operações. Audit, determinize, gerencie contexto agressivamente e faça routing multi-modelo.</p>
+        <div class="meta-row">
+          <span class="meta-chip">⏱ <strong>45 min</strong> de leitura</span>
+          <span class="meta-chip">🎯 <strong>4</strong> objetivos</span>
+          <span class="meta-chip">🧩 <strong>7</strong> conceitos-chave</span>
+          <span class="meta-chip">⌨ <strong>5</strong> comandos CLI</span>
+        </div>
+      </section>
+
+      <div class="tldr">
+        <div class="tldr-label">TL;DR</div>
+        <div class="tldr-text">80% dos tokens vêm de 20% das operações. Audit, determinize, gerencie contexto agressivamente e faça routing multi-modelo.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Você vai aprender</h3>
+          <ul><li>Dominar a anatomia do custo (input/output/operacional)</li><li>Aplicar Code First avançado</li><li>Gerenciar contexto sem degradação</li><li>Implementar estratégia multi-LLM</li></ul>
+        </div>
+        <div class="card">
+          <h3>Conceitos-chave</h3>
+          <div class="chips"><span class="chip">80/20 de Custo</span><span class="chip">Code First Avançado</span><span class="chip">/clear vs /compact</span><span class="chip">Code Intelligence</span><span class="chip">Multi-LLM Routing</span><span class="chip">Waves</span><span class="chip">GitHub Worktrees</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin: 28px 0;"><h3>Comandos deste capítulo</h3><ul><li><code>aiox doctor</code></li><li><code>aiox stats</code></li><li><code>aiox stats --period=7d</code></li><li><code>aiox stats --group-by=operation</code></li><li><code>/clear</code></li></ul></div>
+
+      <article class="prose">
+        <hr />
+<h3 id="151-a-anatomia-do-custo">15.1 A Anatomia do Custo</h3>
+<p>Usar IA com método significa entender o que custa. Não de forma obsessiva — mas com a mesma consciência que um engenheiro tem sobre a complexidade computacional do código que escreve.</p>
+<p>O custo de um sistema AIOX tem três componentes:</p>
+<h4 id="componente-1-custo-de-input-tokens-enviados">Componente 1: Custo de Input (Tokens Enviados)</h4>
+<p>Cada mensagem que você envia para um modelo inclui: o contexto do sistema (personas, regras, memória), o histórico da conversa, e a instrução atual. O total de tokens de input é a soma de todas essas partes.</p>
+<p>O maior inimigo do custo de input é o <strong>contexto não gerenciado</strong>. Quando uma sessão cresce sem controle, o contexto acumula: personas antigas, histórico de conversas de fases anteriores, memória carregada desnecessariamente. Cada mensagem nova carrega todo esse peso.</p>
+<h4 id="componente-2-custo-de-output-tokens-gerados">Componente 2: Custo de Output (Tokens Gerados)</h4>
+<p>Tokens de output custam mais que tokens de input (tipicamente 3-5x). Um agente que responde com análises longas e detalhadas quando uma resposta concisa seria suficiente é um agente que custa mais do que precisa.</p>
+<p>A otimização aqui é de instrução: personas bem escritas incluem orientações sobre verbosidade esperada. "Quando analisando mercado, produza análise em 400-600 palavras focada em insights acionáveis, sem contextualização genérica" é uma instrução que afeta o custo de output.</p>
+<h4 id="componente-3-custo-operacional-infraestrutura-e-tempo">Componente 3: Custo Operacional (Infraestrutura e Tempo)</h4>
+<p>Para squads em produção (Fase 3+), há custos de infraestrutura: servidores, banco de dados, Redis para cache. Esses custos são geralmente menores que os custos de tokens de LLM, mas crescem com o uso.</p>
+<h4 id="a-regra-dos-8020-de-custo">A Regra dos 80/20 de Custo</h4>
+<p>Em projetos típicos, 80% dos tokens são consumidos por 20% das operações. Identificar e otimizar essas operações de alto custo tem impacto desproporcional no custo total.</p>
+<p>As operações de alto custo mais comuns:
+- Análises de código em arquivos grandes (o arquivo inteiro é passado como contexto)
+- Sínteses de múltiplos inputs (o contexto combina múltiplas análises)
+- Iterações de QA Loop onde o contexto acumula histórico de cada iteração
+- Brownfield Discovery onde o contexto inclui todo o assessment progressivo</p>
+<h4 id="os-vazamentos-silenciosos">Os Vazamentos Silenciosos</h4>
+<p>Existem custos que a maioria dos operadores não percebe:</p>
+<p><strong>Servidores MCP consomem contexto passivamente.</strong> Cada MCP registrado no seu ambiente consome entre <strong>8% e 30%</strong> da janela de contexto apenas por estar registrado — mesmo sem usar nenhuma ferramenta. Solução: desabilite MCPs que não está usando ativamente.</p>
+<p><strong>Claude Teams custa ~7x mais tokens</strong> que uso individual, com 44% de perda de contexto em cenários de equipe. Para a maioria dos operadores AIOX, contas individuais são mais eficientes.</p>
+<p><strong>O valor real da assinatura:</strong> Claude Max a $200/mês equivale a ~$2.500-3.500 em créditos de API. Nunca ative "uso extra" — compre uma segunda conta Max em vez disso. Duas contas = ~$5.000-7.000 em tokens por $400.</p>
+<p><strong>A regra dos 91,5%:</strong> Pedro Valério compartilhou uma métrica de produção — 91,5% das operações são determinísticas (scripts), 6,8% por modelo. Se você está gastando muito com API, algo está errado no seu processo.</p>
+<hr />
+<h3 id="152-code-first-avancado-maximizando-a-proporcao-deterministica">15.2 Code First Avançado: Maximizando a Proporção Determinística</h3>
+<p>O princípio Code First foi introduzido no início do livro. Na otimização avançada, a pergunta não é "o que Python pode fazer?" — é "o que Python pode fazer que eu ainda estou deixando para a IA?"</p>
+<h4 id="audit-de-operacoes">Audit de Operações</h4>
+<p>Faça uma lista de todas as operações que acontecem em um ciclo típico de development no seu projeto. Para cada operação, classifique honestamente: Python ou IA necessária.</p>
+<p><strong>Operações que frequentemente acabam com IA quando deveriam ser Python:</strong></p>
+<p><strong>Verificação de completude de story:</strong> "Todos os ACs estão marcados como [x]?" é uma operação de parsing de Markdown. Python resolve em 3 linhas.</p>
+<pre><code class="language-python">def count_ac_completion(story_path: str) -&gt; tuple[int, int]:
+    &quot;&quot;&quot;Retorna (completos, total) de ACs na story.&quot;&quot;&quot;
+    with open(story_path) as f:
+        content = f.read()
+    completed = content.count(&quot;- [x] AC-&quot;)
+    total = content.count(&quot;- [&quot;) - content.count(&quot;- [ ]&quot;)
+    # Método mais robusto com regex
+    import re
+    ac_pattern = re.findall(r'- \[(x| )\] AC-', content)
+    completed = sum(1 for status, _ in [m.split('] AC-') for m in
+                    re.findall(r'- \[.\] AC-\d+', content)]
+                    if '[x]' in m)
+    return completed, len(ac_pattern)
+</code></pre>
+<p><strong>Geração de relatório de progresso de épico:</strong> O EPIC-EXECUTION.yaml tem todos os dados necessários. Python pode gerar o relatório de progresso sem IA:</p>
+<pre><code class="language-python">import yaml
+
+def generate_epic_report(epic_yaml_path: str) -&gt; str:
+    with open(epic_yaml_path) as f:
+        epic = yaml.safe_load(f)
+
+    stories = epic.get('stories', [])
+    done = [s for s in stories if s['status'] == 'Done']
+    in_progress = [s for s in stories if s['status'] == 'InProgress']
+    blocked = [s for s in epic.get('blockers', []) if s['status'] != 'resolved']
+
+    pct = len(done) / len(stories) * 100 if stories else 0
+
+    return f&quot;&quot;&quot;
+## {epic['epic']['title']}
+
+Progresso: {len(done)}/{len(stories)} stories ({pct:.1f}%)
+Em progresso: {len(in_progress)} stories
+Blockers ativos: {len(blocked)}
+&quot;&quot;&quot;
+</code></pre>
+<p><strong>Validação de schema de story:</strong> Verificar se uma story tem todos os campos obrigatórios é validação de estrutura — Python com qualquer schema validator.</p>
+<p><strong>Extração de métricas de QA:</strong> O arquivo <code>qa/loop-status.json</code> tem todos os dados. Python pode gerar dashboard de QA sem IA.</p>
+<h4 id="o-mapa-de-economia">O Mapa de Economia</h4>
+<p>Para cada operação que você migra de IA para Python, estime:
+- Frequência por semana
+- Tokens médios por operação
+- Custo semanal atual
+- Custo semanal após migração (R$0)</p>
+<p>Em projetos ativos, essa análise frequentemente revela R$50-200/mês em operações que Python poderia resolver.</p>
+<hr />
+<h3 id="153-gerenciamento-de-contexto">15.3 Gerenciamento de Contexto</h3>
+<p>O contexto de uma sessão AIOX cresce naturalmente com o uso. Sem gestão, esse crescimento resulta em:
+- Custos crescentes (mais tokens de input em cada mensagem)
+- Latência crescente (modelos processam mais devagar com contextos gigantes)
+- <strong>Degradação de qualidade acima de 100k tokens</strong> (queda de até 50% na precisão — dado validado pelo cohort)</p>
+<h4 id="clear-vs-compact-a-escolha-certa"><code>/clear</code> vs <code>/compact</code> — A Escolha Certa</h4>
+<p>O cohort convergiu numa recomendação clara: <strong><code>/clear</code> é melhor que <code>/compact</code></strong>.</p>
+<p>O <code>/compact</code> tenta preservar contexto resumindo a conversa. Mas o resumo nem sempre captura o que importa — e o processo de compactação consome ~20.000 tokens por sessão. O <code>/clear</code> zera completamente o contexto.</p>
+<p>A estratégia correta: <strong><code>/clear</code> entre fases + reler a story</strong>. Quando o agente faz <code>/clear</code> e depois relê o arquivo da story, ele recupera instantaneamente: o que está sendo feito, quais critérios devem ser atendidos, quais tarefas já foram completadas. O custo de reler a story (~500-1.000 tokens) é muito menor que o custo de manter contexto acumulado.</p>
+<p><strong>Regras práticas:</strong>
+- Desabilite auto-compact (economiza ~20k tokens/sessão)
+- Faça <code>/clear</code> entre trocas de agente (contexto do agente anterior não serve)
+- Nos 80% de uso da janela, use o <strong>método Edu</strong>: prompt de extração de checklist antes do <code>/compact</code>, capturando decisões e estado atual
+- Nunca use <code>/compact</code> quando pode usar <code>/clear</code> + reler story</p>
+<p>O crescimento do contexto é o problema mais subestimado:</p>
+<h4 id="o-protocolo-de-compactacao-de-handoff">O Protocolo de Compactação de Handoff</h4>
+<p>O protocolo de Agent Handoff (definido nas regras do AIOX) é a primeira ferramenta de gestão de contexto. Quando você troca de agente, o contexto do agente anterior é <strong>compactado</strong> num handoff artifact de ~500 tokens em vez de ser carregado integralmente.</p>
+<p>Sem compactação: cada troca de agente acumula ~3-5K tokens de persona do agente anterior.
+Com compactação: cada troca de agente adiciona ~500 tokens de handoff artifact.</p>
+<p>Em uma sessão típica com 4 trocas de agente, a diferença é 20K tokens vs. 2K tokens — uma redução de 90% no custo de contexto acumulado de agentes.</p>
+<h4 id="gestao-manual-de-contexto">Gestão Manual de Contexto</h4>
+<p>Além do handoff automático, há situações onde você precisa gerenciar contexto manualmente:</p>
+<p><strong>Quando iniciar nova sessão:</strong> Para cada nova story, considere iniciar uma sessão nova em vez de continuar a sessão atual. Uma sessão nova começa com contexto limpo — apenas o que é carregado pelo MEMORY.md e pelos arquivos de contexto do projeto.</p>
+<p><strong>Quando compactar memória:</strong> Se o MEMORY.md de um agente cresceu muito, compacte-o. Mantenha apenas as informações que efetivamente afetam comportamento futuro. Decisões de 6 meses atrás que já não são relevantes ocupam tokens em cada sessão.</p>
+<p><strong>Quando usar arquivos de contexto seletivos:</strong> Em vez de carregar todo o MEMORY.md em cada sessão, considere arquivos de contexto modulares que são carregados apenas quando relevantes.</p>
+<h4 id="a-estrategia-de-contexto-por-camadas">A Estratégia de Contexto por Camadas</h4>
+<pre><code>Camada 1: Context permanente (sempre carregado)
+  - Personas de agentes
+  - Regras fundamentais do projeto
+  - Padrões de código estabelecidos
+
+Camada 2: Context de projeto (carregado por sessão)
+  - Estado atual do epic ativo
+  - Decisões arquiteturais relevantes
+  - Dependências conhecidas
+
+Camada 3: Context de tarefa (carregado por story)
+  - Story atual
+  - Arquivos específicos da implementação
+  - Histórico de QA Loop desta story
+
+Camada 4: Context efêmero (descartado após uso)
+  - Código de arquivo analisado pontualmente
+  - Output de ferramentas externas
+  - Resultados intermediários
+</code></pre>
+<p>A Camada 4 é a mais problemática se não gerenciada: resultados de análise de arquivos grandes, outputs de tools, e dados intermediários que foram úteis num momento mas não precisam mais estar no contexto. Descarte-os explicitamente quando não mais necessários.</p>
+<hr />
+<h3 id="154-code-intelligence-enriquecendo-operacoes">15.4 Code Intelligence: Enriquecendo Operações</h3>
+<p>O AIOX tem um sistema de <strong>Code Intelligence</strong> que enriquece operações com dados de análise de código — mas apenas quando disponível. É sempre opcional, com graceful degradation quando não configurado.</p>
+<h4 id="o-que-e-code-intelligence">O Que é Code Intelligence</h4>
+<p>Code Intelligence é um provider de metadados sobre o código: quais funções existem, quais módulos importam o quê, onde uma função específica é chamada, quais são as dependências de um módulo.</p>
+<p>Com Code Intelligence disponível, operações de desenvolvimento ganham contexto adicional sem precisar que o agente leia arquivos manualmente:</p>
+<p>Sem Code Intelligence:</p>
+<pre><code>@dev: &quot;Para implementar esta feature, preciso entender onde o módulo
+de autenticação é usado. Leia todos os arquivos que importam auth...&quot;
+[LLM lê 15 arquivos, processa, extrai informação]
+</code></pre>
+<p>Com Code Intelligence:</p>
+<pre><code>@dev: &quot;Code Intelligence: onde auth.module é importado?&quot;
+[Resposta imediata de análise estática: 8 módulos, listados]
+[LLM recebe lista estruturada, não precisa ler os arquivos]
+</code></pre>
+<p>A diferença em custo: 0 tokens adicionais para a consulta de dependências vs. centenas de tokens para cada arquivo lido manualmente.</p>
+<h4 id="configurando-code-intelligence">Configurando Code Intelligence</h4>
+<p>O provider de Code Intelligence é configurado em <code>core-config.yaml</code>:</p>
+<pre><code class="language-yaml">code_intelligence:
+  provider: &quot;nogic&quot;  # ou outro provider configurado
+  enabled: true
+  cache_ttl: 3600  # segundos
+</code></pre>
+<p>Se o provider não está disponível, o sistema opera normalmente sem enrichment — <code>isCodeIntelAvailable()</code> retorna <code>false</code> e as operações continuam sem o metadado extra.</p>
+<h4 id="quando-code-intelligence-tem-mais-impacto">Quando Code Intelligence Tem Mais Impacto</h4>
+<p><strong>Análise de impacto:</strong> "Quais módulos serão afetados se eu mudar a interface do módulo X?" Sem Code Intelligence, requer análise manual de dependências. Com Code Intelligence, resposta imediata.</p>
+<p><strong>Sugestão de onde implementar:</strong> "Em qual módulo esta função deveria viver?" Com Code Intelligence, o agente pode olhar o mapa de módulos existentes e fazer uma sugestão informada sem ler cada arquivo.</p>
+<p><strong>Detecção de duplicação:</strong> "Já existe algo no codebase que faz isso?" Com Code Intelligence, busca por padrões semelhantes é rápida e sem custo de tokens de leitura de arquivo.</p>
+<hr />
+<h3 id="155-debug-e-diagnostico-de-performance">15.5 Debug e Diagnóstico de Performance</h3>
+<p>Quando o AIOX está lento, caro, ou produzindo outputs de qualidade abaixo do esperado, você precisa de ferramentas para diagnosticar.</p>
+<h4 id="o-dashboard-de-diagnostico">O Dashboard de Diagnóstico</h4>
+<pre><code class="language-bash">aiox doctor
+</code></pre>
+<p>O comando <code>aiox doctor</code> produz um diagnóstico completo do sistema:</p>
+<pre><code>AIOX Doctor — Diagnóstico do Sistema
+=====================================
+
+Configuração:
+  ✓ core-config.yaml válido
+  ✓ Agentes: 11 configurados
+  ! MEMORY.md de @dev: 8.2KB (recomendado: &lt; 5KB)
+  ✓ Code Intelligence: Configurado (nogic)
+
+Stories:
+  ✓ 3 stories em Ready (prontas para implementação)
+  ! 1 story em InProgress há 8 dias (considere verificar blockers)
+  ✓ 0 stories com ACs inconsistentes
+
+Épicos:
+  ✓ EPIC-3 ativo, 28.5% completo
+  ✓ Sem épicos bloqueados
+
+Custos (últimos 7 dias):
+  ! Input tokens: 2.3M (↑ 45% vs semana anterior)
+  ! Spike detectado: 2026-01-23 — sessão de Brownfield Discovery
+  ✓ Output tokens: dentro da média histórica
+
+Code Intelligence:
+  ✓ Provider: nogic — operacional
+  ✓ Cache hit rate: 73%
+  ! Cache TTL muito baixo (600s) — considere aumentar para 3600s
+
+Recomendações:
+  1. Compactar MEMORY.md de @dev — remover entradas antes de 2025-11
+  2. Verificar story 3.3 em InProgress há 8 dias
+  3. Aumentar cache TTL do Code Intelligence
+</code></pre>
+<h4 id="identificando-operacoes-de-alto-custo">Identificando Operações de Alto Custo</h4>
+<p>Para identificar quais operações estão consumindo mais tokens:</p>
+<pre><code class="language-bash">aiox stats --period=7d --group-by=operation
+</code></pre>
+<p>Output típico:</p>
+<pre><code>Top 10 operações por custo (últimos 7 dias)
+==========================================
+1. brownfield-discovery-phase1   847K tokens   $12.71
+2. qa-loop-iteration             234K tokens    $3.51
+3. spec-pipeline-critique        198K tokens    $2.97
+4. dev-develop-story             176K tokens    $2.64
+5. qa-gate                       145K tokens    $2.18
+...
+</code></pre>
+<p>Com essa visibilidade, você pode decidir: o custo de Brownfield Discovery de $12.71 foi uma vez só (esperado). O QA Loop de $3.51 está em linha com o esperado? Ou há mais iterações do que deveria?</p>
+<h4 id="detectando-degradacao-de-qualidade">Detectando Degradação de Qualidade</h4>
+<p>A degradação de qualidade é mais sutil que problemas de custo — você não recebe um erro, você recebe um output pior. Os sinais a observar:</p>
+<p><strong>Aumento na taxa de rejeição do PO:</strong> Se Pax está rejeitando mais stories que antes, ou as stories estão saindo com scores mais baixos, algo mudou. Pode ser que o MEMORY.md de @sm acumulou contexto confuso, ou que as personas foram alteradas inadvertidamente.</p>
+<p><strong>Aumento de iterações no QA Loop:</strong> Se o número médio de iterações até APPROVE aumentou, os outputs de Dex degradaram. Pode ser contexto de projeto desatualizado, ou MEMORY.md de @dev com decisões antigas que conflitam com o estado atual.</p>
+<p><strong>Inconsistência entre sessões:</strong> Outputs para inputs similares são muito diferentes entre sessões. Isso é sinal de que o contexto que os agentes carregam está inconsistente — diferentes versões de MEMORY.md, ou estado de épico desatualizado.</p>
+<hr />
+<h3 id="156-estrategia-multi-llm">15.6 Estratégia Multi-LLM</h3>
+<p>O AIOX não está preso a um único modelo de LLM. Uma estratégia multi-LLM usa o modelo certo para cada tipo de operação.</p>
+<h4 id="o-principio-de-adequacao-de-modelo">O Princípio de Adequação de Modelo</h4>
+<p>Nem toda tarefa cognitiva é igual. A síntese final de um memo de investimento exige capacidades diferentes de uma classificação simples de tipo de bug. Usar o modelo mais poderoso para tudo é desperdício; usar o modelo mais fraco para tudo é degradação de qualidade.</p>
+<p><strong>Haiku — Quando Usar:</strong>
+- Classificação de baixa complexidade
+- Extração de estrutura de texto bem formado
+- Geração de código simples e repetitivo
+- Respostas factuais sobre dados estruturados
+- Validação de formato</p>
+<p><strong>Sonnet — Quando Usar:</strong>
+- A maioria das operações de desenvolvimento
+- Análise de código de complexidade média
+- Geração de conteúdo padrão
+- QA Gate de stories normais
+- Análises de domínio sem alta especialização</p>
+<p><strong>Opus — Quando Usar:</strong>
+- Decisões arquiteturais complexas
+- Síntese de análises de múltiplas perspectivas com alto stake
+- Brownfield Discovery de sistemas críticos
+- Análise de segurança e código sensível
+- Casos edge e problemas não-padrão</p>
+<h4 id="implementando-routing-de-modelos">Implementando Routing de Modelos</h4>
+<pre><code class="language-yaml"># core-config.yaml
+model_routing:
+  default: &quot;claude-sonnet-4-5&quot;
+
+  overrides:
+    # Operações que justificam Opus
+    - operations: [&quot;investment-synthesis&quot;, &quot;security-audit&quot;, &quot;architecture-decision&quot;]
+      model: &quot;claude-opus-4-5&quot;
+
+    # Operações que funcionam com Haiku
+    - operations: [&quot;schema-validation&quot;, &quot;format-check&quot;, &quot;simple-classification&quot;]
+      model: &quot;claude-haiku-4-5&quot;
+
+    # Por agente
+    - agent: &quot;@architect&quot;
+      operations: [&quot;complexity-assessment&quot;, &quot;adr-creation&quot;]
+      model: &quot;claude-opus-4-5&quot;
+
+    - agent: &quot;@dev&quot;
+      operations: [&quot;implement-simple-feature&quot;, &quot;write-tests&quot;]
+      model: &quot;claude-sonnet-4-5&quot;
+</code></pre>
+<h4 id="o-impacto-real-no-custo">O Impacto Real no Custo</h4>
+<p>Para um projeto com 50 stories por mês, 30% de operações simples (Haiku), 60% de operações padrão (Sonnet), e 10% de operações complexas (Opus):</p>
+<ul>
+<li><strong>Sem routing</strong> (tudo Opus): ~$X/mês</li>
+<li><strong>Com routing</strong>: ~$0.35X/mês (65% de economia)</li>
+</ul>
+<p>A variância exata depende dos preços atuais dos modelos e do volume específico do projeto, mas a ordem de grandeza é consistente: routing inteligente tipicamente resulta em 50-70% de redução de custo de LLM em projetos de desenvolvimento ativo.</p>
+<hr />
+<h3 id="157-waves-desenvolvimento-paralelo">15.7 Waves: Desenvolvimento Paralelo</h3>
+<p>O conceito de <strong>Waves</strong> representa uma fronteira na otimização do AIOX: múltiplos agentes trabalhando em tasks independentes simultaneamente, cada um em sua própria instância.</p>
+<h4 id="como-funciona">Como Funciona</h4>
+<p>Em vez de executar stories sequencialmente (Story 1 → Story 2 → Story 3), você identifica stories independentes que podem ser desenvolvidas em paralelo. Cada story roda em sua própria "wave" — uma instância separada do Claude Code com seu próprio contexto.</p>
+<h4 id="github-worktrees-como-base">GitHub Worktrees como Base</h4>
+<p>Alan Nicolas testou e recomenda <strong>GitHub worktrees</strong> como a infraestrutura para Waves. Um worktree é uma cópia do repositório que compartilha o mesmo <code>.git</code> mas tem seu próprio working directory e branch:</p>
+<pre><code class="language-bash"># Criar worktrees para desenvolvimento paralelo
+git worktree add ../wave-1 feat/story-3.1
+git worktree add ../wave-2 feat/story-3.2
+git worktree add ../wave-3 feat/story-3.3
+</code></pre>
+<p>Cada worktree opera independentemente. Três instâncias de Claude Code, cada uma em um worktree, cada uma desenvolvendo uma story diferente. Ao final, consolidação via merge.</p>
+<h4 id="pre-requisitos-para-waves">Pré-Requisitos para Waves</h4>
+<p>Waves só funcionam quando:
+- As stories são genuinamente independentes (sem dependências entre si)
+- O planejamento do épico identificou quais stories podem paralelizar
+- Cada wave tem contexto suficiente (story + CLAUDE.md + relevant files)
+- A consolidação é feita por <code>@devops</code> com cuidado em merge conflicts</p>
+<h4 id="agent-teams-experimental">Agent Teams (Experimental)</h4>
+<p>A feature <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</code> do Claude Code vai além de worktrees: permite que agentes em instâncias separadas se comuniquem entre si. Isso é o futuro das Waves — agentes que colaboram em tempo real em tasks paralelas.</p>
+<hr />
+<h3 id="checklist-de-otimizacao">Checklist de Otimização</h3>
+<p>Use este checklist mensalmente para garantir que o seu projeto AIOX está operando de forma eficiente:</p>
+<p><strong>Custo:</strong>
+- [ ] Rodou <code>aiox stats --period=30d</code> e revisou top operações por custo?
+- [ ] Há operações nas top 5 que poderiam ser determinísticas?
+- [ ] O routing de modelos está configurado e atual?
+- [ ] Há spikes de custo não explicados?</p>
+<p><strong>Contexto:</strong>
+- [ ] MEMORY.md de cada agente ativo tem menos de 5KB?
+- [ ] Há entradas no MEMORY.md com mais de 3 meses que não são mais relevantes?
+- [ ] O EPIC-EXECUTION.yaml está atualizado?</p>
+<p><strong>Code Intelligence:</strong>
+- [ ] O provider está operacional? (<code>aiox doctor</code>)
+- [ ] Cache hit rate está acima de 70%?
+- [ ] Cache TTL está configurado adequadamente?</p>
+<p><strong>Qualidade:</strong>
+- [ ] Taxa de rejeição do PO está estável ou melhorando?
+- [ ] Número médio de iterações de QA Loop está estável ou diminuindo?
+- [ ] Outputs entre sessões similares são consistentes?</p>
+      </article>
+
+      <div class="nav-footer">
+        <a href="14-epicos.html" class=""><div class="label">← Anterior</div><div class="title">Cap 14 · Orquestrando Épicos</div></a>
+        <a href="16-patterns.html" class="nav-next"><div class="label">Próximo →</div><div class="title">Cap 16 · Patterns e Anti-Patterns</div></a>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<button class="to-top" id="to-top" aria-label="Voltar ao topo">↑</button>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+</body>
+</html>

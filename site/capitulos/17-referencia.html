@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap 17 — Referência Completa · AIOX Squad</title>
+<meta name="description" content="Manual de bolso: tabelas de agentes/comandos/workflows, mapa de status, Constitution resumida, glossário e troubleshooting.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="../assets/chat.css">
+<link rel="icon" type="image/svg+xml" href="../assets/logo-aiox.svg">
+</head>
+<body data-chapter="17">
+
+<div class="app">
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html"><img src="../assets/logo-aiox.svg" alt="AIOX Squad"></a>
+      <span class="sidebar-badge">Guia Técnico</span>
+      <div class="sidebar-title">AIOX Squad</div>
+      <div class="sidebar-subtitle">17 capítulos · Synkra</div>
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="sidebar-progress-label"><span>Progresso</span><span id="sb-pct">0/17</span></div>
+      <div class="progress-bar"><div id="sb-bar"></div></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Capítulos</div>
+      <div id="sidebar-chapters"></div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="../index.html">← Voltar à home</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="top-nav">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="../index.html">Capítulos</a>
+        <span class="sep">/</span>
+        <span class="current">Cap 17</span>
+      </div>
+      <div class="top-actions">
+        <button class="gsearch-trigger" data-gsearch-open aria-label="Buscar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <span class="hint">Buscar</span>
+          <kbd>/</kbd>
+        </button>
+        <a class="btn-sm" href="16-patterns.html">← Anterior</a>
+        
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section class="hero">
+        <span class="hero-tag">Capítulo 17 · INICIANTE</span>
+        <h1 class="hero-title">Referência Completa</h1>
+        <p class="hero-subtitle">Manual de bolso: tabelas de agentes/comandos/workflows, mapa de status, Constitution resumida, glossário e troubleshooting.</p>
+        <div class="meta-row">
+          <span class="meta-chip">⏱ <strong>60 min</strong> de leitura</span>
+          <span class="meta-chip">🎯 <strong>4</strong> objetivos</span>
+          <span class="meta-chip">🧩 <strong>7</strong> conceitos-chave</span>
+          <span class="meta-chip">⌨ <strong>3</strong> comandos CLI</span>
+        </div>
+      </section>
+
+      <div class="tldr">
+        <div class="tldr-label">TL;DR</div>
+        <div class="tldr-text">Manual de bolso: tabelas de agentes/comandos/workflows, mapa de status, Constitution resumida, glossário e troubleshooting.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Você vai aprender</h3>
+          <ul><li>Acessar referência rápida de todos os agentes</li><li>Encontrar o comando certo em segundos</li><li>Consultar glossário de termos-chave</li><li>Resolver problemas comuns</li></ul>
+        </div>
+        <div class="card">
+          <h3>Conceitos-chave</h3>
+          <div class="chips"><span class="chip">Tabela de Agentes</span><span class="chip">Tabela de Comandos</span><span class="chip">Tabela de Workflows</span><span class="chip">Mapa de Status</span><span class="chip">Glossário</span><span class="chip">Troubleshooting</span><span class="chip">Checklists</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin: 28px 0;"><h3>Comandos deste capítulo</h3><ul><li><code>aiox doctor</code></li><li><code>aiox stats</code></li><li><code>aiox graph</code></li></ul></div>
+
+      <article class="prose">
+        <hr />
+<h3 id="171-tabela-de-agentes">17.1 Tabela de Agentes</h3>
+<p>Referência rápida de todos os agentes oficiais do AIOX, suas personas, escopos, e comandos exclusivos.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Persona</th>
+<th>Papel</th>
+<th>Operações Exclusivas</th>
+<th>Operações Bloqueadas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@pm</code></td>
+<td>Morgan</td>
+<td>Product Manager / Estrategista</td>
+<td><code>*create-epic</code>, <code>*execute-epic</code>, <code>*spec-pipeline</code>, <code>*split-epic</code></td>
+<td>Git push, implementação de código, QA</td>
+</tr>
+<tr>
+<td><code>@po</code></td>
+<td>Pax</td>
+<td>Product Owner / Guardião de Valor</td>
+<td><code>*validate-story-draft</code>, <code>*backlog-review</code>, <code>*accept-story</code></td>
+<td>Git push, implementação, gerência de infra</td>
+</tr>
+<tr>
+<td><code>@sm</code></td>
+<td>River</td>
+<td>Scrum Master / Facilitador</td>
+<td><code>*draft</code>, <code>*create-story</code>, <code>*sprint-checkpoint</code></td>
+<td>Git push, implementação, aprovação de stories</td>
+</tr>
+<tr>
+<td><code>@dev</code></td>
+<td>Dex</td>
+<td>Desenvolvedor / Implementador</td>
+<td><code>git add/commit</code>, <code>*task dev-develop-story</code></td>
+<td><code>git push</code>, <code>gh pr create/merge</code>, MCP</td>
+</tr>
+<tr>
+<td><code>@qa</code></td>
+<td>Quinn</td>
+<td>QA Engineer / Guardião de Qualidade</td>
+<td><code>*task qa-gate</code>, <code>*qa-loop</code>, <code>*qa-loop-review</code>, <code>*qa-loop-fix</code>, <code>*escalate-qa-loop</code></td>
+<td>Git push, implementação, aprovação de stories</td>
+</tr>
+<tr>
+<td><code>@architect</code></td>
+<td>Aria</td>
+<td>Arquiteto / Designer de Sistema</td>
+<td>Decisões arquiteturais, <code>*complexity-assessment</code>, <code>*create-adr</code></td>
+<td>Git push, implementação direta, gestão de banco</td>
+</tr>
+<tr>
+<td><code>@data-engineer</code></td>
+<td>Dara</td>
+<td>Engenheiro de Dados / DBA</td>
+<td>Schema DDL, RLS policies, migrations, query optimization</td>
+<td>Código de aplicação, frontend, git push</td>
+</tr>
+<tr>
+<td><code>@devops</code></td>
+<td>Gage</td>
+<td>DevOps / Entregador</td>
+<td><code>git push</code>, <code>gh pr create/merge</code>, MCP add/remove, CI/CD</td>
+<td>Implementação de features, criação de stories</td>
+</tr>
+<tr>
+<td><code>@analyst</code></td>
+<td>Alex</td>
+<td>Analista de Pesquisa</td>
+<td>Research, síntese de informação, <code>*research</code></td>
+<td>Git push, implementação, QA gate</td>
+</tr>
+<tr>
+<td><code>@ux-design-expert</code></td>
+<td>Uma</td>
+<td>Designer de UX/UI</td>
+<td>Análise de UX, especificação de componentes, <code>*frontend-spec</code></td>
+<td>Git push, implementação de backend, banco de dados</td>
+</tr>
+<tr>
+<td><code>@aiox-master</code></td>
+<td>—</td>
+<td>Framework Governance</td>
+<td>Tudo, sem restrições</td>
+<td>Nada — autoridade total</td>
+</tr>
+</tbody>
+</table>
+<h4 id="notas-sobre-autoridade">Notas sobre Autoridade</h4>
+<p><strong>Delegação exclusiva:</strong> Operações listadas como exclusivas de um agente não podem ser realizadas por outros agentes, mesmo que tecnicamente possível. Isso é uma regra de processo, não apenas uma convenção.</p>
+<p><strong>Escalação:</strong> Quando qualquer agente não consegue completar uma tarefa, a escalação vai para <code>@aiox-master</code>, que tem autoridade irrestrita para mediar e resolver.</p>
+<p><strong>Ativação:</strong> No Claude Code, agentes são ativados com <code>/nome</code> (spawn completo com scripts e dependências). O <code>@nome</code> apenas carrega o arquivo .md sem executar workflows auxiliares. Commands usam o prefixo <code>*</code>. Exemplo: <code>/dev</code> para ativar, depois <code>*task dev-develop-story</code> para executar.</p>
+<p><strong>Modelo por agente:</strong> Configurável em <code>core-config.yaml</code>. Recomendação: Opus para decisões estratégicas (@architect, @pm), Sonnet para execução (@dev, @qa), Haiku para tasks definidas (@sm). Gemini para UX/design.</p>
+<hr />
+<h3 id="172-tabela-de-comandos">17.2 Tabela de Comandos</h3>
+<h4 id="comandos-de-story-development-cycle">Comandos de Story Development Cycle</h4>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Agente</th>
+<th>Descrição</th>
+<th>Task Executada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*create-story</code></td>
+<td>@sm</td>
+<td>Cria story via elicitação completa</td>
+<td><code>create-next-story.md</code></td>
+</tr>
+<tr>
+<td><code>*draft</code></td>
+<td>@sm</td>
+<td>Cria story rápida (versão mínima)</td>
+<td>Variante de <code>create-next-story.md</code></td>
+</tr>
+<tr>
+<td><code>*validate-story-draft</code></td>
+<td>@po</td>
+<td>Valida story no checklist de 10 pontos</td>
+<td><code>validate-next-story.md</code></td>
+</tr>
+<tr>
+<td><code>*task dev-develop-story</code></td>
+<td>@dev</td>
+<td>Implementa story ativa</td>
+<td><code>dev-develop-story.md</code></td>
+</tr>
+<tr>
+<td><code>*task dev-develop-story --mode=yolo</code></td>
+<td>@dev</td>
+<td>Implementa sem confirmações intermediárias</td>
+<td><code>dev-develop-story.md</code></td>
+</tr>
+<tr>
+<td><code>*task dev-develop-story --mode=preflight</code></td>
+<td>@dev</td>
+<td>Plano de implementação sem código</td>
+<td><code>dev-develop-story.md</code></td>
+</tr>
+<tr>
+<td><code>*task qa-gate</code></td>
+<td>@qa</td>
+<td>Executa QA Gate de 7 checks</td>
+<td><code>qa-gate.md</code></td>
+</tr>
+<tr>
+<td><code>*push</code></td>
+<td>@devops</td>
+<td>Push + PR no repositório remoto</td>
+<td>Workflow de entrega</td>
+</tr>
+<tr>
+<td><code>*accept-story</code></td>
+<td>@po</td>
+<td>Aceita story completada</td>
+<td>Verificação de ACs</td>
+</tr>
+</tbody>
+</table>
+<h4 id="comandos-de-qa-loop">Comandos de QA Loop</h4>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Agente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*qa-loop {storyId}</code></td>
+<td>@qa</td>
+<td>Inicia QA Loop para a story</td>
+</tr>
+<tr>
+<td><code>*qa-loop-review</code></td>
+<td>@qa</td>
+<td>Retoma na fase de review</td>
+</tr>
+<tr>
+<td><code>*qa-loop-fix</code></td>
+<td>@dev</td>
+<td>Retoma na fase de correção</td>
+</tr>
+<tr>
+<td><code>*stop-qa-loop</code></td>
+<td>@qa/@dev</td>
+<td>Pausa e salva estado</td>
+</tr>
+<tr>
+<td><code>*resume-qa-loop</code></td>
+<td>@qa/@dev</td>
+<td>Retoma loop pausado</td>
+</tr>
+<tr>
+<td><code>*escalate-qa-loop</code></td>
+<td>@qa/@dev</td>
+<td>Força escalação para @aiox-master</td>
+</tr>
+</tbody>
+</table>
+<h4 id="comandos-de-epico">Comandos de Épico</h4>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Agente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*create-epic</code></td>
+<td>@pm</td>
+<td>Cria novo épico com decomposição em stories</td>
+</tr>
+<tr>
+<td><code>*execute-epic {id}</code></td>
+<td>@pm</td>
+<td>Inicia execução do épico</td>
+</tr>
+<tr>
+<td><code>*epic-status {id}</code></td>
+<td>@pm</td>
+<td>Relatório de status atual do épico</td>
+</tr>
+<tr>
+<td><code>*sprint-checkpoint {id}</code></td>
+<td>@pm</td>
+<td>Checkpoint formal de sprint</td>
+</tr>
+<tr>
+<td><code>*revise-epic-scope {id}</code></td>
+<td>@pm</td>
+<td>Reavalia escopo do épico</td>
+</tr>
+<tr>
+<td><code>*split-epic {id}</code></td>
+<td>@pm</td>
+<td>Divide épico em dois ou mais épicos menores</td>
+</tr>
+</tbody>
+</table>
+<h4 id="comandos-de-spec-pipeline">Comandos de Spec Pipeline</h4>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Agente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*spec-pipeline</code></td>
+<td>@pm</td>
+<td>Inicia Spec Pipeline completo</td>
+</tr>
+<tr>
+<td><code>*spec-pipeline --class=simple</code></td>
+<td>@pm</td>
+<td>Força classe SIMPLE (3 fases)</td>
+</tr>
+<tr>
+<td><code>*spec-pipeline --class=complex</code></td>
+<td>@pm</td>
+<td>Força classe COMPLEX (6 fases + revisão)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="comandos-de-sistema">Comandos de Sistema</h4>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Interface</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>aiox doctor</code></td>
+<td>CLI</td>
+<td>Diagnóstico completo do sistema</td>
+</tr>
+<tr>
+<td><code>aiox stats</code></td>
+<td>CLI</td>
+<td>Estatísticas de uso e custo</td>
+</tr>
+<tr>
+<td><code>aiox stats --period=7d</code></td>
+<td>CLI</td>
+<td>Stats dos últimos 7 dias</td>
+</tr>
+<tr>
+<td><code>aiox stats --group-by=operation</code></td>
+<td>CLI</td>
+<td>Stats agrupados por operação</td>
+</tr>
+<tr>
+<td><code>aiox graph --deps</code></td>
+<td>CLI</td>
+<td>Grafo de dependências (ASCII)</td>
+</tr>
+<tr>
+<td><code>aiox graph --deps --format=html</code></td>
+<td>CLI</td>
+<td>Grafo interativo em HTML</td>
+</tr>
+<tr>
+<td><code>aiox graph --stats</code></td>
+<td>CLI</td>
+<td>Estatísticas de entidades e cache</td>
+</tr>
+<tr>
+<td><code>npx aios-core install</code></td>
+<td>CLI</td>
+<td>Instala AIOX em projeto</td>
+</tr>
+<tr>
+<td><code>npx aios-core doctor</code></td>
+<td>CLI</td>
+<td>Diagnóstico (alias)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="173-tabela-de-workflows">17.3 Tabela de Workflows</h3>
+<table>
+<thead>
+<tr>
+<th>Workflow</th>
+<th>Quando Usar</th>
+<th>Agentes Envolvidos</th>
+<th>Output Principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Story Development Cycle (SDC)</strong></td>
+<td>Todo desenvolvimento de feature</td>
+<td>@sm, @po, @dev, @qa, @devops</td>
+<td>Code merged + Story Done</td>
+</tr>
+<tr>
+<td><strong>QA Loop</strong></td>
+<td>Após QA Gate com FAIL ou múltiplos CONCERNS</td>
+<td>@qa, @dev</td>
+<td>Story aprovada pelo QA</td>
+</tr>
+<tr>
+<td><strong>Spec Pipeline (SIMPLE)</strong></td>
+<td>Feature com incerteza moderada de requisitos</td>
+<td>@pm, @qa</td>
+<td>spec.md aprovada</td>
+</tr>
+<tr>
+<td><strong>Spec Pipeline (STANDARD)</strong></td>
+<td>Feature complexa ou com integração externa</td>
+<td>@pm, @architect, @analyst, @qa</td>
+<td>spec.md + implementation.yaml</td>
+</tr>
+<tr>
+<td><strong>Spec Pipeline (COMPLEX)</strong></td>
+<td>Feature de alta complexidade ou risco</td>
+<td>Todos + ciclo de revisão</td>
+<td>spec.md + implementation.yaml revisado</td>
+</tr>
+<tr>
+<td><strong>Brownfield Discovery</strong></td>
+<td>Projeto existente sem documentação</td>
+<td>@architect, @data-engineer, @ux-design-expert, @qa, @analyst, @pm</td>
+<td>TECHNICAL-DEBT-REPORT.md + Epic de modernização</td>
+</tr>
+<tr>
+<td><strong>Epic Execution</strong></td>
+<td>Objetivo de produto multi-story</td>
+<td>@pm orquestrado SDC por story</td>
+<td>Todas as stories do épico Done</td>
+</tr>
+</tbody>
+</table>
+<h4 id="fluxo-de-selecao-de-workflow">Fluxo de Seleção de Workflow</h4>
+<pre><code>Projeto novo com código existente?
+    Sim → Brownfield Discovery primeiro
+    Não → continua
+
+Feature com requisitos ambíguos ou complexidade &gt;= STANDARD?
+    Sim → Spec Pipeline → SDC
+    Não → continua
+
+Objetivo de produto com múltiplas stories interdependentes?
+    Sim → Create Epic → Execute Epic → SDC por story
+    Não → continua
+
+Story individual com critérios claros?
+    Sim → SDC diretamente
+    Bugs simples → SDC modo YOLO
+</code></pre>
+<hr />
+<h3 id="174-mapa-de-status">17.4 Mapa de Status</h3>
+<h4 id="status-de-stories">Status de Stories</h4>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Descrição</th>
+<th>Quem Define</th>
+<th>Transição Para</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Draft</strong></td>
+<td>Story criada, aguardando validação</td>
+<td>@sm</td>
+<td>Ready (PO aprovação)</td>
+</tr>
+<tr>
+<td><strong>Ready</strong></td>
+<td>Validada pelo PO, pronta para implementação</td>
+<td>@po</td>
+<td>InProgress (@dev inicia)</td>
+</tr>
+<tr>
+<td><strong>InProgress</strong></td>
+<td>Em implementação ativa</td>
+<td>@dev</td>
+<td>InReview (QA Gate PASS) / Draft (QA Gate FAIL)</td>
+</tr>
+<tr>
+<td><strong>InReview</strong></td>
+<td>QA Gate passou, aguardando push</td>
+<td>@qa</td>
+<td>Done (@devops push)</td>
+</tr>
+<tr>
+<td><strong>Done</strong></td>
+<td>Entregue e mergeada</td>
+<td>@devops</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Blocked</strong></td>
+<td>Bloqueada por dependência ou decisão pendente</td>
+<td>Qualquer agente</td>
+<td>Ready/Draft (após resolução)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="status-de-epicos">Status de Épicos</h4>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Planning</strong></td>
+<td>Épico criado, stories sendo decompostas</td>
+</tr>
+<tr>
+<td><strong>Ready</strong></td>
+<td>Todas as stories iniciais em Draft ou Ready</td>
+</tr>
+<tr>
+<td><strong>InProgress</strong></td>
+<td>Pelo menos uma story em InProgress</td>
+</tr>
+<tr>
+<td><strong>Done</strong></td>
+<td>Todas as stories em Done e critérios de sucesso verificados</td>
+</tr>
+<tr>
+<td><strong>Blocked</strong></td>
+<td>Épico bloqueado por dependência externa ou decisão estratégica</td>
+</tr>
+</tbody>
+</table>
+<h4 id="verdicts-do-qa-gate">Verdicts do QA Gate</h4>
+<table>
+<thead>
+<tr>
+<th>Verdict</th>
+<th>Significado</th>
+<th>Próximo Passo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PASS</strong></td>
+<td>Todos os 7 checks passaram</td>
+<td>Story → InReview, avança para @devops</td>
+</tr>
+<tr>
+<td><strong>CONCERNS</strong></td>
+<td>Checks passaram com ressalvas não-bloqueantes</td>
+<td>Story → InReview (com nota de concerns)</td>
+</tr>
+<tr>
+<td><strong>FAIL</strong></td>
+<td>Um ou mais checks bloqueantes falharam</td>
+<td>Story → InProgress, volta para @dev com lista de issues</td>
+</tr>
+<tr>
+<td><strong>WAIVED</strong></td>
+<td>Um ou mais checks dispensados com justificativa documentada</td>
+<td>Story → InReview (com waiver documentado)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="verdicts-do-qa-loop">Verdicts do QA Loop</h4>
+<table>
+<thead>
+<tr>
+<th>Verdict</th>
+<th>Significado</th>
+<th>Próximo Passo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>APPROVE</strong></td>
+<td>Story aprovada após todas as correções</td>
+<td>Fim do loop, story avança</td>
+</tr>
+<tr>
+<td><strong>REJECT</strong></td>
+<td>Issues identificados, correção necessária</td>
+<td>@dev *qa-loop-fix</td>
+</tr>
+<tr>
+<td><strong>BLOCKED</strong></td>
+<td>Problema não resolvível entre @qa e @dev</td>
+<td>Escalação imediata para @aiox-master</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="175-resumo-da-constitution">17.5 Resumo da Constitution</h3>
+<p>A Constitution define os princípios inegociáveis do AIOX. Gates automáticos bloqueiam violações.</p>
+<table>
+<thead>
+<tr>
+<th>Artigo</th>
+<th>Princípio</th>
+<th>Severidade</th>
+<th>Significado Prático</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I</td>
+<td>CLI First</td>
+<td>NON-NEGOTIABLE</td>
+<td>Toda inteligência e automação vive no CLI. UI é terciária.</td>
+</tr>
+<tr>
+<td>II</td>
+<td>Agent Authority</td>
+<td>NON-NEGOTIABLE</td>
+<td>Cada agente tem autoridade delimitada. Violações bloqueiam.</td>
+</tr>
+<tr>
+<td>III</td>
+<td>Story-Driven Development</td>
+<td>MUST</td>
+<td>Não há código sem story. Sem exceção.</td>
+</tr>
+<tr>
+<td>IV</td>
+<td>No Invention</td>
+<td>MUST</td>
+<td>Agentes não adicionam features não solicitadas. Spec = Lei.</td>
+</tr>
+<tr>
+<td>V</td>
+<td>Quality First</td>
+<td>MUST</td>
+<td>Gates de qualidade não são opcionais. WAIVED requer justificativa.</td>
+</tr>
+<tr>
+<td>VI</td>
+<td>Absolute Imports</td>
+<td>SHOULD</td>
+<td>Imports absolutos. Sem <code>../../../</code> no código.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="gates-automaticos">Gates Automáticos</h4>
+<p>Os seguintes gates são aplicados automaticamente pelo sistema:</p>
+<ul>
+<li><strong>Push sem @devops:</strong> BLOQUEADO</li>
+<li><strong>Story sem ACs verificáveis:</strong> PO retorna NO-GO</li>
+<li><strong>Feature em spec sem rastreabilidade para FR/NFR/CON:</strong> Critique retorna BLOCKED</li>
+<li><strong>Agente realizando operação fora de sua autoridade:</strong> Escalação para @aiox-master</li>
+</ul>
+<hr />
+<h3 id="176-checklist-de-setup">17.6 Checklist de Setup</h3>
+<p>Use este checklist ao inicializar um novo projeto com AIOX.</p>
+<h4 id="pre-requisitos">Pré-requisitos</h4>
+<ul>
+<li>[ ] Node.js 18+ instalado</li>
+<li>[ ] Git configurado com nome e email</li>
+<li>[ ] GitHub CLI instalado e autenticado (<code>gh auth status</code>)</li>
+<li>[ ] Claude Code instalado e configurado</li>
+</ul>
+<h4 id="instalacao-do-aiox">Instalação do AIOX</h4>
+<ul>
+<li>[ ] <code>npx aios-core install</code> executado no diretório do projeto</li>
+<li>[ ] <code>aiox doctor</code> executado — sem erros críticos</li>
+<li>[ ] <code>core-config.yaml</code> revisado e customizado para o projeto</li>
+</ul>
+<h4 id="configuracao-de-agentes">Configuração de Agentes</h4>
+<ul>
+<li>[ ] Personas dos agentes revisadas</li>
+<li>[ ] MEMORY.md inicial criado para cada agente ativo</li>
+<li>[ ] Contexto de projeto adicionado ao MEMORY.md dos agentes principais</li>
+</ul>
+<h4 id="estrutura-de-documentacao">Estrutura de Documentação</h4>
+<ul>
+<li>[ ] <code>docs/stories/</code> criado</li>
+<li>[ ] <code>docs/prd/</code> criado com PRD inicial do projeto</li>
+<li>[ ] Pelo menos um epic criado em <code>docs/</code> ou definido no AIOX</li>
+</ul>
+<h4 id="primeiro-ciclo">Primeiro Ciclo</h4>
+<ul>
+<li>[ ] <code>@sm *create-story</code> executado para primeira story</li>
+<li>[ ] <code>@po *validate-story-draft</code> executado — score &gt;= 7</li>
+<li>[ ] <code>@dev *task dev-develop-story</code> executado com modo Interactive</li>
+<li>[ ] <code>@qa *task qa-gate</code> executado — PASS ou WAIVED documentado</li>
+<li>[ ] <code>@devops *push</code> executado — PR criado no GitHub</li>
+</ul>
+<h4 id="code-intelligence-opcional">Code Intelligence (Opcional)</h4>
+<ul>
+<li>[ ] Provider de Code Intelligence configurado em <code>core-config.yaml</code></li>
+<li>[ ] <code>aiox doctor</code> confirma Code Intelligence operacional</li>
+<li>[ ] Cache TTL configurado adequadamente</li>
+</ul>
+<hr />
+<h3 id="177-glossario">17.7 Glossário</h3>
+<p><strong>AC (Acceptance Criteria):</strong> Critério verificável que define quando um requisito de uma story foi implementado com sucesso. Formato: "Dado X, quando Y, então Z" ou condição booleana clara.</p>
+<p><strong>Agent Authority:</strong> O conjunto de operações que um agente pode realizar e as que são explicitamente bloqueadas. Definido na Constitution e implementado como regra de processo.</p>
+<p><strong>Brownfield Discovery:</strong> Workflow de 10 fases para assessment técnico de projetos existentes com dívida técnica acumulada.</p>
+<p><strong>Code First:</strong> Princípio fundamental que prioriza Python/código determinístico sobre IA para qualquer operação que pode ser resolvida sem julgamento semântico.</p>
+<p><strong>Constitution:</strong> Documento de princípios inegociáveis do AIOX que governa o comportamento de todos os agentes e processos do framework.</p>
+<p><strong>EPIC-EXECUTION.yaml:</strong> Arquivo YAML que registra o estado completo de um épico em execução, incluindo stories, dependências, riscos, blockers, e métricas de progresso.</p>
+<p><strong>Epic:</strong> Objetivo de produto de maior escala que se traduz em múltiplas stories coordenadas com critérios de sucesso próprios.</p>
+<p><strong>Gate:</strong> Verificação obrigatória que valida qualidade ou conformidade antes que o trabalho avance para a próxima fase. Gates que falham retornam o trabalho para correção.</p>
+<p><strong>Handoff Artifact:</strong> Arquivo YAML compacto (~500 tokens) gerado quando um agente passa o controle para outro. Contém o essencial do contexto sem carregar a persona completa do agente anterior.</p>
+<p><strong>MEMORY.md:</strong> Arquivo que armazena a memória de longo prazo de um agente. É a única forma de persistir contexto entre sessões. Deve ser curado ativamente.</p>
+<p><strong>No Invention (Artigo IV):</strong> Princípio constitucional que proíbe agentes de adicionar features, comportamentos, ou requisitos que não foram explicitamente especificados nos documentos de requisitos.</p>
+<p><strong>QA Gate:</strong> Verificação de 7 checks executada por Quinn após a implementação de uma story. Produz veredicto: PASS, CONCERNS, FAIL, ou WAIVED.</p>
+<p><strong>QA Loop:</strong> Ciclo iterativo de revisão-correção entre Quinn e Dex após um QA Gate com FAIL. Máximo de 5 iterações antes de escalação automática.</p>
+<p><strong>SDC (Story Development Cycle):</strong> O workflow primário do AIOX — 4 fases (Criar, Validar, Implementar, QA) executadas por 5 agentes em sequência.</p>
+<p><strong>Spec Pipeline:</strong> Workflow de 3-6 fases para transformar requisitos informais em especificação executável antes de criar stories de implementação.</p>
+<p><strong>Squad:</strong> Equipe de agentes especializados em um domínio específico, com personas próprias, dados de primeiro partido, e memória compartilhada.</p>
+<p><strong>Story:</strong> Unidade fundamental de trabalho no AIOX. Tem status, critérios de aceite verificáveis, escopo delimitado, e rastreabilidade para requisitos documentados.</p>
+<p><strong>WAIVED:</strong> Veredicto especial do QA Gate que dispensa um check específico com justificativa documentada. Uso consciente e justificado, não omissão.</p>
+<hr />
+<h3 id="178-integracao-com-supabase">17.8 Integração com Supabase</h3>
+<h4 id="o-que-e-o-supabase">O Que É o Supabase</h4>
+<p>Supabase é um Backend-as-a-Service (BaaS) baseado em PostgreSQL. Fornece banco de dados, autenticação, storage de arquivos, e edge functions. No contexto do AIOX, é usado para armazenamento de dados e backend.</p>
+<h4 id="configuracao-inicial">Configuração Inicial</h4>
+<ol>
+<li>Criar conta em <code>supabase.com</code></li>
+<li>Criar novo projeto: New Project → preencher nome, senha do banco, região (South America - São Paulo recomendado)</li>
+<li>Aguardar provisionamento (~2 minutos)</li>
+</ol>
+<h4 id="obtendo-credenciais">Obtendo Credenciais</h4>
+<p>Caminho: Project → Settings → API</p>
+<ul>
+<li><strong>Project URL</strong>: <code>https://xxxxx.supabase.co</code> — endereço do projeto</li>
+<li><strong>anon public key</strong>: chave pública para uso no frontend (começa com <code>eyJh...</code>)</li>
+<li><strong>service_role key</strong>: chave administrativa — NUNCA use no frontend. Tem permissão total sobre o banco.</li>
+</ul>
+<h4 id="interfaces-importantes">Interfaces Importantes</h4>
+<table>
+<thead>
+<tr>
+<th>Interface</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SQL Editor</td>
+<td>Executar comandos SQL diretamente (CREATE TABLE, INSERT, etc.)</td>
+</tr>
+<tr>
+<td>Table Editor</td>
+<td>Visualizar e editar dados das tabelas</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>Configurar autenticação de usuários</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>Gerenciar arquivos (imagens, PDFs, etc.)</td>
+</tr>
+<tr>
+<td>Edge Functions</td>
+<td>Funções serverless em Deno/TypeScript</td>
+</tr>
+</tbody>
+</table>
+<h4 id="variaveis-de-ambiente">Variáveis de Ambiente</h4>
+<pre><code class="language-env">NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+</code></pre>
+<p>Estas variáveis ficam em <code>.env.local</code> (NUNCA comitado no Git).</p>
+<h4 id="agente-responsavel">Agente Responsável</h4>
+<p><code>@data-engineer</code> (Dara) é o agente delegado para operações de banco: schema design, DDL, RLS policies, migrations, query optimization. Em modo avançado, pode usar MCP do Supabase para operações diretas — mas SOMENTE com permissões bem configuradas.</p>
+<h4 id="precaucoes">Precauções</h4>
+<ul>
+<li>Aprenda o Supabase manualmente antes de automatizar com MCP</li>
+<li>MCP sem permissões restritivas pode executar comandos destrutivos</li>
+<li>Sempre tenha backup antes de operações críticas</li>
+<li>Use a chave <code>anon public</code> no frontend, NUNCA a <code>service_role</code></li>
+</ul>
+<hr />
+<h3 id="179-integracao-com-vercel">17.9 Integração com Vercel</h3>
+<h4 id="o-que-e-a-vercel">O Que É a Vercel</h4>
+<p>Vercel é uma plataforma de deploy para aplicações web modernas. Criadores do Next.js, com suporte nativo e otimizado para o framework. Funciona como um container web que lê código diretamente do GitHub e publica automaticamente.</p>
+<h4 id="como-funciona">Como Funciona</h4>
+<ol>
+<li>Vercel conecta-se ao repositório GitHub</li>
+<li>A cada <code>git push</code>, detecta automaticamente e re-deploya</li>
+<li>Cada deploy gera uma URL única de preview</li>
+<li>A URL de produção é atualizada automaticamente no branch principal</li>
+</ol>
+<h4 id="deploy-inicial">Deploy Inicial</h4>
+<ol>
+<li>Acessar <code>vercel.com</code> (login com conta GitHub)</li>
+<li>Add New → Project → Importar repositório do GitHub</li>
+<li><strong>CONFIGURAÇÃO CRÍTICA — Root Directory</strong>: Se o projeto Next.js está numa subpasta (ex: <code>landing/</code>), clicar em Edit ao lado de "Root Directory" e digitar o nome da subpasta</li>
+<li>Environment Variables: clicar em "Import .env" → selecionar <code>.env.local</code> da máquina local</li>
+<li>Deploy → aguardar build (~2-3 minutos)</li>
+</ol>
+<h4 id="dominio-personalizado">Domínio Personalizado</h4>
+<p>Para usar domínio próprio:
+1. Comprar domínio (Registro.br, GoDaddy, etc.)
+2. No Vercel: Settings → Domains → adicionar domínio
+3. Configurar registros DNS na registradora conforme instruções do Vercel
+4. Propagação: 24-48 horas</p>
+<h4 id="debugging-no-vercel">Debugging no Vercel</h4>
+<table>
+<thead>
+<tr>
+<th>Aba</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deployments</td>
+<td>Histórico de deploys com status (Success/Error)</td>
+</tr>
+<tr>
+<td>Logs</td>
+<td>Erros detalhados de build e runtime</td>
+</tr>
+<tr>
+<td>Settings</td>
+<td>Configurações do projeto, variáveis, domínios</td>
+</tr>
+</tbody>
+</table>
+<h4 id="fluxo-de-correcao-de-erros">Fluxo de Correção de Erros</h4>
+<ol>
+<li>Identificar erro na aba Deployments/Logs</li>
+<li>Copiar texto do erro (ou tirar print da tela)</li>
+<li>Colar no Claude Code (Ctrl+V aceita imagens)</li>
+<li>Agente analisa e corrige</li>
+<li><code>@devops</code> faz push → Vercel re-deploya automaticamente</li>
+<li>F5 na URL → versão atualizada</li>
+</ol>
+<h4 id="agente-responsavel_1">Agente Responsável</h4>
+<p><code>@devops</code> (Gage) gerencia todo o fluxo de deploy. Após cada push na main, o Vercel detecta automaticamente via webhook do GitHub.</p>
+<hr />
+<h3 id="1710-troubleshooting-comum">17.10 Troubleshooting Comum</h3>
+<table>
+<thead>
+<tr>
+<th>Problema</th>
+<th>Causa</th>
+<th>Solução</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pasta <code>landing/</code> aparece vazia no GitHub</td>
+<td>Dev criou projeto Next.js com <code>.git</code> interno — Git pai trata como submódulo</td>
+<td><code>@devops</code> remove <code>.git</code> interno: <code>rm -rf landing/.git</code> antes do push</td>
+</tr>
+<tr>
+<td>Vercel falha no build ("Module not found")</td>
+<td>Root Directory não configurado — Vercel busca na raiz mas projeto está em subpasta</td>
+<td>Configurar Root Directory para <code>landing/</code> (ou nome da subpasta) nas settings do Vercel</td>
+</tr>
+<tr>
+<td>Página não atualiza após deploy</td>
+<td>Cache do browser</td>
+<td>Hard refresh: Ctrl+Shift+R (ou Cmd+Shift+R no Mac)</td>
+</tr>
+<tr>
+<td>Claude Code travou com HTTP 500</td>
+<td>Instabilidade temporária da API</td>
+<td>Fechar e reabrir Claude Code — retoma contexto automaticamente</td>
+</tr>
+<tr>
+<td>MCP Supabase deletou dados</td>
+<td>Sem permissões restritivas configuradas</td>
+<td>Configurar permissões ANTES de usar MCP. Sempre fazer backup</td>
+</tr>
+<tr>
+<td>Prompt de merge/overwrite na instalação</td>
+<td>AIOX instalado em pasta com projeto existente</td>
+<td>Sempre criar pasta vazia nova antes de instalar</td>
+</tr>
+<tr>
+<td><code>.env.local</code> aparece no GitHub</td>
+<td>.gitignore não configurado corretamente</td>
+<td>Verificar que <code>.env.local</code> está listado no <code>.gitignore</code>. Se já foi comitado: <code>git rm --cached .env.local</code></td>
+</tr>
+<tr>
+<td>AIOX Pro não ativa no Mac</td>
+<td>Cache do NPX corrompido ou nome de pasta com espaços</td>
+<td>Limpar cache: <code>npx clear-npx-cache</code>, criar pasta sem espaços/acentos, max 3 dispositivos por licença</td>
+</tr>
+<tr>
+<td>Contexto lotado — agente alucina</td>
+<td>Janela acima de 100k tokens, qualidade degrada até 50%</td>
+<td><code>/clear</code> entre fases, desabilitar auto-compact, desabilitar MCPs não usados</td>
+</tr>
+<tr>
+<td>Claude "finge" que chamou agente</td>
+<td>Usou <code>@</code> em vez de <code>/</code> para ativar agente</td>
+<td>Sempre usar <code>/agente</code> no Claude Code. <code>@</code> só carrega o .md, <code>/</code> executa o spawn completo</td>
+</tr>
+<tr>
+<td>Banco de dados ficou vazio</td>
+<td>MCP ou agente executou DROP/TRUNCATE sem restrict</td>
+<td>Criar usuario restrito: <code>REVOKE DROP, TRUNCATE ON ALL TABLES</code> + deny rules em settings.json</td>
+</tr>
+<tr>
+<td>Squad commands não aparecem</td>
+<td>Registry desatualizado após instalar squad</td>
+<td>Executar <code>*refresh-registry</code> após adicionar novo squad</td>
+</tr>
+<tr>
+<td>iCloud/OneDrive corrompe arquivos</td>
+<td>Sincronização de nuvem interfere com escrita do agente</td>
+<td>Manter projetos AIOX fora de pastas sincronizadas</td>
+</tr>
+</tbody>
+</table>
+<h4 id="1711-ferramentas-e-recursos-do-cohort">17.11 Ferramentas e Recursos do Cohort</h4>
+<table>
+<thead>
+<tr>
+<th>Ferramenta</th>
+<th>Uso</th>
+<th>Custo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Scrapling</strong></td>
+<td>Web scraping Python avançado (Pedro recomenda)</td>
+<td>Gratuito</td>
+</tr>
+<tr>
+<td><strong>AssemblyAI</strong></td>
+<td>Transcrição com diarização (separação de speakers)</td>
+<td>Pago</td>
+</tr>
+<tr>
+<td><strong>Deepgram</strong></td>
+<td>Transcrição de conteúdo técnico</td>
+<td>Pago</td>
+</tr>
+<tr>
+<td><strong>Tesseract OCR</strong></td>
+<td>OCR open-source, roda em 16GB RAM</td>
+<td>Gratuito</td>
+</tr>
+<tr>
+<td><strong>n8n</strong></td>
+<td>Automação visual, funciona com MCP self-hosted</td>
+<td>Self-hosted gratuito</td>
+</tr>
+<tr>
+<td><strong>Whisper.cpp</strong></td>
+<td>Transcrição local, MLX-Whisper 2x mais rápido no Apple Silicon</td>
+<td>Gratuito</td>
+</tr>
+<tr>
+<td><strong>EXA</strong></td>
+<td>Motor de busca para IA, $10 créditos grátis</td>
+<td>Freemium</td>
+</tr>
+<tr>
+<td><strong>Chronicle HQ</strong></td>
+<td>Criador de slides/apresentações</td>
+<td>Pago</td>
+</tr>
+<tr>
+<td><strong>Wispr Flow</strong></td>
+<td>Ditado por voz para developers</td>
+<td>Pago</td>
+</tr>
+<tr>
+<td><strong>Firecrawl</strong></td>
+<td>ETL web, Tier 1 gratuito</td>
+<td>Freemium</td>
+</tr>
+<tr>
+<td><strong>Apify</strong></td>
+<td>Processamento antes de LLM, web scraping</td>
+<td>Freemium</td>
+</tr>
+<tr>
+<td><strong>Dasel</strong></td>
+<td>Parser JSON/YAML via CLI</td>
+<td>Gratuito</td>
+</tr>
+<tr>
+<td><strong>Composio.io</strong></td>
+<td>Integrações de ferramentas para agentes</td>
+<td>Freemium</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="apendice-a-estrutura-de-diretorios">Apêndice A — Estrutura de Diretórios</h2>
+<p>Estrutura completa de um projeto AIOX configurado:</p>
+<pre><code>projeto/
+├── .aiox-core/                     # Framework (L1-L2, não modificar)
+│   ├── constitution.md             # Constitution formal
+│   ├── core/                       # Módulos do framework
+│   │   ├── code-intel/             # Code Intelligence provider
+│   │   └── graph-dashboard/        # Dashboard de dependências
+│   ├── development/
+│   │   ├── tasks/                  # Task definitions (L2)
+│   │   │   ├── create-next-story.md
+│   │   │   ├── validate-next-story.md
+│   │   │   ├── dev-develop-story.md
+│   │   │   └── qa-gate.md
+│   │   ├── templates/              # Templates de artefatos
+│   │   └── workflows/              # Workflow definitions
+│   └── infrastructure/             # Config de infra do framework
+│
+├── .aiox/                          # Runtime do projeto (gitignored parcialmente)
+│   ├── handoffs/                   # Handoff artifacts (gitignored)
+│   └── cache/                      # Cache de code intelligence (gitignored)
+│
+├── .claude/                        # Config do Claude Code
+│   ├── settings.json               # Allow/deny rules (L1 protection)
+│   └── rules/                      # Rules contextuais
+│       ├── agent-authority.md
+│       ├── agent-handoff.md
+│       ├── story-lifecycle.md
+│       └── workflow-execution.md
+│
+├── agents/                         # Definições de agentes do projeto (L3)
+│   ├── dev/
+│   │   └── MEMORY.md               # Memória de @dev
+│   ├── qa/
+│   │   └── MEMORY.md               # Memória de @qa
+│   ├── architect/
+│   │   └── MEMORY.md               # Memória de @architect
+│   └── {outros-agentes}/
+│       └── MEMORY.md
+│
+├── squads/                         # Squads do projeto (L4)
+│   └── {squad-name}/
+│       ├── squad.yaml              # Manifesto do squad
+│       ├── agents/                 # Personas dos agentes do squad
+│       ├── data/                   # Dados de primeiro partido
+│       │   ├── knowledge/
+│       │   ├── examples/
+│       │   └── references/
+│       ├── tasks/                  # Tasks específicas do squad
+│       └── MEMORY.md               # Memória compartilhada do squad
+│
+├── docs/                           # Documentação do projeto (L4)
+│   ├── stories/                    # Stories de desenvolvimento
+│   │   ├── 1.1.story.md
+│   │   ├── 1.2.story.md
+│   │   └── ...
+│   ├── prd/                        # Product Requirement Documents
+│   │   └── prd-main.md
+│   ├── architecture/               # ADRs e decisões arquiteturais
+│   └── guides/                     # Guias de usuário e desenvolvedor
+│
+├── qa/                             # Artefatos de QA
+│   └── loop-status.json            # Estado dos QA Loops ativos
+│
+├── EPIC-{ID}-EXECUTION.yaml        # Arquivo de execução de épico (por épico)
+├── core-config.yaml                # Configuração do projeto (L3)
+└── {código-do-projeto}/            # Código fonte do projeto
+</code></pre>
+<hr />
+<h2 id="apendice-b-template-de-story">Apêndice B — Template de Story</h2>
+<pre><code class="language-markdown"># Story {epicNum}.{storyNum}: {Título da Story}
+
+## Status
+Draft | Ready | InProgress | InReview | Done | Blocked
+
+## Context
+{
+Contexto relevante para quem vai implementar esta story.
+Por que esta story existe? Qual é o problema que resolve?
+Quais são as decisões já tomadas que afetam esta implementação?
+}
+
+## Requirements
+1. {Requisito funcional FR-N}
+2. {Requisito funcional FR-N}
+3. {Requisito não-funcional NFR-N quando aplicável}
+
+## Acceptance Criteria
+- [ ] AC-1: {Condição verificável — Dado X, quando Y, então Z}
+- [ ] AC-2: {Condição verificável}
+- [ ] AC-3: {Condição verificável}
+
+## Out of Scope
+{Lista explícita do que NÃO está no escopo desta story}
+
+## Technical Notes
+{
+Notas técnicas relevantes:
+- Stack e bibliotecas a usar
+- Restrições arquiteturais
+- Padrões existentes a seguir
+- Módulos que serão afetados
+}
+
+## Dependencies
+- {Dependência de story: Story X.Y precisa estar em status Done}
+- {Dependência externa: API de terceiro, credencial, configuração}
+
+## Risk Assessment
+| Risco | Probabilidade | Impacto | Mitigação |
+|-------|---------------|---------|-----------|
+| {Risco 1} | Alta/Média/Baixa | Alto/Médio/Baixo | {Mitigação} |
+
+## Estimation
+{Small / Medium / Large / XLarge}
+{Justificativa da estimativa}
+
+## File List
+{Preenchido por @dev durante implementação}
+- {arquivo}: {criado/modificado}
+
+## Dev Notes
+{Preenchido por @dev durante implementação — decisões técnicas tomadas,
+problemas encontrados, mudanças de abordagem}
+
+## QA Notes
+{Preenchido por @qa durante QA Gate — issues identificados, waiver documentados,
+observações para o desenvolvedor}
+</code></pre>
+<hr />
+<h2 id="apendice-c-configuracao-avancada">Apêndice C — Configuração Avançada</h2>
+<h4 id="core-configyaml-completo">core-config.yaml Completo</h4>
+<pre><code class="language-yaml"># core-config.yaml — Configuração do projeto AIOX
+
+project:
+  name: &quot;nome-do-projeto&quot;
+  version: &quot;1.0.0&quot;
+  description: &quot;Descrição do projeto&quot;
+
+boundary:
+  frameworkProtection: true  # Ativa deny rules para L1/L2
+
+model_routing:
+  default: &quot;claude-sonnet-4-5&quot;
+  overrides:
+    - operations: [&quot;architecture-decision&quot;, &quot;security-audit&quot;]
+      model: &quot;claude-opus-4-5&quot;
+    - operations: [&quot;schema-validation&quot;, &quot;format-check&quot;]
+      model: &quot;claude-haiku-4-5&quot;
+
+code_intelligence:
+  provider: &quot;nogic&quot;
+  enabled: true
+  cache_ttl: 3600  # segundos
+
+autoClaude:
+  qaLoop:
+    maxIterations: 5
+    statusFile: &quot;qa/loop-status.json&quot;
+  coderabbit:
+    enabled: true
+    autoHeal:
+      maxIterations: 2
+
+agents:
+  memory_max_size_kb: 5  # MEMORY.md máximo por agente
+  active:
+    - dev
+    - qa
+    - architect
+    - devops
+    - pm
+    - po
+    - sm
+
+squads:
+  directory: &quot;squads/&quot;
+  active: []  # Liste squads ativos
+
+monitoring:
+  cost_tracking: true
+  quality_metrics: true
+  alert_thresholds:
+    weekly_cost_usd: 50  # Alerta se custo semanal &gt; $50
+    qa_loop_avg_iterations: 3  # Alerta se média &gt; 3 iterações
+</code></pre>
+<h4 id="configuracao-de-squad-squadyaml-avancado">Configuração de Squad (squad.yaml Avançado)</h4>
+<pre><code class="language-yaml">name: nome-do-squad
+version: 1.0.0
+description: &quot;Descrição do squad&quot;
+
+agents:
+  - id: agent-1
+    persona: agents/agent-1.md
+    role: &quot;Papel do agente&quot;
+    model: &quot;claude-sonnet-4-5&quot;  # Override de modelo por agente
+
+domain:
+  primary: &quot;Domínio principal&quot;
+  verticals: [&quot;Vertical 1&quot;, &quot;Vertical 2&quot;]
+  geography: [&quot;Brasil&quot;]
+
+data:
+  first_party:
+    - data/knowledge/
+    - data/examples/
+  external: []  # Fontes externas de dados
+
+commands:
+  - name: full-analysis
+    description: &quot;Análise completa&quot;
+    agents: [agent-1, agent-2, agent-3]
+    workflow: sequential
+    model: &quot;claude-opus-4-5&quot;  # Modelo para este comando
+    output_format: &quot;structured-report&quot;
+
+  - name: quick-scan
+    description: &quot;Análise rápida&quot;
+    agents: [agent-1]
+    workflow: solo
+    model: &quot;claude-haiku-4-5&quot;
+    output_format: &quot;brief&quot;
+
+distribution:
+  level: 1  # 1=local, 2=team, 3=api, 4=product
+  api:
+    enabled: false
+    auth: &quot;jwt&quot;
+    rate_limit: 100  # requests por hora
+</code></pre>
+<hr />
+<h2 id="apendice-d-integracao-com-ferramentas-externas">Apêndice D — Integração com Ferramentas Externas</h2>
+<h4 id="coderabbit">CodeRabbit</h4>
+<p>O CodeRabbit fornece review automático de código antes do QA Gate.</p>
+<p><strong>Instalação:</strong></p>
+<pre><code class="language-bash">pip install coderabbit
+# ou
+curl -sSL https://install.coderabbit.ai | bash
+</code></pre>
+<p><strong>Uso no AIOX:</strong></p>
+<pre><code class="language-bash"># Review de uncommitted changes
+coderabbit --prompt-only -t uncommitted
+
+# Review de tudo desde main
+coderabbit --prompt-only --base main
+</code></pre>
+<p><strong>Integração automática:</strong> Configure em <code>core-config.yaml</code>:</p>
+<pre><code class="language-yaml">autoClaude:
+  coderabbit:
+    enabled: true
+    trigger: &quot;pre-qa-gate&quot;  # Executa antes do QA Gate
+    autoHeal:
+      enabled: true
+      maxIterations: 2
+</code></pre>
+<h4 id="github-cli">GitHub CLI</h4>
+<p>O <code>gh</code> CLI é usado exclusivamente por <code>@devops</code> para operações de repositório remoto.</p>
+<p><strong>Autenticação:</strong></p>
+<pre><code class="language-bash">gh auth login
+gh auth status  # Verificar
+</code></pre>
+<p><strong>Operações principais:</strong></p>
+<pre><code class="language-bash">gh pr create --title &quot;feat: ...&quot; --body &quot;...&quot;
+gh pr merge {number} --squash
+gh pr list --state open
+gh issue list --label &quot;bug&quot;
+</code></pre>
+<h4 id="supabase-database">Supabase (Database)</h4>
+<p>Para projetos com Supabase:</p>
+<pre><code class="language-bash">supabase init
+supabase start
+supabase db push          # Aplicar migrations
+supabase migration list   # Listar migrations
+supabase db reset         # Reset do banco (cuidado!)
+</code></pre>
+<p><code>@data-engineer</code> tem autoridade exclusiva sobre operações de banco de dados.</p>
+<hr />
+<h2 id="apendice-e-troubleshooting">Apêndice E — Troubleshooting</h2>
+<h4 id="problema-agente-nao-reconhece-contexto-do-projeto">Problema: Agente não reconhece contexto do projeto</h4>
+<p><strong>Sintomas:</strong> Agente faz perguntas que já foram respondidas em sessões anteriores.</p>
+<p><strong>Causa:</strong> MEMORY.md vazio ou desatualizado.</p>
+<p><strong>Solução:</strong>
+1. Verifique se <code>agents/{agente}/MEMORY.md</code> existe e tem conteúdo
+2. Adicione contexto crítico do projeto ao MEMORY.md
+3. Na próxima sessão, verifique se o agente carrega o arquivo</p>
+<h4 id="problema-qa-loop-nao-converge">Problema: QA Loop não converge</h4>
+<p><strong>Sintomas:</strong> Após 3+ iterações, os mesmos issues continuam aparecendo.</p>
+<p><strong>Causa:</strong> Possível ambiguidade nos critérios de aceite ou problema de especificação.</p>
+<p><strong>Solução:</strong>
+1. Execute <code>*escalate-qa-loop</code> para escalação imediata
+2. <code>@aiox-master</code> vai analisar o histórico do loop
+3. Verifique se o problema é de implementação ou de especificação</p>
+<h4 id="problema-custo-aumentando-sem-aumento-de-uso">Problema: Custo aumentando sem aumento de uso</h4>
+<p><strong>Sintomas:</strong> <code>aiox stats</code> mostra crescimento de tokens sem crescimento de atividade.</p>
+<p><strong>Causa:</strong> Contexto acumulado — MEMORY.md grande, sessões longas sem compactação.</p>
+<p><strong>Solução:</strong>
+1. Execute <code>aiox doctor</code> — verificar tamanho de MEMORY.md por agente
+2. Compacte MEMORY.md de agentes acima de 5KB
+3. Inicie sessões novas mais frequentemente para limpar contexto acumulado</p>
+<h4 id="problema-story-rejeitada-repetidamente-pelo-po">Problema: Story rejeitada repetidamente pelo PO</h4>
+<p><strong>Sintomas:</strong> Pax retorna NO-GO nas mesmas dimensões várias vezes.</p>
+<p><strong>Causa:</strong> Requisitos genuinamente ambíguos que precisam ser esclarecidos com stakeholder.</p>
+<p><strong>Solução:</strong>
+1. Identifique qual dimensão falha consistentemente
+2. Se AC são ambíguos: execute Spec Pipeline para esclarecer requisitos
+3. Se contexto está faltando: alimente informação ao MEMORY.md de @sm</p>
+<h4 id="problema-devops-nao-consegue-criar-pr">Problema: @devops não consegue criar PR</h4>
+<p><strong>Sintomas:</strong> <code>gh pr create</code> falha com erro de autenticação.</p>
+<p><strong>Causa:</strong> Token do GitHub CLI expirado ou permissões insuficientes.</p>
+<p><strong>Solução:</strong></p>
+<pre><code class="language-bash">gh auth status  # Verificar status
+gh auth login   # Re-autenticar se necessário
+gh auth refresh # Atualizar token
+</code></pre>
+<h4 id="problema-code-intelligence-indisponivel">Problema: Code Intelligence indisponível</h4>
+<p><strong>Sintomas:</strong> <code>aiox doctor</code> reporta Code Intelligence em fallback.</p>
+<p><strong>Causa:</strong> Provider não configurado ou indisponível.</p>
+<p><strong>Impacto:</strong> Sistema opera normalmente sem enrichment — degradação graceful.</p>
+<p><strong>Solução:</strong>
+1. Verifique <code>core-config.yaml</code> — <code>code_intelligence.enabled: true</code>?
+2. Verifique se o provider está rodando: <code>aiox doctor --verbose</code>
+3. Se provider necessário: configure ou reinstale conforme documentação do provider</p>
+<h4 id="problema-squad-produzindo-outputs-inconsistentes">Problema: Squad produzindo outputs inconsistentes</h4>
+<p><strong>Sintomas:</strong> Respostas do squad variam significativamente para inputs similares.</p>
+<p><strong>Causa:</strong> Personas não suficientemente específicas, ou MEMORY.md compartilhado com conflitos.</p>
+<p><strong>Solução:</strong>
+1. Revise as personas — são suficientemente específicas?
+2. Verifique o MEMORY.md do squad — há entradas conflitantes?
+3. Execute o Teste 1 (Coerência de Persona) descrito no Capítulo 12
+4. Compare dois outputs recentes para o mesmo tipo de análise — onde divergem?</p>
+<hr />
+<p><em>AIOX Manual Técnico — Versão 1.0</em>
+<em>Documento de referência para todos os capítulos deste livro.</em>
+<em>Para a versão mais atualizada, consulte a documentação oficial do framework.</em></p>
+      </article>
+
+      <div class="nav-footer">
+        <a href="16-patterns.html" class=""><div class="label">← Anterior</div><div class="title">Cap 16 · Patterns e Anti-Patterns</div></a>
+        <div></div>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<button class="to-top" id="to-top" aria-label="Voltar ao topo">↑</button>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+</body>
+</html>

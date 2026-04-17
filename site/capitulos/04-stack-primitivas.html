@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap 04 — A Stack de Primitivas: De Comandos a Workflows · AIOX Squad</title>
+<meta name="description" content="5 camadas de abstração que tornam agentes operacionais: Commands, Tasks, Skills, Agents e Workflows. Cada camada encapsula a próxima.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="../assets/chat.css">
+<link rel="icon" type="image/svg+xml" href="../assets/logo-aiox.svg">
+</head>
+<body data-chapter="4">
+
+<div class="app">
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html"><img src="../assets/logo-aiox.svg" alt="AIOX Squad"></a>
+      <span class="sidebar-badge">Guia Técnico</span>
+      <div class="sidebar-title">AIOX Squad</div>
+      <div class="sidebar-subtitle">17 capítulos · Synkra</div>
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="sidebar-progress-label"><span>Progresso</span><span id="sb-pct">0/17</span></div>
+      <div class="progress-bar"><div id="sb-bar"></div></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Capítulos</div>
+      <div id="sidebar-chapters"></div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="../index.html">← Voltar à home</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="top-nav">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="../index.html">Capítulos</a>
+        <span class="sep">/</span>
+        <span class="current">Cap 04</span>
+      </div>
+      <div class="top-actions">
+        <button class="gsearch-trigger" data-gsearch-open aria-label="Buscar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <span class="hint">Buscar</span>
+          <kbd>/</kbd>
+        </button>
+        <a class="btn-sm" href="03-constitution.html">← Anterior</a>
+        <a class="btn-sm" href="05-dados-primeira-mao.html">Próximo →</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section class="hero">
+        <span class="hero-tag">Capítulo 04 · INICIANTE</span>
+        <h1 class="hero-title">A Stack de Primitivas: De Comandos a Workflows</h1>
+        <p class="hero-subtitle">5 camadas de abstração que tornam agentes operacionais: Commands, Tasks, Skills, Agents e Workflows. Cada camada encapsula a próxima.</p>
+        <div class="meta-row">
+          <span class="meta-chip">⏱ <strong>28 min</strong> de leitura</span>
+          <span class="meta-chip">🎯 <strong>4</strong> objetivos</span>
+          <span class="meta-chip">🧩 <strong>7</strong> conceitos-chave</span>
+          <span class="meta-chip">⌨ <strong>3</strong> comandos CLI</span>
+        </div>
+      </section>
+
+      <div class="tldr">
+        <div class="tldr-label">TL;DR</div>
+        <div class="tldr-text">5 camadas de abstração que tornam agentes operacionais: Commands, Tasks, Skills, Agents e Workflows. Cada camada encapsula a próxima.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Você vai aprender</h3>
+          <ul><li>Compreender a pirâmide de 5 camadas</li><li>Distinguir Commands, Tasks, Skills, Agents e Workflows</li><li>Mapear problemas à camada certa</li><li>Conhecer os 11 agentes e 4 workflows oficiais</li></ul>
+        </div>
+        <div class="card">
+          <h3>Conceitos-chave</h3>
+          <div class="chips"><span class="chip">Pirâmide de 5 camadas</span><span class="chip">Commands (*)</span><span class="chip">Tasks</span><span class="chip">Skills</span><span class="chip">Agents</span><span class="chip">Workflows</span><span class="chip">Task-First Principle</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin: 28px 0;"><h3>Comandos deste capítulo</h3><ul><li><code>*help</code></li><li><code>*task</code></li><li><code>*workflow</code></li></ul></div>
+
+      <article class="prose">
+        <hr />
+<h3 id="41-a-piramide-cinco-camadas-de-abstracao">4.1 A Pirâmide: Cinco Camadas de Abstração</h3>
+<p>Todo sistema de software resolve o problema da complexidade da mesma forma: através de abstração. Você agrupa operações simples em unidades mais complexas, que por sua vez se agrupam em unidades ainda mais complexas, até que operações que seriam impossíveis de gerenciar manualmente se tornam expressáveis em uma linha.</p>
+<p>O AIOX resolve o problema da complexidade de desenvolvimento com IA através de uma pirâmide de cinco camadas:</p>
+<pre><code>Workflows
+    ↑
+  Agents
+    ↑
+  Skills
+    ↑
+  Tasks
+    ↑
+Commands
+</code></pre>
+<p>A analogia mais precisa para entender essa hierarquia é a linguagem escrita:</p>
+<ul>
+<li><strong>Commands</strong> são as letras. Unidades básicas, sem significado próprio, mas necessárias para tudo.</li>
+<li><strong>Tasks</strong> são as palavras. Combinações de commands que fazem algo específico e completo.</li>
+<li><strong>Skills</strong> são as frases. Agrupamentos de tasks com contexto de quando e como usá-las.</li>
+<li><strong>Agents</strong> são os parágrafos. Conjunto de skills com identidade, autoridade, e memória.</li>
+<li><strong>Workflows</strong> são o texto completo. Sequências de agentes executando tasks em ordem para produzir um resultado maior.</li>
+</ul>
+<p>Uma letra sozinha não diz nada. Uma palavra tem significado. Uma frase tem contexto. Um parágrafo tem argumento. Um texto completo tem narrativa.</p>
+<p>Da mesma forma: um comando sozinho é uma instrução. Uma task é um processo completo. Uma skill é um conjunto de capacidades relacionadas. Um agente é uma entidade com identidade e responsabilidade. Um workflow é um ciclo de desenvolvimento completo do início ao fim.</p>
+<p>Cada camada depende das camadas abaixo e serve às camadas acima. Você não pula camadas — mas quando trabalha nas camadas superiores, não precisa pensar nas inferiores. É exatamente como escrever: você pensa em argumentos e parágrafos, não em letras e palavras individuais.</p>
+<hr />
+<h3 id="42-commands-o-vocabulario-basico">4.2 Commands: O Vocabulário Básico</h3>
+<p>Commands são o nível mais baixo da hierarquia — mas não subestime sua importância. São eles que tornam o sistema interativo e determinístico na ponta.</p>
+<h4 id="o-prefixo">O Prefixo <code>*</code></h4>
+<p>Todos os commands do AIOX usam o prefixo <code>*</code>. Esse prefixo não é decorativo: ele é um marcador semântico que diz "isso é um comando executável para o agente ativo, não uma instrução conversacional."</p>
+<p>A distinção importa. Quando você diz para um agente "me ajuda a criar uma story", está tendo uma conversa. Quando você diz <code>*create-story</code>, está executando um comando. A conversa pode levar a qualquer lugar. O comando tem um comportamento definido, inputs esperados, outputs documentados, e pré-condições verificadas.</p>
+<p>É a diferença entre pedir para alguém "fazer o que acharem melhor" e executar uma instrução de máquina.</p>
+<h4 id="commands-fundamentais">Commands Fundamentais</h4>
+<p><strong><code>*help</code></strong> — O primeiro command que qualquer usuário deve conhecer. Exibe a lista completa de commands disponíveis para o agente atualmente ativo, com descrição breve de cada um. Cada agente tem um <code>*help</code> diferente, porque cada agente tem commands diferentes. <code>@dev *help</code> mostra commands de desenvolvimento. <code>@qa *help</code> mostra commands de qualidade. É a porta de entrada para qualquer agente.</p>
+<p><strong><code>*create-story</code></strong> — Inicia o processo de criação de uma nova story a partir do contexto do epic ativo. Ao contrário do que o nome pode sugerir, esse command não escreve a story inteiro autonomamente — ele elicita as informações necessárias (contexto, critérios de aceite, dependências) e produz um arquivo de story formatado corretamente. Disponível para <code>@sm</code>.</p>
+<p><strong><code>*task {nome}</code></strong> — Executa uma task específica pelo nome. Este é o command que conecta o nível de Commands ao nível de Tasks: você está explicitamente solicitando a execução de uma task definida no sistema. Por exemplo, <code>*task dev-develop-story</code> executa a task de desenvolvimento completa conforme definida em <code>.aiox-core/development/tasks/dev-develop-story.md</code>.</p>
+<p><strong><code>*exit</code></strong> — Sai do modo agente e retorna ao contexto padrão. Importante para sessões longas onde você alternava entre agentes e precisa encerrar o contexto de um agente específico. Também aciona o protocolo de handoff, gerando o artefato de compactação do contexto do agente que está sendo encerrado.</p>
+<h4 id="o-papel-do-front-matter">O Papel do Front Matter</h4>
+<p>Antes de avançar para as camadas superiores, vale entender um conceito que permeia todas elas: o <strong>Front Matter</strong>.</p>
+<p>Front Matter é um bloco YAML entre <code>---</code> no início de um arquivo Markdown. Parece simples, mas é um dos conceitos mais importantes do AIOX — e frequentemente subestimado por iniciantes.</p>
+<pre><code class="language-markdown">---
+status: Ready
+epic: EPIC-03
+executor: &quot;@dev&quot;
+model: sonnet
+---
+
+# Conteúdo do arquivo aqui...
+</code></pre>
+<p>Por que o Front Matter importa? Porque é <strong>a primeira coisa que a LLM lê</strong>. Quando um agente abre um arquivo, o Front Matter define imediatamente o contexto: que tipo de entidade é, em que estado está, quem é responsável, qual modelo usar. Sem Front Matter, o agente precisa ler o arquivo inteiro para inferir o contexto — gastando tokens e introduzindo ambiguidade.</p>
+<p>O Front Matter é o metadado que torna documentos legíveis tanto por humanos quanto por máquinas. Uma story, uma task, um agente — todos usam Front Matter como sua "identidade" estruturada.</p>
+<p>Uma dica prática do cohort: use <strong>Obsidian</strong> para se familiarizar com Front Matter. O Obsidian renderiza Front Matter de forma visual e ajuda a internalizar o conceito antes de aplicá-lo no AIOX.</p>
+<h4 id="commands-sao-deterministicos">Commands São Determinísticos</h4>
+<p>Uma propriedade fundamental dos commands é que eles são determinísticos: o mesmo command, no mesmo estado do sistema, sempre produz o mesmo comportamento. Não há variação, não há interpretação, não há criatividade.</p>
+<p>Isso é intencional. Commands são a camada onde o AIOX garante previsibilidade. A criatividade e o julgamento existem nas camadas superiores — nos agentes e workflows — mas a execução básica é sempre determinística.</p>
+<hr />
+<h3 id="43-tasks-a-unidade-de-trabalho-executavel">4.3 Tasks: A Unidade de Trabalho Executável</h3>
+<p>Se commands são o vocabulário, tasks são as palavras. Uma task é uma unidade de trabalho completa: ela tem um propósito claro, inputs definidos, outputs esperados, pré-condições verificadas, pós-condições validadas, e modos de execução configuráveis.</p>
+<h4 id="anatomia-de-uma-task">Anatomia de Uma Task</h4>
+<p>Cada task no AIOX é definida em um arquivo Markdown em <code>.aiox-core/development/tasks/</code>. Esse arquivo não é apenas documentação — é a especificação executável da task. O formato inclui:</p>
+<p><strong>Inputs:</strong> O que a task precisa para começar. Podem ser arquivos específicos (a story ativa), estados do sistema (branch em Git), ou informações fornecidas pelo usuário.</p>
+<p><strong>Outputs:</strong> O que a task produz quando concluída com sucesso. Arquivos criados, estados modificados, relatórios gerados.</p>
+<p><strong>Pré-condições:</strong> O que deve ser verdadeiro antes da task começar. A story deve estar em status <code>Ready</code>. O branch correto deve estar ativo. As dependências listadas na story devem estar completas.</p>
+<p><strong>Pós-condições:</strong> O que deve ser verdadeiro depois que a task termina. Os testes devem passar. O lint deve estar limpo. Os checkboxes da story devem estar marcados.</p>
+<p><strong>Modos de execução:</strong> Como a task deve se comportar em diferentes contextos. Ver abaixo.</p>
+<h4 id="os-tres-modos-de-execucao">Os Três Modos de Execução</h4>
+<p>Tasks com complexidade significativa suportam três modos de execução:</p>
+<p><strong>Modo Interactive:</strong> O agente pausa em pontos de decisão para consultar o usuário. Ideal quando você está aprendendo o sistema, quando o contexto é ambíguo, ou quando as decisões têm impacto significativo. O agente apresenta opções, explica trade-offs, e aguarda confirmação antes de prosseguir. Mais lento, mais seguro para quem está começando.</p>
+<p><strong>Modo YOLO:</strong> O agente executa o máximo possível de forma autônoma, tomando decisões razoáveis sem pausar. Ideal para developers experientes que conhecem os padrões do projeto, para automações em CI/CD, ou para trabalho em condições de tempo crítico (como um hotfix de produção). Mais rápido, requer confiança no agente e no contexto.</p>
+<p><strong>Modo Pre-Flight:</strong> O agente analisa a task completamente e produz um plano de execução — sem executar nada. Ideal para revisão antes de operações de alto impacto, para entender o que vai acontecer antes que aconteça, e para identificar potenciais problemas antes de comprometer mudanças.</p>
+<p>A escolha de modo não é permanente. Você pode iniciar em Pre-Flight para revisar o plano, depois executar em Interactive para as partes críticas, depois YOLO para as partes rotineiras.</p>
+<h4 id="task-validada-e-lei">"Task Validada É Lei"</h4>
+<p>Essa frase — "task validada é lei" — é um princípio central do AIOX que vale aprofundar.</p>
+<p>Quando uma task é definida, validada, e publicada no sistema, ela representa o consenso coletivo sobre a melhor forma de executar aquele tipo de trabalho. Ela incorpora decisões arquiteturais, lições aprendidas, restrições de qualidade, e padrões do time.</p>
+<p>Dizer que a task validada é lei significa que nenhum agente, por mais experiente que seja a pessoa interagindo com ele, pode decidir unilateralmente "vou fazer diferente desta vez porque faz mais sentido". Fazer diferente requer modificar a definição da task — o que é um processo deliberado, documentado, e revisado.</p>
+<p>Isso pode parecer rígido. Na prática, é libertador: quando você confia que a task define o comportamento correto, você não precisa pensar sobre "será que estou fazendo da forma certa?" a cada execução. A forma correta está na task. Execute e confie.</p>
+<hr />
+<h3 id="44-skills-o-agrupamento-contextual">4.4 Skills: O Agrupamento Contextual</h3>
+<p>Skills são o nível onde tasks ganham contexto. Uma skill é um conjunto de tasks relacionadas, com a informação de <em>quando</em> usá-las, <em>como</em> sequenciá-las, e <em>por que</em> elas pertencem juntas.</p>
+<p>A distinção entre task e skill é sutil mas importante — e frequentemente confundida:</p>
+<p>Uma <strong>task</strong> sabe <em>como</em> fazer algo e transforma o <strong>status de uma entidade</strong>. <code>dev-develop-story.md</code> sabe como implementar uma story seguindo todos os critérios de qualidade, e ao fazê-lo muda o status da story de <code>Ready</code> para <code>InProgress</code>. Toda task mapeia um processo global do sistema.</p>
+<p>Uma <strong>skill</strong> sabe <em>quando</em> fazer algo e <em>como combinar</em> tasks relacionadas. Skills integram no Claude Code como capacidades instaláveis (filosofia Matrix — "eu sei kung fu"), mas <strong>não são mapeamento de processo global</strong>. Como Alan Nicolas enfatiza: "Sua empresa não pode ser Claude Code." Skills são ferramentas dentro do sistema, não o sistema em si. A skill de desenvolvimento do <code>@dev</code> sabe que antes de implementar você revisa o contexto, que depois de implementar você atualiza a story, que em certos contextos você precisa criar branches específicos, que em outros você faz commit atomicamente por task.</p>
+<p>Se tasks são as instruções individuais de uma receita, skills são o capítulo completo — com as instruções, os contextos de substituição, os timings, e as notas do chef sobre quando adaptar.</p>
+<h4 id="skills-como-encapsulamento-de-expertise">Skills Como Encapsulamento de Expertise</h4>
+<p>Uma das propriedades mais poderosas das skills é que elas encapsulam expertise acumulada. Quando um time trabalha junto por meses, eles desenvolvem padrões implícitos: "quando fazemos isso, sempre verificamos aquilo antes". Esses padrões vivem nas skills.</p>
+<p>Em equipes humanas, esse conhecimento fica na cabeça de pessoas-chave e é transmitido por osmose. Quando a pessoa sai, o conhecimento vai junto. Com skills documentadas e versionadas, o conhecimento é explícito, transferível, e evoluível.</p>
+<p>Um novo membro do time — humano ou agente — que aprende as skills disponíveis está absorvendo o conhecimento acumulado de todos que trabalharam no sistema antes.</p>
+<hr />
+<h3 id="45-agents-persona-skills-autoridade-e-memoria">4.5 Agents: Persona, Skills, Autoridade, e Memória</h3>
+<p>Agentes são onde a magia acontece. Um agente não é apenas um conjunto de skills com um nome diferente. É uma entidade com quatro propriedades que, juntas, criam algo maior do que a soma das partes:</p>
+<p><strong>Persona:</strong> A identidade e o estilo de comunicação do agente. Não é cosmético — é funcional. A persona define como o agente interpreta contexto ambíguo, como ele prioriza quando há conflitos, e como ele comunica incertezas. Dex (<code>@dev</code>) tem uma persona de desenvolvedor focado em qualidade de código e clareza de implementação. Quinn (<code>@qa</code>) tem uma persona de revisor rigoroso mas construtivo. Essas diferenças de persona produzem comportamentos diferentes em situações idênticas.</p>
+<p><strong>Skills:</strong> O conjunto de capacidades do agente. Cada agente tem um conjunto específico de skills que define o que ele pode e sabe fazer. As skills de Dex incluem desenvolvimento de features, refatoração, debugging, e escrita de testes. As skills de Aria (<code>@architect</code>) incluem análise de complexidade, design de sistemas, e avaliação de trade-offs arquiteturais. Skills sem sobreposição excessiva garantem que cada agente tem um domínio claro.</p>
+<p><strong>Autoridade:</strong> As operações que o agente pode executar, e os limites que ele não pode cruzar. Isso é o que o Artigo II da Constitution protege. A autoridade define tanto os poderes exclusivos (o que só esse agente pode fazer) quanto os bloqueios (o que esse agente explicitamente não pode fazer). Gage (<code>@devops</code>) tem autoridade exclusiva sobre git push. Aria tem autoridade de decisão sobre arquitetura de sistema. Dex pode commitar mas não fazer push.</p>
+<p><strong>Memória:</strong> O arquivo <code>MEMORY.md</code> de cada agente. Onde informações relevantes sobre o projeto são acumuladas ao longo do tempo — decisões arquiteturais tomadas, padrões estabelecidos, problemas encontrados e soluções adotadas, preferências do cliente. A memória é o que torna um agente progressivamente mais útil: quanto mais contexto acumula, menos repetição você precisa fazer.</p>
+<h4 id="por-que-persona-importa">Por Que Persona Importa</h4>
+<p>A persona é frequentemente subestimada como "apenas estética". Não é.</p>
+<p>Considere um conflito comum: o <code>@dev</code> identificou uma forma mais elegante de implementar algo, mas essa forma diverge levemente dos critérios de aceite da story. Dois agentes com personas diferentes vão reagir diferente:</p>
+<p>Um agente sem persona consistente vai tomar uma decisão arbitrária — talvez implementar a forma elegante, talvez não, dependendo de variáveis não controláveis.</p>
+<p>Dex, com sua persona de desenvolvedor focado em clareza e nos critérios de aceite, vai: implementar exatamente o que foi especificado, e registrar na story uma observação: "Identifiquei uma abordagem alternativa que pode ser mais elegante para uma refatoração futura — ver nota na seção de decisões técnicas."</p>
+<p>Isso não é serendipidade. É comportamento previsível derivado de uma persona consistente. Persona cria previsibilidade de comportamento, o que é exatamente o que você precisa em um sistema automatizado.</p>
+<h4 id="os-11-agentes-do-aiox">Os 11 Agentes do AIOX</h4>
+<p>O sistema opera com 11 agentes especializados, cada um com um domínio claro:</p>
+<table>
+<thead>
+<tr>
+<th>Agente</th>
+<th>Persona</th>
+<th>Domínio Principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@pm</code> — Morgan</td>
+<td>Estratégico, orientado a produto</td>
+<td>Épicos, requisitos, spec pipeline</td>
+</tr>
+<tr>
+<td><code>@po</code> — Pax</td>
+<td>Rigoroso, orientado a valor</td>
+<td>Validação de stories, backlog</td>
+</tr>
+<tr>
+<td><code>@sm</code> — River</td>
+<td>Facilitador, processo-orientado</td>
+<td>Criação de stories, cerimônias</td>
+</tr>
+<tr>
+<td><code>@dev</code> — Dex</td>
+<td>Técnico, foco em qualidade de código</td>
+<td>Implementação, refatoração</td>
+</tr>
+<tr>
+<td><code>@qa</code> — Quinn</td>
+<td>Detalhista, orientado a qualidade</td>
+<td>Testes, code review, gates</td>
+</tr>
+<tr>
+<td><code>@architect</code> — Aria</td>
+<td>Sistêmico, orientado a longo prazo</td>
+<td>Arquitetura, design técnico</td>
+</tr>
+<tr>
+<td><code>@data-engineer</code> — Dara</td>
+<td>Especialista em dados</td>
+<td>Schema, queries, migrações</td>
+</tr>
+<tr>
+<td><code>@analyst</code> — Alex</td>
+<td>Investigativo, orientado a insights</td>
+<td>Pesquisa, análise, relatórios</td>
+</tr>
+<tr>
+<td><code>@ux-design-expert</code> — Uma</td>
+<td>Empático, orientado a experiência</td>
+<td>UX, frontend spec, usabilidade</td>
+</tr>
+<tr>
+<td><code>@devops</code> — Gage</td>
+<td>Sistemático, orientado a confiabilidade</td>
+<td>CI/CD, git, deploys (EXCLUSIVO)</td>
+</tr>
+<tr>
+<td><code>@aiox-master</code></td>
+<td>Governança total</td>
+<td>Qualquer operação, quando necessário</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="46-workflows-a-sequencia-que-produz-resultado">4.6 Workflows: A Sequência Que Produz Resultado</h3>
+<p>Workflows são o topo da pirâmide — onde tasks executadas por agentes em sequência produzem resultados que nenhum agente poderia produzir sozinho.</p>
+<h4 id="o-principio-task-first">O Princípio Task-First</h4>
+<p>Um conceito crucial sobre workflows no AIOX: <strong>workflows são compostos por tasks conectadas, não por agentes conectados</strong>. Isso é o Task-First Principle.</p>
+<p>A distinção pode parecer sutil, mas tem implicações profundas. Se você pensa em workflows como "agentes em sequência", você cria dependência de personas: "preciso do Pax para validar, depois do Dex para implementar, depois do Quinn para revisar." Se um agente não está disponível, o workflow para.</p>
+<p>Se você pensa em workflows como "tasks em sequência", os agentes são executores — mas o que define o processo são as tasks. A task <code>validate-next-story.md</code> define o que validação de story significa. Quem executa pode ser <code>@po</code>, pode ser <code>@aiox-master</code> em ausência do po, pode até ser um humano que segue o checklist manualmente. O processo é o mesmo.</p>
+<p>Tasks são o coração do sistema. Agentes são os braços.</p>
+<h4 id="os-4-workflows-primarios">Os 4 Workflows Primários</h4>
+<p><strong>1. Story Development Cycle (SDC) — O Workflow Principal</strong></p>
+<p>O ciclo completo de desenvolvimento de uma story, do zero à entrega. Quatro fases:</p>
+<ul>
+<li><strong>Criar</strong> (<code>@sm</code>): A story nasce como Draft.</li>
+<li><strong>Validar</strong> (<code>@po</code>): A story é avaliada em 10 pontos. Com score ≥ 7, avança para Ready.</li>
+<li><strong>Implementar</strong> (<code>@dev</code>): A story sai de Ready, passa por InProgress. Código é escrito.</li>
+<li><strong>Qualidade</strong> (<code>@qa</code>): A story entra em InReview. Sete verificações. PASS → Done.</li>
+</ul>
+<p>Ao final do ciclo, <code>@devops</code> recebe a story Done e faz o push para o repositório.</p>
+<p><strong>2. QA Loop — Revisão Iterativa</strong></p>
+<p>Quando o QA Gate retorna REJECT em vez de PASS, o QA Loop entra em ação: <code>@qa</code> aponta os problemas, <code>@dev</code> corrige, <code>@qa</code> revisa novamente. Máximo de 5 iterações. Se após 5 iterações ainda não passou, o loop escalona para <code>@aiox-master</code>. É o mecanismo de auto-cura do ciclo de desenvolvimento.</p>
+<p><strong>3. Spec Pipeline — Especificação Antes da Implementação</strong></p>
+<p>Para features complexas que precisam ser especificadas antes de virar stories, o Spec Pipeline transforma requisitos informais em especificação executável. Seis fases: coletar requisitos, avaliar complexidade, pesquisar, escrever spec, revisar com critique, planejar implementação. Para features simples (score ≤ 8), três das seis fases são puladas.</p>
+<p><strong>4. Brownfield Discovery — Avaliação de Projeto Existente</strong></p>
+<p>Quando você está entrando em um projeto existente e precisa entender a dívida técnica antes de começar a trabalhar, o Brownfield Discovery mapeia o sistema atual em dez fases, envolvendo arquiteto, engenheiro de dados, especialista de UX, e QA — culminando em um relatório executivo de dívida técnica e um epic pronto para o desenvolvimento.</p>
+<h4 id="por-que-quatro-workflows">Por Que Quatro Workflows?</h4>
+<p>Não é por acaso que o AIOX tem exatamente esses quatro workflows. Eles cobrem os quatro cenários fundamentais de qualquer projeto de software:</p>
+<ul>
+<li><strong>Novo trabalho em projeto ativo</strong> → SDC</li>
+<li><strong>Trabalho que não passou na qualidade</strong> → QA Loop</li>
+<li><strong>Feature complexa que precisa ser especificada</strong> → Spec Pipeline</li>
+<li><strong>Entrada em projeto existente</strong> → Brownfield Discovery</li>
+</ul>
+<p>Todo trabalho de desenvolvimento que você vai fazer cabe em um desses quatro cenários. E para cada cenário, há um workflow com tasks definidas, agentes designados, gates de qualidade, e critérios de conclusão.</p>
+<hr />
+<h3 id="exercicio-do-capitulo-4">Exercício do Capítulo 4</h3>
+<p><strong>Objetivo:</strong> Internalizar a hierarquia de primitivas relacionando-a com situações reais.</p>
+<p><strong>Parte 1: Desenhe a pirâmide</strong></p>
+<p>Em papel (não no computador — o ato físico de desenhar cria memória diferente), desenhe a pirâmide das cinco camadas. Para cada camada, escreva:
+- O nome da camada
+- A analogia de linguagem (letra, palavra, frase, parágrafo, texto)
+- Um exemplo concreto do AIOX (um command, uma task, uma skill, um agente, um workflow)</p>
+<p><strong>Parte 2: Mapeie um exemplo do cotidiano</strong></p>
+<p>Pense em um processo do seu dia-a-dia profissional — pode ser onboarding de um novo colaborador, processo de code review, ou qualquer sequência de trabalho que você repete. Decomponha-o nas cinco camadas:</p>
+<ul>
+<li><strong>Commands:</strong> Quais são as instruções atômicas básicas? (checar email, abrir arquivo, rodar teste)</li>
+<li><strong>Tasks:</strong> Quais são as unidades de trabalho completas? (revisar PR, criar branch, escrever documentação)</li>
+<li><strong>Skills:</strong> Quais grupos de tasks um profissional específico sabe fazer? (desenvolvedor backend, QA, tech lead)</li>
+<li><strong>Agents:</strong> Quem são as personas envolvidas, com seus escopos e autoridades?</li>
+<li><strong>Workflow:</strong> Qual é a sequência completa do processo, do início ao fim?</li>
+</ul>
+<p><strong>Parte 3: Identifique o nível do seu problema atual</strong></p>
+<p>Pense em um problema recorrente no seu trabalho com IA. Em qual nível da pirâmide o problema está?</p>
+<ul>
+<li>Se é "não sei como pedir para o agente fazer X" → problema de Commands</li>
+<li>Se é "o agente faz coisas inconsistentes na mesma situação" → problema de Tasks</li>
+<li>Se é "o agente não tem contexto suficiente" → problema de Skills</li>
+<li>Se é "não sei qual agente usar" → problema de Agents</li>
+<li>Se é "o processo tem muito re-trabalho" → problema de Workflows</li>
+</ul>
+<p>Identificar o nível correto do problema é o primeiro passo para resolvê-lo no lugar certo. Soluções no nível errado não funcionam: você não resolve um problema de Workflow adicionando mais Commands.</p>
+<hr />
+<p><em>No próximo capítulo, vamos explorar o que realmente diferencia seu sistema AIOX dos outros: os dados de primeira mão, o Princípio do Repertório, e por que processos configurados são o seu maior ativo competitivo.</em></p>
+      </article>
+
+      <div class="nav-footer">
+        <a href="03-constitution.html" class=""><div class="label">← Anterior</div><div class="title">Cap 03 · A Constitution: As Leis do Framework</div></a>
+        <a href="05-dados-primeira-mao.html" class="nav-next"><div class="label">Próximo →</div><div class="title">Cap 05 · Dados de Primeira Mão: Seu Fosso Competitivo</div></a>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<button class="to-top" id="to-top" aria-label="Voltar ao topo">↑</button>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+</body>
+</html>

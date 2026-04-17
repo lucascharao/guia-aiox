@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap 09 — Qualidade Sem Compromisso: Gates e QA Loop · AIOX Squad</title>
+<meta name="description" content="3 camadas de qualidade + QA Loop iterativo com verdicts automáticos e escalação. Qualidade é investimento, não burocracia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="../assets/chat.css">
+<link rel="icon" type="image/svg+xml" href="../assets/logo-aiox.svg">
+</head>
+<body data-chapter="9">
+
+<div class="app">
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html"><img src="../assets/logo-aiox.svg" alt="AIOX Squad"></a>
+      <span class="sidebar-badge">Guia Técnico</span>
+      <div class="sidebar-title">AIOX Squad</div>
+      <div class="sidebar-subtitle">17 capítulos · Synkra</div>
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="sidebar-progress-label"><span>Progresso</span><span id="sb-pct">0/17</span></div>
+      <div class="progress-bar"><div id="sb-bar"></div></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Capítulos</div>
+      <div id="sidebar-chapters"></div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="../index.html">← Voltar à home</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="top-nav">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="../index.html">Capítulos</a>
+        <span class="sep">/</span>
+        <span class="current">Cap 09</span>
+      </div>
+      <div class="top-actions">
+        <button class="gsearch-trigger" data-gsearch-open aria-label="Buscar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <span class="hint">Buscar</span>
+          <kbd>/</kbd>
+        </button>
+        <a class="btn-sm" href="08-sdc.html">← Anterior</a>
+        <a class="btn-sm" href="10-workflows-avancados.html">Próximo →</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section class="hero">
+        <span class="hero-tag">Capítulo 09 · INTERMEDIARIO</span>
+        <h1 class="hero-title">Qualidade Sem Compromisso: Gates e QA Loop</h1>
+        <p class="hero-subtitle">3 camadas de qualidade + QA Loop iterativo com verdicts automáticos e escalação. Qualidade é investimento, não burocracia.</p>
+        <div class="meta-row">
+          <span class="meta-chip">⏱ <strong>35 min</strong> de leitura</span>
+          <span class="meta-chip">🎯 <strong>4</strong> objetivos</span>
+          <span class="meta-chip">🧩 <strong>6</strong> conceitos-chave</span>
+          <span class="meta-chip">⌨ <strong>5</strong> comandos CLI</span>
+        </div>
+      </section>
+
+      <div class="tldr">
+        <div class="tldr-label">TL;DR</div>
+        <div class="tldr-text">3 camadas de qualidade + QA Loop iterativo com verdicts automáticos e escalação. Qualidade é investimento, não burocracia.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Você vai aprender</h3>
+          <ul><li>Entender as 3 camadas de qualidade</li><li>Operar o QA Loop iterativo</li><li>Interpretar verdicts PASS/CONCERNS/FAIL/WAIVED</li><li>Saber quando escalar BLOCKED</li></ul>
+        </div>
+        <div class="card">
+          <h3>Conceitos-chave</h3>
+          <div class="chips"><span class="chip">3 Camadas</span><span class="chip">QA Loop</span><span class="chip">Max 5 iterações</span><span class="chip">Verdicts</span><span class="chip">CodeRabbit</span><span class="chip">WAIVED consciente</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin: 28px 0;"><h3>Comandos deste capítulo</h3><ul><li><code>@qa *task qa-gate</code></li><li><code>@qa *qa-loop {storyId}</code></li><li><code>@qa *qa-loop-review</code></li><li><code>@dev *qa-loop-fix</code></li><li><code>@qa *escalate-qa-loop</code></li></ul></div>
+
+      <article class="prose">
+        <hr />
+<h3 id="91-as-3-camadas-de-qualidade">9.1 As 3 Camadas de Qualidade</h3>
+<p>Qualidade em desenvolvimento de software não é um evento. É uma propriedade emergente de múltiplas camadas de verificação que se sobrepõem e se complementam. O AIOX incorpora essa visão em sua arquitetura: existem três camadas de qualidade distintas, cada uma com propósito e mecanismo diferentes.</p>
+<p>Entender essas três camadas é fundamental para usar o AIOX de forma eficaz. Muitos times implementam apenas uma ou duas camadas e depois se perguntam por que problemas de qualidade ainda escapam. A resposta é sempre: faltava uma camada.</p>
+<h4 id="camada-1-gates-da-constitution">Camada 1: Gates da Constitution</h4>
+<p>A primeira camada de qualidade não é executada por um agente — é executada pela própria arquitetura do sistema. A <strong>Constitution</strong> define princípios inegociáveis que bloqueiam automaticamente violações antes que elas aconteçam.</p>
+<p>Os gates constitucionais mais relevantes para qualidade são:</p>
+<p><strong>Artigo II — Agent Authority:</strong> Um agente não pode fazer operações fora de sua autoridade. Dex não pode fazer push. Gage não pode aprovar stories. Essa separação é em si um gate de qualidade: garante que cada operação é executada pelo agente que tem o contexto e a expertise adequados para realizá-la.</p>
+<p><strong>Artigo IV — No Invention:</strong> Nenhum agente pode adicionar features, critérios, ou comportamentos que não foram especificados nos requisitos. Um desenvolvedor humano que decide "de presente" adicionar uma feature não solicitada cria risco técnico sem aprovação de produto. O mesmo se aplica aos agentes. A Constitution bloqueia isso de forma sistemática.</p>
+<p><strong>Artigo III — Story-Driven Development:</strong> Nada vai para produção que não passou por uma story. Isso garante rastreabilidade completa: cada mudança no código tem uma story que explica por que foi feita, quais critérios foram estabelecidos, e quem validou.</p>
+<p>Esses gates não são verificações que alguém faz — são restrições estruturais. Você não "roda" um gate constitucional. Você simplesmente não consegue violá-lo sem conscientemente contornar o sistema.</p>
+<h4 id="camada-2-o-checklist-de-10-pontos-do-po">Camada 2: O Checklist de 10 Pontos do PO</h4>
+<p>A segunda camada acontece antes da implementação. Pax aplica o checklist de 10 pontos sobre a story em Draft para garantir que o que vai ser implementado está suficientemente especificado.</p>
+<p>Essa camada responde à pergunta: <strong>"Está certo o que pedimos para fazer?"</strong></p>
+<p>O checklist verifica rastreabilidade, clareza de critérios, completude de contexto, identificação de dependências e riscos. Uma story que passa por Pax com score &gt;= 7 é uma story que um desenvolvedor pode implementar sem precisar inventar interpretações ou fazer decisões de produto não intencionais.</p>
+<p>O valor dessa camada está na prevenção: cada issue identificado pelo PO antes da implementação custa minutos para corrigir. O mesmo issue identificado após a implementação custa horas de retrabalho.</p>
+<h4 id="camada-3-o-qa-gate-de-7-checks">Camada 3: O QA Gate de 7 Checks</h4>
+<p>A terceira camada acontece após a implementação. Quinn aplica 7 verificações sobre o código produzido para garantir que o que foi implementado corresponde ao que foi pedido, e que foi implementado com qualidade adequada.</p>
+<p>Essa camada responde à pergunta: <strong>"Foi feito corretamente o que pedimos para fazer?"</strong></p>
+<p>Os 7 checks verificam completude de implementação, cobertura de testes, aderência a padrões, ausência de regressões, atualização de documentação, segurança básica, e delimitação de escopo.</p>
+<p>Enquanto o PO gate é sobre especificação, o QA gate é sobre execução. São dimensões completamente diferentes — e por isso ambos são necessários.</p>
+<h4 id="por-que-tres-camadas">Por Que Três Camadas?</h4>
+<p>A resposta intuitiva seria: "uma camada rigorosa basta". Mas considere os tipos de problemas que cada camada captura:</p>
+<ul>
+<li><strong>Constitution gates</strong> capturam violações de processo e autoridade — coisas que nenhuma revisão humana vai consistentemente pegar porque dependem de aplicação sistemática de regras.</li>
+<li><strong>PO checklist</strong> captura problemas de especificação — coisas que aparecem antes de qualquer código existir.</li>
+<li><strong>QA gate</strong> captura problemas de implementação — coisas que só existem depois que o código foi escrito.</li>
+</ul>
+<p>Um QA Gate perfeito não pode pegar problemas de especificação, porque eles existiram antes do código. Um PO checklist perfeito não pode pegar problemas de implementação, porque eles ainda não existiam. Somente com as três camadas você tem cobertura completa do ciclo de vida.</p>
+<hr />
+<h3 id="92-qa-loop-o-ciclo-iterativo-de-revisao">9.2 QA Loop: O Ciclo Iterativo de Revisão</h3>
+<p>O QA Gate do capítulo anterior representa a revisão inicial após a implementação. Mas o que acontece quando essa revisão retorna FAIL? Ou quando retorna CONCERNS que precisam de iteração? O <strong>QA Loop</strong> é o mecanismo para gerenciar esse processo de forma estruturada.</p>
+<h4 id="o-problema-que-o-qa-loop-resolve">O Problema que o QA Loop Resolve</h4>
+<p>Sem estrutura, o processo de revisão-correção parece assim:</p>
+<p>Quinn identifica problemas. Dex corrige. Quinn revisa. Dex corrige novamente. E assim por diante, sem estado compartilhado, sem limite de iterações, e sem visibilidade de quantas vezes o ciclo já rodou.</p>
+<p>Isso cria três problemas:
+1. <strong>Sem limite:</strong> O ciclo pode durar indefinidamente, consumindo tokens e tempo.
+2. <strong>Sem estado:</strong> Cada iteração começa como se fosse nova, perdendo contexto de iterações anteriores.
+3. <strong>Sem escalação:</strong> Quando o problema é genuinamente complexo ou quando há desacordo entre Quinn e Dex, não há mecanismo claro de escalação.</p>
+<h4 id="como-o-qa-loop-funciona">Como o QA Loop Funciona</h4>
+<p>O QA Loop é iniciado com:</p>
+<pre><code>@qa *qa-loop {storyId}
+</code></pre>
+<p>A partir daí, o ciclo funciona assim:</p>
+<pre><code>@qa review → verdict → @dev fixes → re-review (max 5 iterações)
+</code></pre>
+<p>Cada iteração tem estado próprio, salvo em <code>qa/loop-status.json</code>. Esse arquivo registra:
+- Story em revisão
+- Número da iteração atual
+- Último verdict
+- Issues identificados em cada iteração
+- Issues resolvidos e pendentes</p>
+<h4 id="comandos-do-qa-loop">Comandos do QA Loop</h4>
+<p>O QA Loop tem um conjunto completo de comandos para gerenciar o ciclo:</p>
+<p><strong><code>*qa-loop {storyId}</code></strong> — Inicia um novo loop para a story especificada. Executa o primeiro QA review automaticamente.</p>
+<p><strong><code>*qa-loop-review</code></strong> — Retoma o loop na fase de review. Útil quando o loop foi pausado antes ou durante a revisão.</p>
+<p><strong><code>*qa-loop-fix</code></strong> — Retoma o loop na fase de correção. Dex assume e trabalha nos issues pendentes identificados no último review.</p>
+<p><strong><code>*stop-qa-loop</code></strong> — Pausa o loop e salva o estado. O loop pode ser retomado posteriormente exatamente de onde parou.</p>
+<p><strong><code>*resume-qa-loop</code></strong> — Retoma um loop pausado. Carrega o estado salvo e continua de onde parou.</p>
+<p><strong><code>*escalate-qa-loop</code></strong> — Força escalação imediata para <code>@aiox-master</code>, independente de onde o loop está. Usado quando há bloqueio que não pode ser resolvido entre Quinn e Dex.</p>
+<h4 id="o-estado-do-loop-e-a-memoria-entre-iteracoes">O Estado do Loop e a Memória entre Iterações</h4>
+<p>Um aspecto crítico do QA Loop é a memória entre iterações. Quando Quinn faz a segunda revisão, ela sabe o que foi encontrado na primeira, o que foi corrigido, e o que foi explicitamente deixado pendente. Isso evita regressões onde uma correção resolve um problema e introduce outro que já havia sido identificado anteriormente.</p>
+<p>O arquivo <code>qa/loop-status.json</code> estrutura essa memória:</p>
+<pre><code class="language-json">{
+  &quot;storyId&quot;: &quot;1.3&quot;,
+  &quot;iteration&quot;: 2,
+  &quot;status&quot;: &quot;reviewing&quot;,
+  &quot;issues&quot;: {
+    &quot;iteration_1&quot;: [
+      {&quot;id&quot;: &quot;qi-001&quot;, &quot;severity&quot;: &quot;HIGH&quot;, &quot;description&quot;: &quot;...&quot;, &quot;status&quot;: &quot;resolved&quot;},
+      {&quot;id&quot;: &quot;qi-002&quot;, &quot;severity&quot;: &quot;MEDIUM&quot;, &quot;description&quot;: &quot;...&quot;, &quot;status&quot;: &quot;pending&quot;}
+    ],
+    &quot;iteration_2&quot;: [
+      {&quot;id&quot;: &quot;qi-003&quot;, &quot;severity&quot;: &quot;LOW&quot;, &quot;description&quot;: &quot;...&quot;, &quot;status&quot;: &quot;open&quot;}
+    ]
+  }
+}
+</code></pre>
+<h4 id="o-limite-de-5-iteracoes">O Limite de 5 Iterações</h4>
+<p>O QA Loop tem um limite configurável de iterações (padrão: 5). Esse limite existe por uma razão importante: se uma story está falhando no QA Gate depois de 5 tentativas de correção, o problema não é de implementação — é de especificação.</p>
+<p>Uma story que não consegue passar no QA após 5 ciclos provavelmente tem um dos seguintes problemas:
+- Critérios de aceite ambíguos que permitem interpretações conflitantes
+- Dependências não mapeadas que tornam a implementação impossível sem mudanças de escopo
+- Requisitos técnicos contraditórios que precisam de mediação de produto</p>
+<p>Ao atingir o limite, o loop escala automaticamente para <code>@aiox-master</code> com o histórico completo de iterações, permitindo que o master tome uma decisão informada sobre como proceder.</p>
+<p>O limite é configurado em <code>core-config.yaml</code>:</p>
+<pre><code class="language-yaml">autoClaude:
+  qaLoop:
+    maxIterations: 5
+</code></pre>
+<hr />
+<h3 id="93-verdicts-e-escalacao">9.3 Verdicts e Escalação</h3>
+<h4 id="os-3-verdicts-do-qa-loop">Os 3 Verdicts do QA Loop</h4>
+<p>Cada iteração do loop resulta em um de três verdicts:</p>
+<p><strong>APPROVE:</strong> A story passou em todos os checks relevantes. Pode ser que alguns issues de iterações anteriores tenham sido dispensados (WAIVED) com justificativa, mas não há blockers pendentes. O loop termina, a story avança para <code>InReview</code>, e o processo segue para <code>@devops</code>.</p>
+<p><strong>REJECT:</strong> Um ou mais checks identificaram problemas que precisam de correção antes de avançar. Quinn documenta cada problema com:
+- ID único (ex: <code>qi-004</code>)
+- Severidade (HIGH/MEDIUM/LOW)
+- Descrição clara do problema
+- Sugestão de correção quando possível
+- Check que gerou o problema</p>
+<p>O loop avança para <code>@dev *qa-loop-fix</code>, que lê os issues pendentes e implementa as correções.</p>
+<p><strong>BLOCKED:</strong> A revisão identificou um problema que Quinn não pode resolver com Dex — seja porque requer uma decisão de produto, seja porque há um conflito técnico que precisa de decisão arquitetural, seja porque o problema é de especificação e não de implementação. BLOCKED escala imediatamente.</p>
+<h4 id="triggers-de-escalacao">Triggers de Escalação</h4>
+<p>Há quatro situações que disparam escalação automática:</p>
+<p><strong><code>max_iterations_reached</code>:</strong> O loop atingiu o limite configurado sem aprovação. Escalado para <code>@aiox-master</code> com histórico completo de iterações para análise.</p>
+<p><strong><code>verdict_blocked</code>:</strong> Quinn retornou BLOCKED em qualquer iteração. Escalado imediatamente sem esperar o limite.</p>
+<p><strong><code>fix_failure</code>:</strong> Dex tentou aplicar as correções do QA e não conseguiu — seja por conflito técnico, seja por impossibilidade dentro do escopo definido. Escalado para mediação.</p>
+<p><strong><code>manual_escalate</code>:</strong> O humano executou <code>*escalate-qa-loop</code> explicitamente. Usado quando você, como operador, reconhece que o ciclo está em loop improdutivo.</p>
+<h4 id="o-papel-do-aiox-master-na-escalacao">O Papel do @aiox-master na Escalação</h4>
+<p>Quando o <code>@aiox-master</code> recebe uma escalação do QA Loop, ele tem autoridade para:</p>
+<ol>
+<li><strong>Mediar o conflito técnico</strong> entre Quinn e Dex, tomando uma decisão baseada no contexto completo do projeto.</li>
+<li><strong>Determinar que o problema é de especificação</strong>, retornando a story para <code>@sm</code> e <code>@po</code> com análise de por que a spec atual não é implementável sem conflito.</li>
+<li><strong>Aplicar um WAIVER global</strong> para checks que são genuinamente inaplicáveis no contexto do projeto (ex: cobertura de testes unitários para código de integração com sistema legado que não pode ser mockado).</li>
+<li><strong>Rejeitar a story</strong> em casos extremos onde a implementação está fundamentalmente errada e seria mais eficiente reconstruir do que corrigir.</li>
+</ol>
+<hr />
+<h3 id="94-integracao-com-coderabbit">9.4 Integração com CodeRabbit</h3>
+<p>O CodeRabbit é uma ferramenta de code review automatizado que pode ser integrada ao fluxo do AIOX para adicionar uma camada adicional de verificação antes do QA Gate.</p>
+<h4 id="onde-coderabbit-se-encaixa">Onde CodeRabbit se Encaixa</h4>
+<p>A integração com CodeRabbit acontece durante a Fase 3 (implementação) e antes da Fase 4 (QA Gate). Especificamente, após Dex completar a implementação e antes de executar <code>@qa *task qa-gate</code>, você pode rodar CodeRabbit para obter um review automático do diff.</p>
+<h4 id="como-usar-no-contexto-aiox">Como Usar no Contexto AIOX</h4>
+<p>O CodeRabbit no contexto AIOX serve dois propósitos específicos:</p>
+<p><strong>Auto-healing de problemas de estilo:</strong> Issues como formatação inconsistente, imports não utilizados, e violações de linting que o CodeRabbit identifica automaticamente. Dex pode aplicar essas correções sem necessidade de QA Loop.</p>
+<p><strong>Identificação antecipada de problemas de qualidade:</strong> O CodeRabbit pode identificar issues que o QA de Quinn vai capturar — mas identificá-los <em>antes</em> do QA Gate significa que o QA Gate tem mais chance de passar na primeira iteração, reduzindo o número de loops.</p>
+<h4 id="self-healing-e-o-limite-de-2-iteracoes">Self-Healing e o Limite de 2 Iterações</h4>
+<p>Uma regra importante na integração do CodeRabbit com o AIOX: o self-healing automático tem máximo de 2 iterações. Isso significa que Dex pode aplicar correções sugeridas pelo CodeRabbit automaticamente até duas vezes. Se após duas iterações ainda há issues significativos, o problema é escalado para revisão humana antes de avançar para o QA Gate.</p>
+<p>Essa limitação previne loops infinitos de auto-correção que não convergem — situações onde cada correção introduz um novo problema que o CodeRabbit identifica na próxima rodada.</p>
+<h4 id="configuracao-basica">Configuração Básica</h4>
+<p>Para usar CodeRabbit no fluxo AIOX, você precisa da ferramenta instalada e acessível. A invocação típica para review pre-commit é:</p>
+<pre><code class="language-bash">coderabbit --prompt-only -t uncommitted
+</code></pre>
+<p>Para review de tudo que divergiu da branch main:</p>
+<pre><code class="language-bash">coderabbit --prompt-only --base main
+</code></pre>
+<p>O output do CodeRabbit é processado por Dex, que aplica as correções automáticas e documenta as decisões de "não aplicar" quando o contexto do projeto justifica ignorar uma sugestão específica.</p>
+<h4 id="coderabbit-automatico-via-setup-github">CodeRabbit Automático via <code>*setup-github</code></h4>
+<p>Quando o <code>@devops</code> executa <code>*setup-github</code>, o CodeRabbit é configurado automaticamente para rodar em cada Pull Request. Isso significa que após o setup inicial, você não precisa invocar o CodeRabbit manualmente — ele roda como parte do CI/CD no GitHub.</p>
+<p>A progressão de qualidade completa fica:</p>
+<table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>Quem</th>
+<th>Precisão</th>
+<th>Quando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Self-healing</td>
+<td><code>@dev</code> + CodeRabbit light</td>
+<td>~30%</td>
+<td>Durante implementação</td>
+</tr>
+<tr>
+<td>QA Gate</td>
+<td><code>@qa</code> + CodeRabbit heavy</td>
+<td>~60%</td>
+<td>Após implementação</td>
+</tr>
+<tr>
+<td>CI/CD</td>
+<td>CodeRabbit no GitHub PR</td>
+<td>~90%</td>
+<td>Após push</td>
+</tr>
+</tbody>
+</table>
+<p>Cada camada captura problemas que a anterior deixou passar. A camada final (CI/CD) é a mais precisa porque opera sobre o diff completo com contexto do repositório inteiro.</p>
+<hr />
+<h3 id="95-quando-qualidade-vira-burocracia">9.5 Quando Qualidade Vira Burocracia</h3>
+<p>Existe um paradoxo no coração de qualquer sistema de qualidade: o mesmo rigor que previne bugs em produção pode, se mal calibrado, se tornar um impedimento ao progresso. Um sistema de qualidade que paralisa o desenvolvimento não está cumprindo sua função — porque a função é entregar software de qualidade, não bloquear software.</p>
+<p>O AIOX foi projetado com consciência desse paradoxo. As ferramentas de escape existem, e é importante saber quando e como usá-las.</p>
+<h4 id="o-equilibrio-correto">O Equilíbrio Correto</h4>
+<p>A regra prática: o nível de rigor deve ser proporcional ao risco. Uma mudança de configuração de text no frontend não precisa do mesmo rigor de qualidade que uma mudança no módulo de autenticação. Uma story de correção de typo não precisa do mesmo processo que uma story de refatoração de banco de dados.</p>
+<p>O AIOX não impõe rigor igual para todas as situações. Você como operador tem o poder e a responsabilidade de calibrar.</p>
+<h4 id="waived-o-uso-consciente-da-dispensa">WAIVED: O Uso Consciente da Dispensa</h4>
+<p>O veredicto WAIVED existe para situações legítimas onde um check não se aplica. Alguns exemplos reais:</p>
+<p><strong>Cobertura de testes:</strong> O check de cobertura falha porque o código toca um módulo legado que não pode ser testado unitariamente sem mocking extensivo que não está no escopo da story atual. WAIVED com justificativa: "Cobertura do módulo legacy postergada para Story 2.4 que trata especificamente de testabilidade."</p>
+<p><strong>Documentação de API:</strong> O endpoint criado é interno (usado apenas por serviço próprio), não público. WAIVED com justificativa: "Endpoint interno. Documentação não aplicável para consumidores externos."</p>
+<p><strong>Testes de integração:</strong> O ambiente de CI não tem acesso ao serviço externo que esta story integra. WAIVED com justificativa: "Serviço X não disponível em CI. Teste de integração executado manualmente em staging."</p>
+<p>A diferença entre um WAIVED legítimo e um WAIVED de preguiça está na justificativa. Se a justificativa for específica, referenciável, e honesta sobre o risco aceito — é legítimo. Se for "muito trabalhoso" ou "não é importante" — não é.</p>
+<h4 id="modo-yolo-velocidade-com-consciencia">Modo YOLO: Velocidade com Consciência</h4>
+<p>Para stories simples, bugs óbvios, ou mudanças de configuração de baixo risco, o modo YOLO existe para remover a fricção do processo sem remover a rastreabilidade.</p>
+<p>Em YOLO:
+- Dex implementa sem confirmações intermediárias
+- O QA Gate ainda é executado (não é pulado)
+- A story ainda é atualizada com File List e checkboxes
+- O push ainda vai por Gage</p>
+<p>YOLO não é "pular qualidade". É "implementar com velocidade". A diferença é sutil mas fundamental.</p>
+<h4 id="o-limite-nao-negociavel">O Limite Não-Negociável</h4>
+<p>Há um conjunto de medidas de qualidade que nunca devem ser waived ou contornadas, independente do tamanho da mudança:</p>
+<ol>
+<li><strong>Story deve existir.</strong> Não há push sem story. Nem para bugfix urgente.</li>
+<li><strong>@devops é o único que faz push.</strong> Sem exceções.</li>
+<li><strong>QA Gate deve ser executado.</strong> PASS, CONCERNS, ou WAIVED documentado — mas executado.</li>
+</ol>
+<p>Esses três pontos não são negociáveis porque cada um deles resolve um problema de classe inteira. Remover qualquer um deles abre uma brecha que, ao longo do tempo, se transforma em um buraco no processo de qualidade.</p>
+<hr />
+<h3 id="exercicio-simule-uma-iteracao-de-qa-loop">Exercício: Simule uma Iteração de QA Loop</h3>
+<p>Este exercício é sobre desenvolver intuição para o processo de revisão iterativa.</p>
+<p><strong>Cenário:</strong> Você tem uma story implementada com os seguintes issues:
+1. Falta cobertura de testes para o caso de erro HTTP 500
+2. Uma variável está com nome <code>tmp</code> em vez de um nome descritivo
+3. O endpoint retorna dados de usuário sem filtrar campos sensíveis (senha hashada está exposta)</p>
+<p><strong>Parte 1 — Classificação de Severidade:</strong>
+Sem usar o AIOX, classifique cada issue como HIGH, MEDIUM, ou LOW. Justifique sua classificação.</p>
+<p><strong>Parte 2 — Simule o Verdict:</strong>
+Com base na sua classificação, qual seria o verdict do QA Loop? APPROVE, REJECT, ou BLOCKED? Por quê?</p>
+<p><strong>Parte 3 — Execute na Prática:</strong>
+Pegue uma story real do seu projeto e execute:</p>
+<pre><code>@qa *qa-loop {storyId}
+</code></pre>
+<p>Observe o estado sendo salvo em <code>qa/loop-status.json</code>. Observe como Quinn documenta os issues. Observe como Dex carrega e resolve os issues quando você executa:</p>
+<pre><code>@dev *qa-loop-fix
+</code></pre>
+<p><strong>Parte 4 — Reflexão:</strong>
+- Qual check do QA Gate você considera mais importante para o seu tipo de projeto?
+- Você identificaria alguma situação no seu projeto atual onde um WAIVED seria legítimo?
+- Como você calibraria o limite de iterações para o seu contexto?</p>
+<p>A qualidade não é um destino — é um processo contínuo de calibração entre rigor e velocidade, entre segurança e entrega. O QA Loop é o mecanismo que torna essa calibração visível e gerenciável.</p>
+      </article>
+
+      <div class="nav-footer">
+        <a href="08-sdc.html" class=""><div class="label">← Anterior</div><div class="title">Cap 08 · Seu Primeiro Ciclo: Story Development Cycle</div></a>
+        <a href="10-workflows-avancados.html" class="nav-next"><div class="label">Próximo →</div><div class="title">Cap 10 · Spec Pipeline e Brownfield: Workflows Avançados</div></a>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<button class="to-top" id="to-top" aria-label="Voltar ao topo">↑</button>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+</body>
+</html>

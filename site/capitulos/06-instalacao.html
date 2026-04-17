@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap 06 — Instalação e Configuração · AIOX Squad</title>
+<meta name="description" content="Do zero à URL pública. Pré-requisitos, instalação por projeto, anatomia dos diretórios, modelo L1-L4 e bootstrap completo via @devops.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="../assets/chat.css">
+<link rel="icon" type="image/svg+xml" href="../assets/logo-aiox.svg">
+</head>
+<body data-chapter="6">
+
+<div class="app">
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html"><img src="../assets/logo-aiox.svg" alt="AIOX Squad"></a>
+      <span class="sidebar-badge">Guia Técnico</span>
+      <div class="sidebar-title">AIOX Squad</div>
+      <div class="sidebar-subtitle">17 capítulos · Synkra</div>
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="sidebar-progress-label"><span>Progresso</span><span id="sb-pct">0/17</span></div>
+      <div class="progress-bar"><div id="sb-bar"></div></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Capítulos</div>
+      <div id="sidebar-chapters"></div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="../index.html">← Voltar à home</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="top-nav">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="../index.html">Capítulos</a>
+        <span class="sep">/</span>
+        <span class="current">Cap 06</span>
+      </div>
+      <div class="top-actions">
+        <button class="gsearch-trigger" data-gsearch-open aria-label="Buscar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <span class="hint">Buscar</span>
+          <kbd>/</kbd>
+        </button>
+        <a class="btn-sm" href="05-dados-primeira-mao.html">← Anterior</a>
+        <a class="btn-sm" href="07-agentes.html">Próximo →</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section class="hero">
+        <span class="hero-tag">Capítulo 06 · INICIANTE</span>
+        <h1 class="hero-title">Instalação e Configuração</h1>
+        <p class="hero-subtitle">Do zero à URL pública. Pré-requisitos, instalação por projeto, anatomia dos diretórios, modelo L1-L4 e bootstrap completo via @devops.</p>
+        <div class="meta-row">
+          <span class="meta-chip">⏱ <strong>40 min</strong> de leitura</span>
+          <span class="meta-chip">🎯 <strong>4</strong> objetivos</span>
+          <span class="meta-chip">🧩 <strong>6</strong> conceitos-chave</span>
+          <span class="meta-chip">⌨ <strong>5</strong> comandos CLI</span>
+        </div>
+      </section>
+
+      <div class="tldr">
+        <div class="tldr-label">TL;DR</div>
+        <div class="tldr-text">Do zero à URL pública. Pré-requisitos, instalação por projeto, anatomia dos diretórios, modelo L1-L4 e bootstrap completo via @devops.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Você vai aprender</h3>
+          <ul><li>Instalar AIOX com sucesso</li><li>Entender as 4 camadas L1-L4</li><li>Rodar aiox doctor e interpretar resultados</li><li>Completar bootstrap do zero ao deploy</li></ul>
+        </div>
+        <div class="card">
+          <h3>Conceitos-chave</h3>
+          <div class="chips"><span class="chip">npx aiox-core install</span><span class="chip">core-config.yaml</span><span class="chip">4 camadas L1-L4</span><span class="chip">.claude/</span><span class="chip">Multi-IDE</span><span class="chip">@devops *bootstrap</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin: 28px 0;"><h3>Comandos deste capítulo</h3><ul><li><code>npx aiox-core install</code></li><li><code>npx aiox-core doctor</code></li><li><code>aiox doctor</code></li><li><code>aiox doctor --fix</code></li><li><code>@devops *bootstrap</code></li></ul></div>
+
+      <article class="prose">
+        <hr />
+<h3 id="61-pre-requisitos-o-que-voce-precisa-antes-de-comecar">6.1 Pré-Requisitos: O Que Você Precisa Antes de Começar</h3>
+<p>Antes de instalar o AIOX, você precisa garantir que seu ambiente tem as ferramentas fundamentais. Diferente de alguns frameworks que tentam gerenciar suas próprias dependências, o AIOX assume que você tem um ambiente de desenvolvimento funcional e se integra a ele — não o substitui.</p>
+<p>Esta seção detalha cada pré-requisito, por que ele existe, e como verificar se está instalado corretamente.</p>
+<h4 id="nodejs-18">Node.js 18+</h4>
+<p>O AIOX é construído em Node.js. A versão mínima é 18 porque essa versão introduziu melhorias significativas de performance no runtime, suporte nativo a módulos ES, e APIs de filesystem mais robustas que o framework utiliza.</p>
+<p>Para verificar sua versão atual:</p>
+<pre><code class="language-bash">node --version
+# Output esperado: v18.x.x ou superior
+</code></pre>
+<p>Se você não tem Node.js instalado, ou tem uma versão antiga, a forma recomendada de gerenciar versões é via <code>nvm</code> (Node Version Manager) no macOS/Linux ou <code>nvm-windows</code> no Windows. Isso permite manter múltiplas versões instaladas e alternar entre elas por projeto:</p>
+<pre><code class="language-bash">nvm install 20
+nvm use 20
+nvm alias default 20
+</code></pre>
+<h4 id="npm-9">npm 9+</h4>
+<p>O npm (Node Package Manager) vem instalado com o Node.js, mas pode estar desatualizado em instalações antigas. A versão 9 introduziu melhorias no lockfile e na resolução de pacotes que são importantes para a estabilidade do AIOX.</p>
+<pre><code class="language-bash">npm --version
+# Output esperado: 9.x.x ou superior
+
+# Para atualizar o npm para a versão mais recente:
+npm install -g npm@latest
+</code></pre>
+<h4 id="git">Git</h4>
+<p>Git é obrigatório. O AIOX integra profundamente com Git para controle de versão de stories, branches por feature, e o ciclo de delivery via <code>@devops</code>. Sem Git, metade dos workflows do AIOX não funciona.</p>
+<pre><code class="language-bash">git --version
+# Output esperado: git version 2.x.x
+
+# Configure sua identidade se ainda não fez:
+git config --global user.name &quot;Seu Nome&quot;
+git config --global user.email &quot;seu@email.com&quot;
+</code></pre>
+<p>Certifique-se de que o repositório do projeto está inicializado (<code>git init</code> ou clonado de um remoto). O AIOX não inicializa o repositório Git por você — assume que o versionamento já está configurado.</p>
+<h4 id="github-cli-gh">GitHub CLI (gh)</h4>
+<p>O GitHub CLI é necessário para as operações que envolvem o repositório remoto: criação de Pull Requests, verificação de status de PRs, e integração com Actions. É de uso exclusivo do <code>@devops</code> (Gage), mas precisa estar instalado no ambiente.</p>
+<pre><code class="language-bash">gh --version
+# Output esperado: gh version 2.x.x
+
+# Para autenticar com sua conta GitHub:
+gh auth login
+# Siga as instruções interativas
+
+# Para verificar autenticação:
+gh auth status
+</code></pre>
+<p>Se você trabalha em uma organização com SSO (Single Sign-On), você pode precisar de autorização adicional:</p>
+<pre><code class="language-bash">gh auth login --scopes &quot;read:org,workflow&quot;
+</code></pre>
+<h4 id="editor-com-suporte-a-markdown-e-yaml">Editor com Suporte a Markdown e YAML</h4>
+<p>O AIOX é primariamente um sistema de arquivos de texto. Você vai criar, editar, e revisar arquivos Markdown e YAML constantemente. Um editor que renderiza Markdown, valida YAML, e tem bom suporte a arquivos de texto torna o trabalho significativamente mais confortável.</p>
+<p><strong>VS Code</strong> é o mais recomendado, com as extensões:
+- <code>yzhang.markdown-all-in-one</code> — Preview e edição de Markdown
+- <code>redhat.vscode-yaml</code> — Validação de YAML
+- <code>formulahendry.auto-rename-tag</code> — Se você trabalha com HTML também</p>
+<p><strong>Cursor</strong> também funciona bem e tem integração direta com modelos de IA.</p>
+<p>Outros editores como Neovim, Zed, ou JetBrains IDEs funcionam — mas as extensões específicas variam.</p>
+<h4 id="conforto-com-terminal">Conforto com Terminal</h4>
+<p>Este pré-requisito não tem número de versão, mas é o mais importante: você precisa estar confortável usando o terminal. O AIOX é CLI First por princípio. Se você evita o terminal, vai lutar constantemente com o framework em vez de ser amplificado por ele.</p>
+<p>"Confortável" não significa ser um expert em shell scripting. Significa:
+- Saber navegar entre diretórios
+- Entender output de comandos básicos
+- Saber o que fazer quando um comando falha com erro
+- Não ter medo de rodar comandos que modificam o sistema</p>
+<p>Se você está desconfortável com o terminal, invista algumas horas em um tutorial básico de linha de comando antes de prosseguir. O retorno sobre esse investimento, trabalhando com AIOX, vai ser enorme.</p>
+<hr />
+<h3 id="62-instalacao-por-projeto-por-que-e-como">6.2 Instalação por Projeto: Por Que e Como</h3>
+<p>Uma decisão arquitetural fundamental do AIOX é que ele é instalado <strong>por projeto</strong>, não globalmente. Isso é intencional e tem consequências importantes que você precisa entender.</p>
+<h4 id="por-que-por-projeto-nao-global">Por Que Por Projeto, Não Global?</h4>
+<p><strong>Versionamento por projeto.</strong> Projetos diferentes podem precisar de versões diferentes do AIOX. Um projeto legado pode ter sido iniciado com AIOX 1.x e ainda não migrou. Um projeto novo usa AIOX 2.x com features que quebrariam o projeto legado. Instalação por projeto garante que cada projeto usa a versão correta.</p>
+<p><strong>Configurações independentes.</strong> As configurações do AIOX — quais agentes estão disponíveis, quais workflows estão ativos, quais critérios de qualidade são obrigatórios — variam por projeto e por organização. Uma instalação global conflitaria entre projetos com configurações diferentes.</p>
+<p><strong>Sem poluição de ambiente global.</strong> Ferramentas instaladas globalmente podem criar conflitos de versão, poluir o PATH, e causar comportamentos inesperados em projetos não relacionados. Por projeto, o ambiente fica limpo e previsível.</p>
+<p><strong>Reproducibilidade.</strong> Quando você clona o repositório do projeto em uma nova máquina ou compartilha com um colega, as configurações do AIOX vêm junto — no <code>package.json</code> como dependência. Um <code>npm install</code> restaura o ambiente completo.</p>
+<h4 id="comandos-de-instalacao">Comandos de Instalação</h4>
+<pre><code class="language-bash"># Navegue até o diretório do projeto
+cd meu-projeto
+
+# Instalação inicial — cria a estrutura completa do AIOX no projeto
+npx aiox-core init
+
+# Se o AIOX já foi inicializado e você quer reinstalar:
+npx aiox-core install
+</code></pre>
+<p>A diferença entre <code>init</code> e <code>install</code>:
+- <code>init</code> cria toda a estrutura desde zero — use em projetos novos ou para configuração inicial
+- <code>install</code> instala ou atualiza o AIOX em um projeto que já tem a estrutura básica</p>
+<h4 id="templates-de-projeto">Templates de Projeto</h4>
+<p>Durante o <code>npx aiox-core init</code>, o sistema solicita que você escolha um template inicial. Três opções disponíveis:</p>
+<p><strong>Template <code>default</code></strong> — Para projetos de desenvolvimento de software em geral. Inclui todos os 11 agentes, os 4 workflows primários, tasks de desenvolvimento padrão, e configurações de qualidade para TypeScript/JavaScript. Recomendado para a maioria dos casos.</p>
+<p><strong>Template <code>minimal</code></strong> — Para projetos que querem o AIOX mas com overhead mínimo. Inclui apenas os agentes essenciais (<code>@dev</code>, <code>@qa</code>, <code>@devops</code>), o SDC simplificado, e configurações básicas. Ideal para projetos solo ou experimentação.</p>
+<p><strong>Template <code>enterprise</code></strong> — Para organizações que precisam de governance adicional: aprovações multi-nível, integração com ferramentas de projeto externas, políticas de branch estritas, e relatórios de compliance. Requer configuração adicional para integrar com os sistemas da organização.</p>
+<hr />
+<h3 id="63-anatomia-do-projeto-entendendo-cada-diretorio">6.3 Anatomia do Projeto: Entendendo Cada Diretório</h3>
+<p>Após o <code>npx aiox-core init</code>, a estrutura do seu projeto terá os seguintes diretórios e arquivos:</p>
+<pre><code>seu-projeto/
+├── .aiox-core/          # Framework core e templates
+├── .claude/             # Configurações do Claude Code
+├── docs/
+│   ├── stories/         # Arquivos de story (.story.md)
+│   ├── prd/             # Product Requirement Documents
+│   └── architecture/    # Documentação de arquitetura
+├── agents/              # Memória e configuração de agentes
+├── core-config.yaml     # Configuração principal do AIOX
+└── [seus arquivos]      # O código do seu projeto
+</code></pre>
+<p>Vamos explorar cada parte:</p>
+<h4 id="aiox-core-o-nucleo-do-framework"><code>.aiox-core/</code> — O Núcleo do Framework</h4>
+<p>Este diretório contém o framework em si: as definições de tasks, templates de stories, checklists de qualidade, personas de agentes, e a Constitution. <strong>Você nunca edita esse diretório diretamente</strong> (com poucas exceções documentadas).</p>
+<p>Subdivisões importantes:
+- <code>.aiox-core/development/tasks/</code> — Definições das tasks executáveis
+- <code>.aiox-core/development/templates/</code> — Templates para stories, relatórios, etc.
+- <code>.aiox-core/development/checklists/</code> — Checklists de validação
+- <code>.aiox-core/constitution.md</code> — A Constitution formal do framework</p>
+<h4 id="claude-configuracoes-do-claude-code"><code>.claude/</code> — Configurações do Claude Code</h4>
+<p>Este diretório contém regras e configurações específicas para o Claude Code. Ele é lido automaticamente pelo Claude Code ao iniciar uma sessão, carregando as regras do AIOX:</p>
+<ul>
+<li><code>.claude/settings.json</code> — Deny rules e allow rules de proteção de camadas</li>
+<li><code>.claude/rules/</code> — Regras contextuais carregadas por relevância</li>
+</ul>
+<h4 id="docsstories-onde-o-trabalho-vive"><code>docs/stories/</code> — Onde o Trabalho Vive</h4>
+<p>Este é o diretório mais ativo do projeto. Cada story é um arquivo <code>.story.md</code> nomeado com o padrão <code>{epic}.{story}.story.md</code>. Por exemplo, <code>2.4.story.md</code> é a quarta story do segundo epic.</p>
+<p>As stories são o registro vivo do trabalho: criadas pelo <code>@sm</code>, validadas pelo <code>@po</code>, atualizadas pelo <code>@dev</code> durante a implementação, e revisadas pelo <code>@qa</code>. Elas são tanto especificação quanto documentação — descrevem o que será feito e registram o que foi feito.</p>
+<h4 id="agents-memoria-dos-agentes"><code>agents/</code> — Memória dos Agentes</h4>
+<p>Cada agente que opera no projeto tem um subdiretório aqui:</p>
+<pre><code>agents/
+├── dev/
+│   └── MEMORY.md
+├── qa/
+│   └── MEMORY.md
+├── architect/
+│   └── MEMORY.md
+└── ...
+</code></pre>
+<p>O <code>MEMORY.md</code> de cada agente é o único arquivo no diretório <code>.aiox-core/</code> que você (e os agentes) podem editar livremente — é o mecanismo de memória persistente.</p>
+<h4 id="core-configyaml-a-configuracao-central"><code>core-config.yaml</code> — A Configuração Central</h4>
+<p>O arquivo mais importante para customização do AIOX é o <code>core-config.yaml</code> na raiz do projeto. Ele controla o comportamento global do framework:</p>
+<pre><code class="language-yaml">project:
+  name: &quot;meu-projeto&quot;
+  type: &quot;webapp&quot;
+  stack:
+    - &quot;typescript&quot;
+    - &quot;node&quot;
+    - &quot;postgresql&quot;
+
+boundary:
+  frameworkProtection: true  # false para contribuidores do framework
+
+agents:
+  enabled:
+    - dev
+    - qa
+    - architect
+    - devops
+    - pm
+    - po
+    - sm
+
+quality:
+  minPOScore: 7
+  qaAutoPass: false
+  requireTestsForNewCode: true
+
+workflows:
+  sdcEnabled: true
+  qaLoopEnabled: true
+  maxQaIterations: 5
+</code></pre>
+<hr />
+<h3 id="64-o-modelo-de-4-camadas-entendendo-o-que-voce-pode-e-nao-pode-editar">6.4 O Modelo de 4 Camadas: Entendendo o Que Você Pode e Não Pode Editar</h3>
+<p>Uma das decisões mais importantes do AIOX é a separação clara entre o que pertence ao framework e o que pertence ao projeto. Essa separação é chamada de modelo de 4 camadas (L1-L4), e entendê-la evita erros comuns que podem corromper o funcionamento do sistema.</p>
+<h4 id="l1-framework-core-nunca-modifique">L1 — Framework Core (NUNCA modifique)</h4>
+<p><strong>Paths:</strong> <code>.aiox-core/core/</code>, <code>.aiox-core/constitution.md</code>, <code>bin/aiox.js</code>, <code>bin/aiox-init.js</code></p>
+<p>Esta é a camada mais interna do framework: o código que faz o AIOX funcionar, a Constitution que governa o sistema, e os scripts de inicialização. Modificar esses arquivos é equivalente a modificar o código-fonte de uma ferramenta que você está usando — você vai quebrar coisas de formas imprevisíveis.</p>
+<p><strong>Proteção:</strong> Deny rules no <code>.claude/settings.json</code> bloqueiam qualquer agente de modificar esses arquivos. Mesmo que você instrua um agente a modificar algo nesse caminho, o gate bloqueia.</p>
+<h4 id="l2-framework-templates-nunca-modifique">L2 — Framework Templates (NUNCA modifique)</h4>
+<p><strong>Paths:</strong> <code>.aiox-core/development/tasks/</code>, <code>.aiox-core/development/templates/</code>, <code>.aiox-core/development/checklists/</code>, <code>.aiox-core/development/workflows/</code>, <code>.aiox-core/infrastructure/</code></p>
+<p>Estes são os templates e definições de tasks que o AIOX usa para operar. Modificá-los não quebra o framework imediatamente, mas cria inconsistências: quando o AIOX é atualizado, suas modificações são sobrescritas. E se seus agentes estão treinados para esperar um comportamento específico dessas tasks, modificações silenciosas criam bugs difíceis de diagnosticar.</p>
+<p><strong>Extensão:</strong> Se você precisa de tasks ou templates customizados, crie-os em <code>.aiox-core/data/</code> (L3) ou na raiz do projeto, referenciando os templates originais como base.</p>
+<h4 id="l3-project-config-mutavel-com-excecoes">L3 — Project Config (Mutável com Exceções)</h4>
+<p><strong>Paths:</strong> <code>.aiox-core/data/</code>, <code>agents/*/MEMORY.md</code>, <code>core-config.yaml</code></p>
+<p>Esta é a camada de configuração do projeto. Você pode e deve modificar esses arquivos para customizar o AIOX para seu contexto:</p>
+<ul>
+<li><code>core-config.yaml</code> para configurações gerais</li>
+<li><code>agents/*/MEMORY.md</code> para acumular memória dos agentes</li>
+<li><code>.aiox-core/data/</code> para dados customizados de configuração (glossário, padrões específicos do projeto, etc.)</li>
+</ul>
+<p><strong>Exceções:</strong> Mesmo dentro da L3, algumas operações são restritas. Você pode adicionar conteúdo ao <code>MEMORY.md</code>, mas não pode modificar o formato estrutural. Você pode adicionar entradas ao glossário, mas não pode remover definições que outros agentes dependem.</p>
+<h4 id="l4-project-runtime-sempre-modifique">L4 — Project Runtime (SEMPRE modifique)</h4>
+<p><strong>Paths:</strong> <code>docs/stories/</code>, <code>packages/</code>, <code>squads/</code>, <code>tests/</code>, e o código do seu projeto</p>
+<p>Esta é a camada onde o trabalho acontece. Stories são criadas, modificadas, e completadas aqui. Código é escrito aqui. Testes vivem aqui. Não há restrições de framework — este é seu território.</p>
+<h4 id="o-toggle-de-protecao">O Toggle de Proteção</h4>
+<p>O <code>core-config.yaml</code> tem uma configuração que controla se as deny rules estão ativas:</p>
+<pre><code class="language-yaml">boundary:
+  frameworkProtection: true
+</code></pre>
+<p>Com <code>true</code> (padrão), as deny rules bloqueiam modificações em L1 e L2. Com <code>false</code>, as deny rules são desativadas — usado por contribuidores do framework que precisam modificar as camadas protegidas.</p>
+<p><strong>Regra prática:</strong> Se você é usuário do AIOX (e não um contribuidor do framework), deixe sempre <code>frameworkProtection: true</code>. Os bloqueios existem para te proteger.</p>
+<hr />
+<h3 id="65-multi-ide-usando-aiox-com-diferentes-ferramentas">6.5 Multi-IDE: Usando AIOX com Diferentes Ferramentas</h3>
+<p>O AIOX foi projetado com Claude Code como IDE primário, mas o sistema pode ser usado com outras ferramentas de IA. A compatibilidade varia por ferramenta, e cada uma tem considerações específicas.</p>
+<h4 id="claude-code-compatibilidade-total">Claude Code (Compatibilidade Total)</h4>
+<p>O Claude Code é o ambiente para o qual o AIOX foi otimizado. A integração é completa:</p>
+<ul>
+<li>Leitura automática de <code>.claude/CLAUDE.md</code> e <code>.claude/rules/</code></li>
+<li>Execução de commands via <code>@agent *command</code></li>
+<li>Suporte completo a deny rules e allow rules</li>
+<li>Integração com o sistema de handoff de agentes</li>
+<li>Carregamento automático de memória de agentes</li>
+</ul>
+<p>Quando você usa Claude Code com AIOX, todos os recursos do framework estão disponíveis sem configuração adicional.</p>
+<h4 id="gemini-cli-alta-compatibilidade">Gemini CLI (Alta Compatibilidade)</h4>
+<p>O Gemini CLI da Google tem boa compatibilidade com o AIOX, com algumas limitações:</p>
+<ul>
+<li>Lê arquivos de contexto mas com formato levemente diferente (adaptar <code>.claude/CLAUDE.md</code> para <code>GEMINI.md</code>)</li>
+<li>Suporta a maior parte dos workflows, mas gates automáticos precisam ser verificados manualmente</li>
+<li>Commands funcionam via instrução de texto, não via prefixo <code>*</code> nativo</li>
+</ul>
+<p>Para usar AIOX com Gemini CLI, você pode criar um script de sincronização que mantém <code>GEMINI.md</code> atualizado com as regras relevantes do AIOX. O projeto pode incluir um script <code>scripts/sync-gemini-context.py</code> que extrai as seções relevantes do CLAUDE.md e adapta para o formato do Gemini.</p>
+<h4 id="codex-cli-compatibilidade-parcial">Codex CLI (Compatibilidade Parcial)</h4>
+<p>O Codex CLI da OpenAI tem compatibilidade parcial, focada principalmente na execução de código:</p>
+<ul>
+<li>Excelente para a fase de implementação de stories</li>
+<li>Limitado para orchestração multi-agente</li>
+<li>Sem suporte nativo a gates e deny rules</li>
+</ul>
+<p>Uso recomendado: como co-executor de Dex (<code>@dev</code>), para as partes de implementação de código onde a velocidade de geração é crítica.</p>
+<h4 id="cursor-compatibilidade-limitada">Cursor (Compatibilidade Limitada)</h4>
+<p>O Cursor é um editor com IA integrada, não um CLI de agentes. Sua compatibilidade com AIOX é limitada a:</p>
+<ul>
+<li>Leitura de arquivos de contexto (<code>.cursorrules</code>)</li>
+<li>Execução de código assistida pela IA</li>
+<li>Geração de código baseada em stories (fluxo manual)</li>
+</ul>
+<p>Para times que usam Cursor como editor principal, a recomendação é usar Claude Code para orquestração do AIOX (criação de stories, validação, QA) e Cursor para a implementação de código em si. Os dois podem coexistir no mesmo projeto.</p>
+<h4 id="scripts-de-sincronizacao">Scripts de Sincronização</h4>
+<p>Para projetos que usam múltiplos IDEs, o AIOX inclui utilitários de sincronização de contexto. Esses scripts mantêm os arquivos de contexto de cada IDE sincronizados com as configurações master do AIOX:</p>
+<pre><code class="language-bash"># Sincronizar contexto para Gemini CLI
+npx aiox-core sync-context --target gemini
+
+# Sincronizar contexto para Cursor
+npx aiox-core sync-context --target cursor
+
+# Sincronizar todos os alvos configurados
+npx aiox-core sync-context --all
+</code></pre>
+<p>Os scripts de sincronização leem o <code>core-config.yaml</code>, as personas dos agentes, as regras ativas, e produzem arquivos de contexto no formato esperado por cada IDE.</p>
+<hr />
+<h3 id="66-diagnostico-verificando-a-saude-do-sistema">6.6 Diagnóstico: Verificando a Saúde do Sistema</h3>
+<p>Após a instalação — e sempre que algo parecer estranho — o primeiro comando a rodar é <code>aiox doctor</code>. Ele é o diagnóstico completo do seu ambiente AIOX.</p>
+<h4 id="o-que-aiox-doctor-verifica">O Que <code>aiox doctor</code> Verifica</h4>
+<p>O comando executa uma série de verificações em cascata:</p>
+<p><strong>Dependências do sistema:</strong>
+- Node.js versão ≥ 18
+- npm versão ≥ 9
+- Git instalado e configurado
+- GitHub CLI instalado e autenticado</p>
+<p><strong>Estrutura do projeto:</strong>
+- Presença de <code>.aiox-core/</code> com versão compatível
+- Presença de <code>core-config.yaml</code> com schema válido
+- Diretório <code>docs/stories/</code> existe
+- Diretório <code>agents/</code> com <code>MEMORY.md</code> para cada agente habilitado</p>
+<p><strong>Configuração:</strong>
+- <code>core-config.yaml</code> tem todos os campos obrigatórios
+- Agentes habilitados têm arquivos de configuração correspondentes
+- Workflows habilitados têm tasks correspondentes disponíveis</p>
+<p><strong>Integridade de stories ativas:</strong>
+- Stories em <code>InProgress</code> têm branch Git correspondente
+- Stories em <code>InReview</code> têm agente <code>@qa</code> identificado
+- Sem stories em estados inválidos ou inconsistentes</p>
+<p><strong>Conectividade (quando aplicável):</strong>
+- GitHub acessível (para operações de <code>@devops</code>)
+- Modelos de IA acessíveis</p>
+<h4 id="saida-do-comando">Saída do Comando</h4>
+<p>O output do <code>aiox doctor</code> usa um formato visual claro:</p>
+<pre><code>AIOX Doctor — Verificação de Ambiente
+══════════════════════════════════════
+
+✓ Node.js v20.11.0 (mínimo: 18.0.0)
+✓ npm 10.2.4 (mínimo: 9.0.0)
+✓ Git 2.43.0 configurado
+✓ GitHub CLI 2.45.0 autenticado como @seu-usuario
+
+✓ .aiox-core/ presente (versão 2.1.3)
+✓ core-config.yaml válido
+✓ docs/stories/ presente
+✓ agents/ presente com 8 agentes configurados
+
+⚠ Story 3.2.story.md está InProgress mas branch feat/story-3-2 não encontrado
+  → Execute: git checkout -b feat/story-3-2
+
+✓ Sem outros problemas encontrados
+
+Estado geral: AVISO (1 problema menor)
+</code></pre>
+<h4 id="a-flag-fix">A Flag <code>--fix</code></h4>
+<p>Para problemas que o sistema pode corrigir automaticamente, a flag <code>--fix</code> tenta a correção:</p>
+<pre><code class="language-bash">npx aiox-core doctor --fix
+</code></pre>
+<p>Problemas que <code>--fix</code> consegue corrigir automaticamente:
+- Diretórios faltantes (<code>agents/qa/</code> não existe → cria com <code>MEMORY.md</code> vazio)
+- <code>MEMORY.md</code> faltando para um agente habilitado → cria com template padrão
+- Schema do <code>core-config.yaml</code> desatualizado → migra para nova versão</p>
+<p>Problemas que <code>--fix</code> NÃO corrige (requerem ação manual):
+- Branches Git faltantes para stories ativas
+- Autenticação do GitHub CLI
+- Versões de Node.js incompatíveis</p>
+<p>Para esses casos, o <code>doctor</code> exibe as instruções precisas do que você precisa fazer.</p>
+<h4 id="o-comando-aiox-info">O Comando <code>aiox info</code></h4>
+<p>Complementar ao <code>doctor</code>, o <code>aiox info</code> exibe informações sobre o estado atual do sistema sem fazer verificações de saúde:</p>
+<pre><code class="language-bash">npx aiox-core info
+</code></pre>
+<p>Output típico:</p>
+<pre><code>AIOX Info — Estado do Sistema
+═══════════════════════════════
+
+Framework: AIOX v2.1.3
+Projeto: meu-projeto (webapp/typescript)
+Stories ativas: 2 (1 InProgress, 1 InReview)
+Agentes habilitados: 8 (dev, qa, architect, devops, pm, po, sm, analyst)
+Workflows ativos: SDC, QA Loop
+Proteção de framework: ATIVA
+
+Última story criada: 3.2 — Exportação de Relatórios (há 2 dias)
+Último commit: feat: implement story 3.1 (há 3 horas)
+Branch atual: feat/story-3-2
+</code></pre>
+<p>Use <code>aiox info</code> quando quiser entender rapidamente em que estado o projeto está, sem a verbosidade do <code>doctor</code>.</p>
+<hr />
+<h3 id="67-na-pratica-bootstrap-completo-de-um-projeto-do-zero">6.7 Na Prática: Bootstrap Completo de um Projeto do Zero</h3>
+<p>Até aqui você viu cada componente isoladamente: pré-requisitos, instalação, anatomia de diretórios, camadas, editores, diagnóstico. Agora vamos juntar tudo em uma sequência prática — do terminal vazio ao projeto configurado, com GitHub, editor, e agentes prontos para trabalhar.</p>
+<p>Esta seção reproduz o processo exato demonstrado em aula e que todo operador AIOX deveria ser capaz de executar de olhos fechados. A recomendação é repetir esse processo quantas vezes forem necessárias até virar automático — como músculo. Não adianta assistir e entender. Precisa fazer.</p>
+<h4 id="passo-1-criar-a-pasta-do-projeto">Passo 1: Criar a Pasta do Projeto</h4>
+<p>Sempre comece com uma pasta vazia. Esse detalhe é crítico: se você instalar o AIOX em uma pasta que já contém um projeto, o instalador vai encontrar arquivos existentes (como <code>.claude/CLAUDE.md</code>) e apresentar um prompt de merge/overwrite que pode confundir quem está começando.</p>
+<pre><code class="language-bash">mkdir meu-projeto
+cd meu-projeto
+</code></pre>
+<p>No Windows com WSL, lembre-se de que suas pastas ficam acessíveis tanto pelo terminal quanto pelo Explorador de Arquivos. No Mac, o Finder mostra a mesma pasta — use <code>Cmd+Shift+.</code> para alternar a visibilidade de arquivos ocultos.</p>
+<h4 id="passo-2-instalar-o-aiox">Passo 2: Instalar o AIOX</h4>
+<pre><code class="language-bash">npx aiox-core install
+</code></pre>
+<p>O instalador vai apresentar uma série de perguntas. As opções recomendadas para quem está começando:</p>
+<table>
+<thead>
+<tr>
+<th>Pergunta</th>
+<th>Opção Recomendada</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Idioma</td>
+<td>Português</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Modo</td>
+<td>Assistido (primeira opção)</td>
+<td>Modo avançado para operadores experientes</td>
+</tr>
+<tr>
+<td>Tipo de projeto</td>
+<td>Greenfield</td>
+<td>Para projetos novos do zero</td>
+</tr>
+<tr>
+<td>Ferramentas de IA</td>
+<td>Selecione com barra de espaço</td>
+<td>Claude, Gemini, Cursor, Anti-Gravity — marque todas que pretende usar</td>
+</tr>
+<tr>
+<td>Plano</td>
+<td>Community (Free)</td>
+<td>Primeira opção. O Pro adiciona features avançadas</td>
+</tr>
+<tr>
+<td>Framework</td>
+<td>Next.js (primeira opção)</td>
+<td>Ou conforme seu stack</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Uma observação importante:</strong> o AIOX é um organismo vivo. Ele evolui constantemente. Pode ser que hoje você digite <code>npx aiox-core install</code> e as perguntas estejam de um jeito. Amanhã, podem estar ligeiramente diferentes — uma opção nova aqui, uma reformulação ali. Não tente decorar as telas. Entenda o raciocínio por trás de cada escolha: tipo de projeto (greenfield vs brownfield), ferramentas que você usa, nível de experiência. A lógica não muda mesmo quando a interface evolui.</p>
+<h4 id="passo-3-abrir-o-claude-code">Passo 3: Abrir o Claude Code</h4>
+<p>Com o AIOX instalado, abra o Claude Code no terminal:</p>
+<pre><code class="language-bash">claude
+</code></pre>
+<p>Este é o ambiente onde os agentes vivem. A partir daqui, você pode ativar qualquer agente com <code>@</code> e executar commands com <code>*</code>.</p>
+<h4 id="passo-4-abrir-o-editor-de-codigo">Passo 4: Abrir o Editor de Código</h4>
+<p>Em paralelo ao terminal, abra seu editor preferido na mesma pasta do projeto. Três opções principais:</p>
+<p><strong>VS Code</strong> — O editor clássico, com extensões para Markdown e YAML. Sólido e confiável.</p>
+<p><strong>Cursor</strong> — Editor com IA integrada, popular entre os desenvolvedores. Boa compatibilidade com AIOX quando selecionado na instalação.</p>
+<p><strong>Anti-Gravity</strong> — Editor com IA integrada, similar ao Cursor em conceito. Quando você seleciona Anti-Gravity durante a instalação do AIOX, os agentes aparecem automaticamente na área de chat do editor. Suporta terminal integrado (<code>Ctrl+J</code> ou <code>Cmd+J</code>), visualização de arquivos, e acesso direto aos mesmos agentes que você usa no terminal.</p>
+<p>Qualquer um dos três funciona. O editor serve para visualizar e navegar pelos arquivos enquanto o terminal (ou o terminal integrado do editor) é onde os agentes operam.</p>
+<h4 id="passo-5-bootstrap-com-devops">Passo 5: Bootstrap com @devops</h4>
+<p>Este é o passo que conecta tudo — GitHub, estrutura de projeto, e ambiente de desenvolvimento:</p>
+<pre><code>@devops *bootstrap
+</code></pre>
+<p>O bootstrap vai fazer uma série de perguntas:</p>
+<ol>
+<li><strong>Nome do projeto</strong> — confirme o padrão (geralmente o nome da pasta)</li>
+<li><strong>Organização/usuário do GitHub</strong> — seu usuário pessoal do GitHub</li>
+<li><strong>Visibilidade</strong> — privado (recomendado para projetos pessoais)</li>
+<li><strong>Instalar dependências adicionais</strong> — não (a menos que você saiba o que precisa)</li>
+</ol>
+<p>Após responder, o bootstrap:
+- Inicializa o repositório Git local
+- Cria o repositório remoto no GitHub (via <code>gh</code>)
+- Configura o <code>.gitignore</code> adequado
+- Faz o primeiro commit e push
+- Deixa o projeto pronto para desenvolvimento</p>
+<p><strong>Verificação:</strong> Após o bootstrap, abra seu GitHub no navegador e dê um refresh. O repositório do projeto deve aparecer lá — criado automaticamente pelo Devops.</p>
+<h4 id="passo-6-configurar-permissoes-opcional">Passo 6: Configurar Permissões (Opcional)</h4>
+<p>Por padrão, o Claude Code pede confirmação para cada operação que modifica arquivos. Isso é seguro, mas pode se tornar repetitivo quando você já sabe o que está fazendo. Existem duas formas de ajustar:</p>
+<p><strong>Método 1: settings.local.json (Recomendado)</strong></p>
+<p>Abra o arquivo <code>.claude/settings.local.json</code> no editor e adicione as permissões que deseja liberar. Esse método é granular — você escolhe exatamente o que autorizar.</p>
+<p>Após modificar o arquivo, você precisa sair do Claude Code (<code>exit</code>) e abrir novamente (<code>claude</code>) para que as mudanças tenham efeito.</p>
+<p><strong>Método 2: Flag de linha de comando (PERIGOSO)</strong></p>
+<pre><code class="language-bash">claude --dangerously-skip-permissions
+</code></pre>
+<p>O nome do flag não é acidental. Com essa opção, o Claude Code pode fazer <strong>qualquer coisa</strong> na sua máquina sem pedir permissão — incluindo deletar arquivos, modificar configurações do sistema, ou formatar o disco. Use apenas quando você tem absoluta certeza do que está fazendo e entende os riscos envolvidos.</p>
+<p>A recomendação para quem está aprendendo: use o Método 1 ou simplesmente conviva com os prompts de permissão. A segurança vale mais do que a conveniência.</p>
+<h4 id="passo-7-verificar-e-praticar">Passo 7: Verificar e Praticar</h4>
+<p>Neste ponto, você tem:
+- ✓ Pasta do projeto criada
+- ✓ AIOX instalado
+- ✓ Claude Code operacional
+- ✓ Editor aberto com os arquivos
+- ✓ Repositório no GitHub configurado
+- ✓ Permissões ajustadas (opcional)</p>
+<p>O projeto está pronto para o primeiro ciclo de desenvolvimento. A partir daqui, o próximo passo é ativar um agente e começar a trabalhar — seja com <code>@pm *create-prd</code> para criar um PRD, ou <code>@sm *create-story</code> para criar uma story, ou qualquer outro ponto de entrada que faça sentido para o seu contexto.</p>
+<h4 id="erros-comuns-na-instalacao">Erros Comuns na Instalação</h4>
+<p><strong>Instalar em pasta com projeto existente:</strong>
+O instalador encontra arquivos como <code>.claude/CLAUDE.md</code> e apresenta prompt de merge/backup/overwrite. Solução: sempre crie uma pasta vazia antes de instalar.</p>
+<p><strong>Selecionar Pro em vez de Community:</strong>
+Se você acidentalmente selecionou o plano Pro, pode reinstalar na mesma pasta. O instalador vai perguntar sobre backup — aceite o backup e prossiga selecionando Community na próxima vez.</p>
+<p><strong>Erro de autenticação no bootstrap:</strong>
+Se o <code>@devops *bootstrap</code> falha ao criar o repositório, verifique se o GitHub CLI está autenticado: <code>gh auth status</code>. Se não estiver, execute <code>gh auth login</code> no terminal fora do Claude Code.</p>
+<p><strong>Bootstrap em pasta errada:</strong>
+Se você executou o bootstrap em uma pasta que já tinha um projeto, o comportamento pode ser imprevisível. A regra é simples: pasta nova, instalação limpa, bootstrap do zero. Na dúvida, comece de novo.</p>
+<p><strong>AIOX Pro não ativa no Mac:</strong>
+Limpe o cache do NPX (<code>npx clear-npx-cache</code> ou delete <code>~/.npm/_npx/</code>), teste em uma pasta nova, verifique se o nome da pasta não contém espaços ou caracteres especiais. O license server valida por IP (máximo 3 dispositivos). Para reset de senha, contate o suporte.</p>
+<p><strong>iCloud e OneDrive interferem:</strong>
+Serviços de sincronização de nuvem (iCloud, OneDrive, Google Drive) podem corromper arquivos do AIOX enquanto agentes escrevem neles. Mantenha seus projetos AIOX em pastas <strong>fora</strong> de diretórios sincronizados.</p>
+<hr />
+<h3 id="68-permissoes-e-seguranca">6.8 Permissões e Segurança</h3>
+<h4 id="o-flag-dangerously-skip-permissions">O Flag <code>--dangerously-skip-permissions</code></h4>
+<p>O Claude Code pede confirmação para cada operação de escrita e execução de comando. Isso é seguro, mas lento para desenvolvimento ativo. A recomendação do cohort é clara: use <code>--dangerously-skip-permissions</code> combinado com <strong>deny rules</strong> em <code>.claude/settings.json</code>.</p>
+<p>As deny rules atuam como guardrails: bloqueiam operações destrutivas independente do modo de permissão.</p>
+<pre><code class="language-json">{
+  &quot;deny&quot;: [
+    &quot;rm -rf&quot;,
+    &quot;mkfs&quot;,
+    &quot;dd&quot;,
+    &quot;chmod 777&quot;,
+    &quot;DROP TABLE&quot;,
+    &quot;TRUNCATE&quot;
+  ]
+}
+</code></pre>
+<h4 id="hooks-para-automacao-deterministica">Hooks para Automação Determinística</h4>
+<p>Hooks são comandos shell que executam automaticamente em resposta a eventos no Claude Code. Eles são <strong>100% determinísticos</strong> — diferente de skills (50-80%) ou agentes (variável).</p>
+<p>Exemplo prático: injetar a data atual no início de cada sessão via hook <code>SessionStart</code>:</p>
+<pre><code class="language-bash">#!/bin/bash
+echo &quot;Data atual: $(date '+%Y-%m-%d %H:%M:%S')&quot;
+</code></pre>
+<p>Hooks são configurados em <code>settings.json</code> e executam antes que o agente processe qualquer coisa — garantindo que informações contextuais críticas estejam sempre disponíveis.</p>
+<hr />
+<h3 id="exercicio-do-capitulo-6">Exercício do Capítulo 6</h3>
+<p><strong>Objetivo:</strong> Instalar o AIOX, verificar a saúde do ambiente, e explorar a estrutura gerada.</p>
+<p><strong>Etapa 1: Instalação</strong></p>
+<p>Se você ainda não tem um projeto para instalar o AIOX, crie um diretório de teste:</p>
+<pre><code class="language-bash">mkdir aiox-test
+cd aiox-test
+git init
+git commit --allow-empty -m &quot;Initial commit&quot;
+npx aiox-core init
+</code></pre>
+<p>Escolha o template <code>minimal</code> para começar com o mínimo necessário.</p>
+<p><strong>Etapa 2: Execute o Diagnóstico</strong></p>
+<pre><code class="language-bash">npx aiox-core doctor
+</code></pre>
+<p>Leia atentamente o output. Para cada item verificado, identifique:
+- O que foi verificado?
+- O resultado foi ✓, ⚠, ou ✗?
+- Se foi ⚠ ou ✗, qual a correção indicada?</p>
+<p>Execute <code>npx aiox-core doctor --fix</code> e observe quais problemas foram corrigidos automaticamente.</p>
+<p><strong>Etapa 3: Explore a Estrutura</strong></p>
+<p>Use os comandos abaixo para explorar o que foi criado:</p>
+<pre><code class="language-bash"># Listar a estrutura criada
+ls -la
+ls -la .aiox-core/
+ls -la .claude/
+ls -la docs/
+ls -la agents/
+
+# Ver o core-config.yaml
+cat core-config.yaml
+
+# Ver a Constitution
+cat .aiox-core/constitution.md
+</code></pre>
+<p><strong>Etapa 4: Identifique as Camadas</strong></p>
+<p>Classifique cada diretório e arquivo criado na instalação em uma das quatro camadas (L1, L2, L3, L4):</p>
+<p>Crie uma tabela com três colunas: <code>Path</code>, <code>Camada</code>, <code>Pode Editar?</code>. Mínimo de 10 linhas.</p>
+<p><strong>Etapa 5: Execute <code>aiox info</code></strong></p>
+<pre><code class="language-bash">npx aiox-core info
+</code></pre>
+<p>Compare o output com o que você viu explorando a estrutura na Etapa 3. As informações são consistentes?</p>
+<p><strong>Reflexão Final:</strong></p>
+<p>Documente em um parágrafo:
+- O que foi mais surpreendente na estrutura gerada?
+- Qual diretório você mais quer explorar em profundidade?
+- Algum pré-requisito causou problemas na instalação? Como você resolveu?</p>
+<hr />
+<p><em>No próximo capítulo, você vai conhecer cada agente em detalhe: suas personas, suas capacidades, suas fronteiras de autoridade, e como colaborar com eles de forma eficiente.</em></p>
+      </article>
+
+      <div class="nav-footer">
+        <a href="05-dados-primeira-mao.html" class=""><div class="label">← Anterior</div><div class="title">Cap 05 · Dados de Primeira Mão: Seu Fosso Competitivo</div></a>
+        <a href="07-agentes.html" class="nav-next"><div class="label">Próximo →</div><div class="title">Cap 07 · Conhecendo Seus Agentes</div></a>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<button class="to-top" id="to-top" aria-label="Voltar ao topo">↑</button>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap 03 — A Constitution: As Leis do Framework · AIOX Squad</title>
+<meta name="description" content="A Constitution é o contrato legal que bloqueia automaticamente violações. 6 artigos + gates determinísticos transformam princípios em proteção real.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="../assets/chat.css">
+<link rel="icon" type="image/svg+xml" href="../assets/logo-aiox.svg">
+</head>
+<body data-chapter="3">
+
+<div class="app">
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html"><img src="../assets/logo-aiox.svg" alt="AIOX Squad"></a>
+      <span class="sidebar-badge">Guia Técnico</span>
+      <div class="sidebar-title">AIOX Squad</div>
+      <div class="sidebar-subtitle">17 capítulos · Synkra</div>
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="sidebar-progress-label"><span>Progresso</span><span id="sb-pct">0/17</span></div>
+      <div class="progress-bar"><div id="sb-bar"></div></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Capítulos</div>
+      <div id="sidebar-chapters"></div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="../index.html">← Voltar à home</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="top-nav">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="../index.html">Capítulos</a>
+        <span class="sep">/</span>
+        <span class="current">Cap 03</span>
+      </div>
+      <div class="top-actions">
+        <button class="gsearch-trigger" data-gsearch-open aria-label="Buscar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <span class="hint">Buscar</span>
+          <kbd>/</kbd>
+        </button>
+        <a class="btn-sm" href="02-tres-pilares.html">← Anterior</a>
+        <a class="btn-sm" href="04-stack-primitivas.html">Próximo →</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section class="hero">
+        <span class="hero-tag">Capítulo 03 · INICIANTE</span>
+        <h1 class="hero-title">A Constitution: As Leis do Framework</h1>
+        <p class="hero-subtitle">A Constitution é o contrato legal que bloqueia automaticamente violações. 6 artigos + gates determinísticos transformam princípios em proteção real.</p>
+        <div class="meta-row">
+          <span class="meta-chip">⏱ <strong>20 min</strong> de leitura</span>
+          <span class="meta-chip">🎯 <strong>4</strong> objetivos</span>
+          <span class="meta-chip">🧩 <strong>6</strong> conceitos-chave</span>
+          
+        </div>
+      </section>
+
+      <div class="tldr">
+        <div class="tldr-label">TL;DR</div>
+        <div class="tldr-text">A Constitution é o contrato legal que bloqueia automaticamente violações. 6 artigos + gates determinísticos transformam princípios em proteção real.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Você vai aprender</h3>
+          <ul><li>Conhecer os 6 artigos da Constitution</li><li>Entender como gates automáticos funcionam</li><li>Dominar o Artigo IV: No Invention</li><li>Prevenir scope creep com rastreabilidade</li></ul>
+        </div>
+        <div class="card">
+          <h3>Conceitos-chave</h3>
+          <div class="chips"><span class="chip">Constitution</span><span class="chip">6 Artigos</span><span class="chip">Gates automáticos</span><span class="chip">Severidade (NON-NEGOTIABLE/MUST/SHOULD)</span><span class="chip">No Invention</span><span class="chip">Rastreabilidade FR/NFR/CON</span></div>
+        </div>
+      </div>
+
+      
+
+      <article class="prose">
+        <hr />
+<h3 id="31-por-que-um-framework-precisa-de-leis">3.1 Por Que Um Framework Precisa de Leis</h3>
+<p>Imagine que você contratou dez desenvolvedores altamente competentes para trabalhar no seu projeto. Cada um é brilhante na sua área, mas nenhum deles tem qualquer restrição sobre o que pode ou não pode fazer. Um deles decide que o banco de dados deveria ser MongoDB porque "é mais moderno". Outro reescreve o módulo de autenticação porque "a versão anterior estava mal feita". Um terceiro adiciona três dependências novas sem consultar ninguém porque "vão ser úteis no futuro".</p>
+<p>Em dois meses, o projeto está irreconhecível. As decisões arquiteturais originais foram ignoradas. O escopo triplicou. Ninguém sabe exatamente o que foi feito ou por quê. E o pior: cada desenvolvedor estava agindo de boa-fé, com boas intenções, usando seu conhecimento genuíno.</p>
+<p>Agora substitua "desenvolvedores" por "agentes de IA".</p>
+<p>O problema é exatamente o mesmo — só que amplificado. Agentes de IA têm uma propriedade que os torna particularmente perigosos sem restrições: eles são <em>muito bons</em> em parecer convincentes enquanto fazem coisas que não foram pedidas. Um LLM não diz "desculpa, não sei o que fazer aqui." Ele inventa uma resposta plausível e a entrega com a mesma confiança de uma resposta genuinamente correta.</p>
+<p>Sem estrutura, IA em desenvolvimento produz três patologias específicas:</p>
+<p><strong>Invenção de features.</strong> Você pede "adicione um botão de exportação" e o agente implementa exportação para CSV, PDF, e Excel, com opções de formatação e um modal de configuração — porque "vai ser útil". Você não pediu nada disso. O escopo explodiu silenciosamente.</p>
+<p><strong>Violação de contexto.</strong> O agente não sabe quais decisões foram tomadas anteriormente. Ele não tem memória de que você escolheu PostgreSQL em vez de MongoDB por razões arquiteturais específicas. Sem restrições, ele vai sugerir "e se usássemos Redis aqui?" a cada oportunidade.</p>
+<p><strong>Cruzamento de fronteiras.</strong> Sem delimitação clara de autoridade, o agente de desenvolvimento começa a tomar decisões de arquitetura. O agente de qualidade começa a implementar correções. O agente de UX começa a redesenhar o banco de dados. Cada um agindo no que acha melhor, sem coordenação.</p>
+<p>A Constitution do AIOX existe para resolver esses três problemas de forma sistemática. Ela é um contrato formal entre o framework, os agentes, e o projeto. Um contrato que não pode ser ignorado, negociado ou reinterpretado por conveniência.</p>
+<h4 id="a-constitution-como-contrato">A Constitution Como Contrato</h4>
+<p>O que torna uma constitution diferente de uma "lista de boas práticas" ou um "guia de estilo"?</p>
+<p>A diferença está na executabilidade. Boas práticas são sugestões. Um guia de estilo é uma recomendação. Uma constitution tem <strong>gates automáticos</strong> que bloqueiam violações antes que elas aconteçam.</p>
+<p>Se um artigo da Constitution diz que apenas o agente <code>@devops</code> pode fazer push para o repositório, isso não é uma recomendação de que outros agentes deveriam evitar fazer push. É uma restrição técnica e processual que torna impossível (ou pelo menos muito difícil) para qualquer outro agente fazer essa operação. O gate bloqueia.</p>
+<p>Isso importa porque agentes de IA são sofisticados o suficiente para <em>racionalizar</em> por que uma regra deveria ter exceções. "Nesse caso específico, faz sentido eu fazer o push porque..." — e a lógica pode parecer convincente. A Constitution não negocia. O gate bloqueia, e ponto.</p>
+<hr />
+<h3 id="32-os-6-artigos">3.2 Os 6 Artigos</h3>
+<p>A Constitution do AIOX tem seis artigos, cada um com um princípio central, uma severidade, e uma razão de existir.</p>
+<h4 id="artigo-i-cli-first-non-negotiable">Artigo I — CLI First (NON-NEGOTIABLE)</h4>
+<p><strong>Princípio:</strong> Toda operação significativa do sistema deve ter um equivalente CLI. O terminal é a camada primária. Interfaces gráficas são derivadas.</p>
+<p><strong>Severidade:</strong> NON-NEGOTIABLE — o gate sempre bloqueia violações. Não há waiver possível.</p>
+<p><strong>Por que existe:</strong> Sem CLI First, operações que só existem em interfaces gráficas se tornam impossíveis de automatizar, auditar, ou reproduzir. Um agente de IA não consegue "clicar em botões" de forma confiável ou versionável. Toda automação começa com um comando.</p>
+<p><strong>Na prática:</strong> Se você está construindo uma nova funcionalidade no AIOX e ela não tem um comando CLI correspondente, você está violando o Artigo I. A solução não é "vou adicionar o CLI depois" — é criar o CLI primeiro, e derivar a interface visual a partir dele.</p>
+<h4 id="artigo-ii-agent-authority-non-negotiable">Artigo II — Agent Authority (NON-NEGOTIABLE)</h4>
+<p><strong>Princípio:</strong> Cada agente tem autoridade definida e exclusiva sobre certas operações. Nenhum agente pode executar operações fora do seu escopo sem delegação explícita.</p>
+<p><strong>Severidade:</strong> NON-NEGOTIABLE — o gate sempre bloqueia violações.</p>
+<p><strong>Por que existe:</strong> Sem delimitação de autoridade, o sistema vira caos. O agente de desenvolvimento começa a fazer deploys. O agente de qualidade começa a aprovar suas próprias revisões. O agente de dados começa a tomar decisões de arquitetura de sistema. Cada agente fazendo o que acha melhor, sem coordenação, sem responsabilidade clara.</p>
+<p><strong>Na prática:</strong> <code>@devops</code> é o único agente com autoridade para <code>git push</code> e <code>gh pr create</code>. Se <code>@dev</code> tenta fazer push, o gate bloqueia. Não porque <code>@dev</code> é incompetente — mas porque a separação de autoridade cria accountability. Gage é responsável por tudo que vai para o repositório. Dex é responsável pela implementação local. Essa clareza é o que permite rastrear responsabilidades.</p>
+<h4 id="artigo-iii-story-driven-development-must">Artigo III — Story-Driven Development (MUST)</h4>
+<p><strong>Princípio:</strong> Todo desenvolvimento começa com uma story validada. Nenhuma implementação acontece sem uma story em status <code>Ready</code>.</p>
+<p><strong>Severidade:</strong> MUST — o gate bloqueia por padrão, mas existe waiver com justificativa documentada.</p>
+<p><strong>Por que existe:</strong> Sem uma story, não há critérios de aceite. Sem critérios de aceite, não há definição de "pronto". Sem definição de pronto, o trabalho nunca termina — ou termina de forma diferente do que deveria. A story é o contrato entre o que foi pedido e o que foi entregue.</p>
+<p><strong>Na prática:</strong> O agente <code>@dev</code> tem uma pré-condição explícita: deve existir uma story em status <code>Ready</code> antes de iniciar qualquer implementação. Se você tentar iniciar uma implementação sem story, o gate questiona. Com waiver documentado (hotfix de produção urgente, por exemplo), o processo pode continuar — mas a exceção fica registrada.</p>
+<h4 id="artigo-iv-no-invention-must">Artigo IV — No Invention (MUST)</h4>
+<p><strong>Princípio:</strong> Agentes só podem produzir outputs que rastreiam de volta a requisitos documentados. Nenhuma feature, campo, função, ou decisão arquitetural pode ser "inventada" pelo agente.</p>
+<p><strong>Severidade:</strong> MUST — o gate bloqueia por padrão.</p>
+<p><strong>Por que existe:</strong> LLMs são treinados para serem úteis. Ser útil, na ausência de restrições, frequentemente significa adicionar mais do que foi pedido. O modelo "sabe" que uma API de login "deveria ter" rate limiting, logging, refresh tokens, e remoção de conta — e vai adicionar tudo isso mesmo que você não tenha pedido nada disso.</p>
+<p><strong>Na prática:</strong> Todo output de um agente deve poder ser rastreado a um FR-<em> (Functional Requirement), NFR-</em> (Non-Functional Requirement), ou CON-* (Constraint) documentado no PRD ou na story. Se não há rastreabilidade, o output é inválido. Mais sobre isso na seção 3.4.</p>
+<h4 id="artigo-v-quality-first-must">Artigo V — Quality First (MUST)</h4>
+<p><strong>Princípio:</strong> Nenhum trabalho avança sem passar pelo gate de qualidade correspondente. Qualidade não é negociável por velocidade.</p>
+<p><strong>Severidade:</strong> MUST — o gate bloqueia por padrão, com waiver possível documentado.</p>
+<p><strong>Por que existe:</strong> A pressão por velocidade é constante em qualquer projeto. "Só essa vez vamos pular os testes." "Esse PR é urgente, não dá pra esperar o code review." Cada exceção cria dívida técnica. Com o tempo, o custo de corrigir supera o tempo que foi "economizado" pulando qualidade.</p>
+<p><strong>Na prática:</strong> O ciclo <code>@qa *qa-gate</code> tem sete verificações que devem passar antes de qualquer story ser marcada como <code>Done</code>. O waiver existe para casos documentados (proof-of-concept, experimentos) onde a qualidade de produção não é o objetivo. Mas o waiver é uma exceção documentada, não uma cultura.</p>
+<h4 id="artigo-vi-absolute-imports-should">Artigo VI — Absolute Imports (SHOULD)</h4>
+<p><strong>Princípio:</strong> Todos os imports no código devem usar caminhos absolutos, nunca relativos.</p>
+<p><strong>Severidade:</strong> SHOULD — gera aviso, não bloqueia.</p>
+<p><strong>Por que existe:</strong> Imports relativos criam fragilidade. <code>import { useStore } from '../../../stores/feature/store'</code> quebra quando você move arquivos. <code>import { useStore } from '@/stores/feature/store'</code> é resiliente a reorganização. Em projetos grandes com múltiplos desenvolvedores (e agentes) modificando a estrutura, imports absolutos são a diferença entre estabilidade e caos de dependências.</p>
+<p><strong>Na prática:</strong> O gate de qualidade do <code>@qa</code> verifica se há imports relativos no código novo. Não bloqueia automaticamente (severidade SHOULD), mas reporta como concern que deve ser endereçado antes do merge.</p>
+<hr />
+<h3 id="33-gates-automaticos">3.3 Gates Automáticos</h3>
+<p>Gates são mecanismos de verificação que acontecem automaticamente em pontos específicos do ciclo de desenvolvimento. Eles existem para tornar a Constitution executável — não apenas aspiracional.</p>
+<h4 id="como-gates-funcionam">Como Gates Funcionam</h4>
+<p>Um gate é simples: em um momento específico do processo, um conjunto de condições é verificado. Se todas as condições passam, o processo continua. Se qualquer condição falha, o gate bloqueia — e o processo não avança até que a condição seja satisfeita (ou que um waiver seja documentado, quando disponível).</p>
+<p>Gates não pedem permissão. Eles não "recomendam" que você corrija algo. Eles bloqueiam. Essa distinção é crucial porque remove a possibilidade de "vou corrigir depois" — não há depois sem passar pelo gate.</p>
+<h4 id="niveis-de-severidade">Níveis de Severidade</h4>
+<p><strong>NON-NEGOTIABLE:</strong> O gate sempre bloqueia. Não há waiver, não há exceção, não há argumento que faça o sistema avançar sem a condição ser satisfeita. Artigos I e II operam nesse nível. A razão é que as violações desses artigos criam danos estruturais que são muito mais caros de corrigir do que o inconveniente do bloqueio.</p>
+<p><strong>MUST:</strong> O gate bloqueia por padrão, mas aceita waiver. Um waiver é uma exceção documentada: você explica por que está ignorando a regra nesse caso específico, e essa explicação fica registrada. Artigos III, IV, e V operam nesse nível. O waiver não é uma porta de escape fácil — é um mecanismo que torna as exceções visíveis e rastreáveis.</p>
+<p><strong>SHOULD:</strong> O gate gera um aviso mas não bloqueia. O processo continua, mas a violação fica registrada para revisão. Artigo VI opera nesse nível. O SHOULD reconhece que algumas regras são fortemente recomendadas mas não criticamente obrigatórias — e que bloquear o processo por um import relativo seria desproporcional.</p>
+<h4 id="tipos-de-gates-no-aiox">Tipos de Gates no AIOX</h4>
+<p><strong>Gate de Criação de Story:</strong> Verifica que a story tem todos os campos obrigatórios, que o epic referenciado existe, que as dependências listadas existem e estão em status adequado, e que o formato do arquivo está correto. Acionado quando <code>@sm</code> cria uma nova story.</p>
+<p><strong>Gate de Validação PO:</strong> O checklist de 10 pontos do <code>@po</code>. Pontuação mínima de 7 para a story avançar. Acionado quando <code>@po</code> executa <code>*validate-story-draft</code>. Os 10 pontos cobrem: clareza dos critérios de aceite, rastreabilidade aos requisitos, completude do contexto, viabilidade técnica, identificação de riscos, dependências mapeadas, estimativa de tamanho razoável, testes contemplados, documentação necessária identificada, e escopo bem definido.</p>
+<p><strong>Gate de Autoridade:</strong> Verifica se o agente que está tentando executar uma operação tem autoridade para isso. Acionado em qualquer operação que envolva os escopos exclusivos definidos no Artigo II. O bloqueio é imediato e a mensagem é clara: "Operação bloqueada — autoridade exclusiva de <code>@devops</code>."</p>
+<p><strong>Gate de QA:</strong> As sete verificações de qualidade do <code>@qa</code>. Acionado quando <code>@qa</code> executa <code>*qa-gate</code>. As verificações: testes passando, lint sem erros, type checking limpo, todos os critérios de aceite satisfeitos, sem regressões em funcionalidades existentes, documentação atualizada, e nada fora do escopo implementado.</p>
+<hr />
+<h3 id="34-no-invention-o-artigo-mais-importante-para-leigos">3.4 No Invention: O Artigo Mais Importante Para Leigos</h3>
+<p>De todos os seis artigos, o Artigo IV — No Invention — é o mais importante para quem está começando a trabalhar com IA em projetos reais. E é também o menos intuitivo.</p>
+<p>Para entender por que, você precisa entender uma propriedade fundamental dos LLMs: eles foram treinados para ser úteis, e "ser útil" para um modelo de linguagem frequentemente significa <em>completar</em> o que parece incompleto, <em>adicionar</em> o que parece faltar, e <em>melhorar</em> o que parece poder ser melhorado.</p>
+<p>Isso é excelente quando você quer que a IA sugira ideias criativas. É um desastre quando você quer que a IA implemente exatamente o que foi especificado.</p>
+<h4 id="por-que-llms-alucinam-features">Por Que LLMs Alucinam Features</h4>
+<p>Alucinação não é apenas quando a IA inventa fatos falsos. É também quando a IA inventa <em>trabalho não pedido</em> — e entrega com a mesma confiança de trabalho pedido.</p>
+<p>Considere esse cenário: você tem um PRD que especifica um sistema de login com email e senha. Você pede para um agente de IA implementar o sistema. Sem restrições, o agente vai muito provavelmente implementar também:</p>
+<ul>
+<li>Validação de força da senha</li>
+<li>Email de confirmação</li>
+<li>Recuperação de senha via email</li>
+<li>Opção "lembrar-me"</li>
+<li>Logout de todos os dispositivos</li>
+<li>Log de tentativas de login</li>
+</ul>
+<p>Nenhuma dessas coisas estava no PRD. O agente as adicionou porque "faz sentido" para um sistema de login completo. Cada uma dessas adições tem custo de desenvolvimento, custo de teste, custo de manutenção, e potencial de introduzir bugs.</p>
+<p>Pior: você só descobre que essas features foram adicionadas quando o código chega para revisão. Você gastou tokens implementando, tokens fazendo code review, e vai gastar mais tokens removendo o que não devia estar lá.</p>
+<h4 id="o-principio-do-repertorio">O Princípio do Repertório</h4>
+<p>Antes de entrar no mecanismo de rastreabilidade, é importante introduzir um conceito que explica <em>por que</em> as restrições do Artigo IV funcionam: o <strong>Princípio do Repertório</strong>.</p>
+<p>LLMs produzem output baseado em padrões que aprenderam durante o treinamento. Quando você diz "login", o modelo ativa um conjunto de padrões associados a "sistema de login" — e esse conjunto inclui todas as features que ele já viu em sistemas de login no código que foi treinado. Sem restrições, o modelo vai "completar" o padrão.</p>
+<p>O Princípio do Repertório diz: <strong>precisão de vocabulário reduz alucinação</strong>. Quando você usa terminologia específica, bem definida, e rastreável — <code>FR-AUTH-001: autenticação com email e senha</code>, <code>NFR-SEC-003: senha mínima de 8 caracteres</code> — você está criando um contexto que direciona o modelo para outputs específicos, em vez de deixar que ele "complete" com padrões genéricos.</p>
+<p>O Artigo IV implementa o Princípio do Repertório de forma sistemática: todo output deve rastrear a uma referência documentada. Isso força precisão de vocabulário em ambas as direções — no que você especifica, e no que o agente entrega.</p>
+<h4 id="o-mecanismo-de-rastreabilidade">O Mecanismo de Rastreabilidade</h4>
+<p>Na prática, o Artigo IV funciona assim: qualquer afirmação, decisão, ou implementação produzida por um agente deve ser rastreável a uma referência no PRD ou na story.</p>
+<p>As referências usam um sistema de IDs prefixados:</p>
+<ul>
+<li><strong>FR-</strong>*: Functional Requirement (requisito funcional). Ex: <code>FR-AUTH-001: O sistema deve permitir login com email e senha.</code></li>
+<li><strong>NFR-</strong>*: Non-Functional Requirement (requisito não-funcional). Ex: <code>NFR-SEC-003: Senhas devem ter mínimo de 8 caracteres.</code></li>
+<li><strong>CON-</strong>*: Constraint (restrição). Ex: <code>CON-TECH-002: O stack deve usar Node.js 18+ e TypeScript.</code></li>
+</ul>
+<p>Quando um agente produz código que inclui validação de força de senha, ele deve ser capaz de apontar para <code>NFR-SEC-003</code> como justificativa. Se não há NFR-SEC-003 no PRD, a validação não deveria estar no código.</p>
+<h4 id="violacao-vs-conformidade-exemplos-concretos">Violação vs Conformidade: Exemplos Concretos</h4>
+<p><strong>Violação do Artigo IV:</strong></p>
+<p>O PRD especifica <code>FR-EXPORT-001: O usuário pode exportar dados em formato CSV.</code></p>
+<p>O agente implementa exportação para CSV, PDF, Excel, e JSON, com configurações de formatação e email automático dos exportados.</p>
+<p>Apenas o CSV rastreia a <code>FR-EXPORT-001</code>. PDF, Excel, JSON, configurações de formatação, e email automático são invenção. O gate bloqueia.</p>
+<p><strong>Conformidade com o Artigo IV:</strong></p>
+<p>O PRD especifica <code>FR-EXPORT-001: O usuário pode exportar dados em formato CSV.</code></p>
+<p>O agente implementa apenas exportação para CSV. O code review mostra que cada linha de código rastreia a <code>FR-EXPORT-001</code>.</p>
+<p>Quando o agente nota que o código poderia facilmente suportar outros formatos, ele não implementa — ele <strong>reporta</strong> como sugestão para o próximo ciclo: "Para stories futuras, considerar adicionar suporte a PDF e Excel via <code>FR-EXPORT-002</code>." A decisão fica com o humano.</p>
+<h4 id="prevencao-de-scope-creep">Prevenção de Scope Creep</h4>
+<p>Um dos benefícios mais práticos do Artigo IV é a prevenção sistemática de scope creep — a expansão gradual e não planejada do escopo do projeto.</p>
+<p>Scope creep é insidioso porque cada adição individual parece razoável. "Claro que o login deveria ter recuperação de senha." "Faz sentido que o export tenha configurações." "Seria estranho não ter log de atividades."</p>
+<p>O problema não é que essas coisas são ruins. O problema é que elas foram decididas <em>implicitamente</em>, por um agente de IA, sem consideração do custo total, sem priorização, sem aprovação do Product Owner, sem estimativa de impacto.</p>
+<p>O Artigo IV torna esse processo <em>explícito</em>. Qualquer coisa que vai além do especificado gera um bloqueio. O bloqueio força uma decisão consciente: isso deve ser adicionado ao PRD e especificado como FR-*, ou não deve ser implementado agora?</p>
+<p>Essa explicitação tem um efeito colateral valioso: ela cria um backlog de ideias. Quando o agente reporta "a implementação poderia incluir X, mas X não está especificado", você tem uma lista de potenciais features para avaliar e priorizar — em vez de descobrir que foram silenciosamente adicionadas ao código.</p>
+<hr />
+<h3 id="exercicio-do-capitulo-3">Exercício do Capítulo 3</h3>
+<p><strong>Objetivo:</strong> Desenvolver consciência sobre quais artigos da Constitution você mais naturalmente violaria.</p>
+<p><strong>Instrução:</strong> Leia os seis artigos novamente, devagar. Para cada artigo, pense em projetos passados onde você trabalhou — como desenvolvedor, como líder, como cliente. Responda:</p>
+<ol>
+<li>
+<p><strong>Artigo I (CLI First):</strong> Você já construiu funcionalidades que só existiam em interfaces gráficas e depois precisou automatizar? O que aconteceu?</p>
+</li>
+<li>
+<p><strong>Artigo II (Agent Authority):</strong> Você já teve projetos onde "todo mundo fazia de tudo" sem responsabilidade clara? Quais foram as consequências?</p>
+</li>
+<li>
+<p><strong>Artigo III (Story-Driven):</strong> Você já começou a implementar algo sem especificação clara? O que você entregou correspondia ao que era esperado?</p>
+</li>
+<li>
+<p><strong>Artigo IV (No Invention):</strong> Você já recebeu código ou documento que tinha muito mais do que foi pedido? Como foi a experiência de revisar/remover o excesso?</p>
+</li>
+<li>
+<p><strong>Artigo V (Quality First):</strong> Você já "pulou" qualidade por pressão de prazo? Quanto tempo você gastou corrigindo depois?</p>
+</li>
+<li>
+<p><strong>Artigo VI (Absolute Imports):</strong> Você já passou horas corrigindo imports quebrados após uma reorganização de pastas?</p>
+</li>
+</ol>
+<p>Depois de responder às seis perguntas, identifique: <strong>qual artigo você mais naturalmente resistiria a seguir?</strong> Não a resposta "correta" — a resposta honesta. Esse artigo é onde você vai precisar de mais disciplina consciente ao trabalhar com AIOX.</p>
+<p>Escreva um parágrafo explicando por que esse artigo é desafiador para você e quais são os gatilhos que te levam a querer violá-lo. Esse exercício de autoconhecimento vai ser mais valioso do que memorizar os artigos.</p>
+<hr />
+<p><em>No próximo capítulo, vamos explorar a Stack de Primitivas — como comandos, tasks, skills, agentes, e workflows se encaixam em uma hierarquia que torna o sistema mais que a soma de suas partes.</em></p>
+      </article>
+
+      <div class="nav-footer">
+        <a href="02-tres-pilares.html" class=""><div class="label">← Anterior</div><div class="title">Cap 02 · Os Três Pilares: CLI First, Code First, Story-Driven</div></a>
+        <a href="04-stack-primitivas.html" class="nav-next"><div class="label">Próximo →</div><div class="title">Cap 04 · A Stack de Primitivas: De Comandos a Workflows</div></a>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<button class="to-top" id="to-top" aria-label="Voltar ao topo">↑</button>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+</body>
+</html>

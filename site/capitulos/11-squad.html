@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap 11 — O Conceito de Squad · AIOX Squad</title>
+<meta name="description" content="Squad é uma Business Unit — equipe especializada de agentes com domínio, dados e memória compartilhada. Muito além de um agente individual.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="../assets/chat.css">
+<link rel="icon" type="image/svg+xml" href="../assets/logo-aiox.svg">
+</head>
+<body data-chapter="11">
+
+<div class="app">
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html"><img src="../assets/logo-aiox.svg" alt="AIOX Squad"></a>
+      <span class="sidebar-badge">Guia Técnico</span>
+      <div class="sidebar-title">AIOX Squad</div>
+      <div class="sidebar-subtitle">17 capítulos · Synkra</div>
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="sidebar-progress-label"><span>Progresso</span><span id="sb-pct">0/17</span></div>
+      <div class="progress-bar"><div id="sb-bar"></div></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Capítulos</div>
+      <div id="sidebar-chapters"></div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="../index.html">← Voltar à home</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="top-nav">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="../index.html">Capítulos</a>
+        <span class="sep">/</span>
+        <span class="current">Cap 11</span>
+      </div>
+      <div class="top-actions">
+        <button class="gsearch-trigger" data-gsearch-open aria-label="Buscar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <span class="hint">Buscar</span>
+          <kbd>/</kbd>
+        </button>
+        <a class="btn-sm" href="10-workflows-avancados.html">← Anterior</a>
+        <a class="btn-sm" href="12-primeiro-squad.html">Próximo →</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section class="hero">
+        <span class="hero-tag">Capítulo 11 · AVANCADO</span>
+        <h1 class="hero-title">O Conceito de Squad</h1>
+        <p class="hero-subtitle">Squad é uma Business Unit — equipe especializada de agentes com domínio, dados e memória compartilhada. Muito além de um agente individual.</p>
+        <div class="meta-row">
+          <span class="meta-chip">⏱ <strong>35 min</strong> de leitura</span>
+          <span class="meta-chip">🎯 <strong>4</strong> objetivos</span>
+          <span class="meta-chip">🧩 <strong>7</strong> conceitos-chave</span>
+          
+        </div>
+      </section>
+
+      <div class="tldr">
+        <div class="tldr-label">TL;DR</div>
+        <div class="tldr-text">Squad é uma Business Unit — equipe especializada de agentes com domínio, dados e memória compartilhada. Muito além de um agente individual.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Você vai aprender</h3>
+          <ul><li>Distinguir Squad de Agente individual</li><li>Conhecer anatomia de um squad</li><li>Entender os 4 tiers e 4 níveis de distribuição</li><li>Reconhecer os 5 sinais para criar um squad</li></ul>
+        </div>
+        <div class="card">
+          <h3>Conceitos-chave</h3>
+          <div class="chips"><span class="chip">Business Unit</span><span class="chip">squad.yaml</span><span class="chip">Memória Compartilhada</span><span class="chip">4 Tiers (0/1/2/3)</span><span class="chip">4 Níveis de distribuição</span><span class="chip">book-squad</span><span class="chip">analytics-squad</span></div>
+        </div>
+      </div>
+
+      
+
+      <article class="prose">
+        <hr />
+<h3 id="111-o-que-e-um-squad">11.1 O Que É Um Squad</h3>
+<p>Quando a maioria das pessoas pensa em usar IA para trabalhar com um domínio específico de conhecimento — uma área de produto, uma vertical de mercado, um conjunto de práticas — elas pensam em "treinar um modelo" ou "criar um prompt especializado". Ambas as abordagens funcionam para casos simples. Nenhuma escala bem.</p>
+<p>Um <strong>squad</strong> no AIOX é algo fundamentalmente diferente. E a primeira coisa a entender é o que um squad <strong>NÃO</strong> é:</p>
+<ul>
+<li><strong>Não é um prompt.</strong> Um prompt é uma instrução. Um squad é uma formação.</li>
+<li><strong>Não é um agente.</strong> Um agente é um indivíduo com persona e skills. Um squad é um time.</li>
+<li><strong>Não é um workflow.</strong> Um workflow é uma sequência de tasks. Um squad é quem executa.</li>
+<li><strong>Não é uma task.</strong> Uma task é uma unidade de trabalho. Um squad é a equipe que a executa.</li>
+</ul>
+<p>A analogia mais precisa vem do mundo militar e empresarial: um squad é uma <strong>Business Unit (BU)</strong> — uma formação com pessoas, processos e entregas próprias.</p>
+<p>Um squad é uma <strong>equipe de agentes especializados em um domínio específico</strong>, cada um com papel, personalidade, e conhecimento acumulado próprio, operando de forma coordenada para resolver problemas daquele domínio. Não é um prompt especializado. Não é um único agente com "contexto extra". É uma equipe com a mesma complexidade e especialização que você esperaria de uma equipe humana real.</p>
+<p>Para tornar isso concreto: imagine que você está construindo um produto de investimentos. Você não quer um único agente genérico que "sabe um pouco sobre finanças". Você quer um analista fundamentalista com 10 anos de experiência em avaliação de empresas, um especialista em risco com foco em volatilidade de mercados emergentes, um estrategista de portfólio que pensa em alocação de ativos, e um analista de macroeconomia que conecta cenários globais com movimentos de mercado.</p>
+<p>Essas são personas diferentes. Têm backgrounds diferentes. Fazem perguntas diferentes. Chegam a conclusões diferentes e complementares. Juntas, cobrem o domínio de investimentos de uma forma que nenhum agente individual conseguiria.</p>
+<p>Um squad encapsula exatamente isso.</p>
+<hr />
+<h3 id="112-a-anatomia-de-um-squad">11.2 A Anatomia de um Squad</h3>
+<p>Todo squad no AIOX tem a mesma estrutura base, independente do domínio. Entender essa estrutura é fundamental para criar squads eficazes.</p>
+<h4 id="diretorio-base">Diretório Base</h4>
+<pre><code>squads/
+└── {squad-name}/
+    ├── squad.yaml          # Manifesto do squad
+    ├── agents/             # Definições dos agentes
+    │   ├── {agent-1}.md    # Persona, skills, autoridade
+    │   ├── {agent-2}.md
+    │   └── {agent-N}.md
+    ├── data/               # Dados de primeiro partido
+    │   ├── knowledge/      # Conhecimento do domínio
+    │   ├── examples/       # Exemplos e casos de uso
+    │   └── references/     # Material de referência
+    ├── tasks/              # Tasks específicas do squad
+    └── MEMORY.md           # Memória compartilhada do squad
+</code></pre>
+<h4 id="o-squadyaml-o-manifesto">O squad.yaml: O Manifesto</h4>
+<p>O manifesto define o squad como um todo:</p>
+<pre><code class="language-yaml">name: investment-analysis
+version: 1.0.0
+description: &quot;Squad de análise de investimentos&quot;
+
+agents:
+  - id: fundamentalista
+    persona: agents/fundamentalista.md
+    role: &quot;Análise fundamentalista de empresas&quot;
+  - id: risk-analyst
+    persona: agents/risk-analyst.md
+    role: &quot;Análise e gestão de risco&quot;
+  - id: macro-strategist
+    persona: agents/macro-strategist.md
+    role: &quot;Análise macroeconômica e estratégia&quot;
+
+domain:
+  primary: &quot;Análise de investimentos&quot;
+  verticals: [&quot;Renda variável&quot;, &quot;Renda fixa&quot;, &quot;Fundos&quot;]
+  geography: [&quot;Brasil&quot;, &quot;Global&quot;]
+
+data:
+  first_party:
+    - data/knowledge/
+    - data/references/
+
+commands:
+  - name: analyze-company
+    description: &quot;Análise completa de uma empresa&quot;
+    agents: [fundamentalista, risk-analyst, macro-strategist]
+  - name: portfolio-review
+    description: &quot;Review de portfólio com análise de risco&quot;
+    agents: [risk-analyst, macro-strategist]
+</code></pre>
+<h4 id="os-agentes-do-squad">Os Agentes do Squad</h4>
+<p>Cada agente em um squad tem uma definição que segue o mesmo padrão dos agentes de desenvolvimento do AIOX — persona, skills, autoridade — mas especializada para o domínio do squad.</p>
+<p>Um agente de squad não tem as mesmas autoridades que um agente de desenvolvimento. Ele não faz <code>git push</code>, não cria stories. Ele tem autoridade sobre as operações do seu domínio específico: analisar empresas, avaliar riscos, formular estratégias.</p>
+<p>A diferença central entre um agente de squad e um agente de desenvolvimento é o <strong>domínio de ativação</strong>. Um agente de desenvolvimento é ativado por um humano num fluxo de trabalho de software. Um agente de squad pode ser ativado por humanos, por outros agentes, ou por workflows automatizados — e seu output é conhecimento, análise, ou decisões, não código.</p>
+<h4 id="a-memoria-do-squad-memorymd">A Memória do Squad: MEMORY.md</h4>
+<p>Cada squad tem um arquivo <code>MEMORY.md</code> que funciona como a mente coletiva da equipe. Diferente do MEMORY.md individual de cada agente de desenvolvimento, a memória do squad captura:</p>
+<ul>
+<li>Decisões de análise feitas anteriormente sobre entidades do domínio</li>
+<li>Padrões identificados ao longo do tempo</li>
+<li>Preferências calibradas do operador</li>
+<li>Casos especiais e exceções estabelecidas</li>
+<li>Contexto acumulado sobre o domain específico</li>
+</ul>
+<p>Essa memória compartilhada é o que diferencia um squad maduro de um squad recém-criado. Com o tempo, o squad "aprende" — não no sentido de fine-tuning de modelo, mas no sentido de acumulação de contexto relevante que melhora a qualidade das análises.</p>
+<hr />
+<h3 id="113-squad-vs-agente-quando-cada-um">11.3 Squad vs. Agente: Quando Cada Um</h3>
+<p>A diferença entre usar um agente individual e usar um squad não é apenas de complexidade — é de natureza do problema.</p>
+<h4 id="quando-um-agente-individual-e-suficiente">Quando Um Agente Individual É Suficiente</h4>
+<p>Use um agente individual quando:</p>
+<ul>
+<li>O problema tem uma perspectiva dominante (é essencialmente um problema de desenvolvimento, ou essencialmente um problema de qualidade)</li>
+<li>A tarefa é bem delimitada e não exige múltiplas especialidades</li>
+<li>Você precisa de velocidade e a profundidade de análise não é crítica</li>
+<li>O contexto é específico de um projeto, não de um domínio</li>
+</ul>
+<p>Exemplo: "Implemente esta feature de autenticação." Isso é um problema de desenvolvimento. <code>@dev</code> é o agente certo.</p>
+<h4 id="quando-um-squad-e-necessario">Quando Um Squad É Necessário</h4>
+<p>Use um squad quando:</p>
+<ul>
+<li>O problema requer múltiplas perspectivas especializadas</li>
+<li>A qualidade da análise depende de expertise acumulada no domínio</li>
+<li>O output precisa ser consistente ao longo do tempo (não apenas numa sessão)</li>
+<li>Você quer que o sistema "aprenda" sobre o domínio com o uso</li>
+<li>O problema não é de desenvolvimento de software, mas de outro domínio</li>
+</ul>
+<p>Exemplo: "Analise esta empresa para potencial de investimento." Isso requer perspectivas fundamentalista, macroeconômica, e de risco. Um único agente genérico vai produzir análise superficial. Um squad especializado vai produzir análise com profundidade real.</p>
+<h4 id="a-hierarquia-de-uso">A Hierarquia de Uso</h4>
+<p>Em termos de profundidade e especialização:</p>
+<pre><code>Prompt direto → Agente individual → Squad especializado
+</code></pre>
+<p>Cada nível adiciona especialização, consistência, e profundidade — mas também adiciona setup e custo de tokens. Escolha o nível certo para o problema em mãos.</p>
+<hr />
+<h3 id="114-o-sistema-de-tiers-organizando-a-complexidade">11.4 O Sistema de Tiers: Organizando a Complexidade</h3>
+<p>Squads não são todos iguais em escopo ou responsabilidade. O AIOX organiza squads em um sistema de tiers que define sua posição na hierarquia operacional:</p>
+<h4 id="tier-0-fundacao">Tier 0 — Fundação</h4>
+<p>Squads de infraestrutura que servem como base para todos os outros. São "meta-squads" — squads que gerenciam squads. Exemplo: o Squad Creator, que cria e valida outros squads, opera no Tier 0.</p>
+<h4 id="tier-1-tatico">Tier 1 — Tático</h4>
+<p>Squads que coordenam operações entre múltiplos squads de execução. São os "gerentes" — decidem prioridade, alocam recursos, resolvem conflitos. O gap mais comum em projetos AIOX é a <strong>ausência do tier tático</strong>. Muitos operadores criam squads de execução (Tier 2) sem um squad tático que os coordene — e depois se perguntam por que os outputs são inconsistentes.</p>
+<h4 id="tier-2-operacional">Tier 2 — Operacional</h4>
+<p>Squads de execução que produzem outputs concretos de um domínio específico. A maioria dos squads que você vai criar são Tier 2: squads de copy, de análise, de design, de pesquisa.</p>
+<h4 id="tier-3-experts-cirurgicos">Tier 3 — Experts Cirúrgicos</h4>
+<p>Squads ultra-especializados que fazem uma única coisa com profundidade extrema. Um squad que só faz análise de risco de crédito, ou que só escreve cláusulas contratuais de M&amp;A. São chamados "cirúrgicos" porque atuam com precisão máxima em um domínio mínimo.</p>
+<h4 id="servicos-compartilhados-entre-squads">Serviços Compartilhados entre Squads</h4>
+<p>Squads não operam em isolamento completo. O AIOX suporta serviços compartilhados que qualquer squad pode consumir:</p>
+<ul>
+<li><strong>Registry:</strong> Catálogo centralizado de todos os squads e seus commands</li>
+<li><strong>Refresh Registry:</strong> <code>*refresh-registry</code> atualiza os slash commands disponíveis quando squads são adicionados ou modificados</li>
+<li><strong>Tools Discovery:</strong> <code>*discovery-tools</code> mapeia ferramentas, MCPs e capacidades disponíveis no ambiente, evitando duplicação entre squads</li>
+</ul>
+<p>Esses serviços compartilhados evitam a duplicação mais comum em projetos com múltiplos squads: cada squad reinventando a roda de buscar ferramentas ou registrar seus commands.</p>
+<hr />
+<h3 id="115-quando-criar-um-squad">11.5 Quando Criar Um Squad</h3>
+<p>A decisão de criar um squad deve ser guiada por critérios claros. Criar um squad desnecessariamente adiciona overhead sem benefício. Não criar um squad quando necessário resulta em análises inconsistentes e superficiais.</p>
+<h4 id="os-5-sinais-de-que-voce-precisa-de-um-squad">Os 5 Sinais de Que Você Precisa de Um Squad</h4>
+<p><strong>Sinal 1: Você está explicando o mesmo contexto de domínio repetidamente.</strong>
+Toda vez que você abre uma sessão, gasta 10-15 minutos re-explicando o contexto do domínio para a IA. Isso é sinal de que esse contexto precisa ser encapsulado num squad com memória persistente.</p>
+<p><strong>Sinal 2: O problema exige múltiplas perspectivas especializadas.</strong>
+Quando a resposta de uma única perspectiva é insuficiente e você precisa de análise a partir de ângulos diferentes — risco e retorno, tecnologia e negócio, longo prazo e curto prazo — você precisa de agentes com especialidades distintas.</p>
+<p><strong>Sinal 3: A qualidade da análise melhora com o acúmulo de casos.</strong>
+Quando cada análise que você faz deveria informar as próximas (você está vendo padrões, calibrando julgamentos, refinando critérios), a memória persistente do squad é o que permite isso.</p>
+<p><strong>Sinal 4: O problema é recorrente e de domínio estável.</strong>
+Se você vai usar essa capacidade de análise repetidamente ao longo do tempo, o investimento de criar um squad é justificado. Para problemas únicos ou esporádicos, um agente individual com contexto ad-hoc é mais eficiente.</p>
+<p><strong>Sinal 5: Você quer que outros usem a capacidade sem conhecer o domínio.</strong>
+Se você quer que sua equipe, seus clientes, ou outros sistemas usem a expertise de domínio sem precisar entender o domínio profundamente, um squad empacota essa expertise de forma acessível.</p>
+<h4 id="os-dominios-mais-comuns">Os Domínios Mais Comuns</h4>
+<p>Squads são criados para uma variedade de domínios. Os mais comuns em projetos AIOX:</p>
+<p><strong>Squads de Análise de Negócio:</strong> Análise competitiva, análise de mercado, due diligence de empresas, avaliação de oportunidades.</p>
+<p><strong>Squads de Conteúdo:</strong> Criação de conteúdo para nichos específicos — saúde, finanças, tecnologia, jurídico. Cada agente tem uma voz e especialidade diferente dentro do nicho.</p>
+<p><strong>Squads de Research:</strong> Pesquisa científica, análise de literatura, síntese de estudos em áreas específicas.</p>
+<p><strong>Squads de Produto:</strong> Análise de UX, pesquisa de usuário, ideação de features, priorização de roadmap.</p>
+<p><strong>Squads de Suporte:</strong> Squads especializados em responder perguntas sobre domínios complexos — compliance, regulação, configuração de sistemas.</p>
+<hr />
+<h3 id="116-os-squads-oficiais-do-aiox">11.6 Os Squads Oficiais do AIOX</h3>
+<p>O AIOX vem com um conjunto de squads oficiais pré-configurados. Esses squads foram desenhados para os domínios mais comuns e servem como referência de qualidade para squads customizados.</p>
+<h4 id="squad-book-squad">Squad: book-squad</h4>
+<p>O squad para criação de livros e conteúdo longo de alta qualidade. Composto por:</p>
+<ul>
+<li><strong>Estrategista de conteúdo:</strong> Define estrutura, audiência, e objetivos do livro</li>
+<li><strong>Pesquisador:</strong> Faz research de mercado, benchmarks, e fontes</li>
+<li><strong>Escritor principal:</strong> Produz o texto com voz consistente</li>
+<li><strong>Editor:</strong> Revisa qualidade, consistência, e clareza</li>
+<li><strong>Formatador:</strong> Garante formatação e estrutura técnica</li>
+</ul>
+<h4 id="squad-analytics-squad">Squad: analytics-squad</h4>
+<p>Squad para análise de dados e métricas de negócio:</p>
+<ul>
+<li><strong>Analista de dados:</strong> Interpreta datasets e métricas</li>
+<li><strong>Estatístico:</strong> Valida metodologia e significância</li>
+<li><strong>Storyteller de dados:</strong> Transforma análise em narrativa executiva</li>
+</ul>
+<h4 id="squad-research-squad">Squad: research-squad</h4>
+<p>Squad para pesquisa e síntese de informação:</p>
+<ul>
+<li><strong>Pesquisador primário:</strong> Coleta e valida fontes</li>
+<li><strong>Analista de padrões:</strong> Identifica tendências e conexões</li>
+<li><strong>Sintetizador:</strong> Compila insights em documentos coesos</li>
+</ul>
+<hr />
+<h3 id="117-niveis-de-distribuicao-de-squads">11.7 Níveis de Distribuição de Squads</h3>
+<p>Squads podem operar em diferentes níveis de distribuição — do uso pessoal até squads como serviço para múltiplos usuários.</p>
+<h4 id="nivel-1-uso-pessoal">Nível 1: Uso Pessoal</h4>
+<p>O squad vive no seu projeto AIOX local. Você é o único operador. O squad acessa seus dados locais, tem memória que só você alimenta, e produz outputs para seu uso pessoal ou profissional.</p>
+<p>Este é o ponto de entrada. Ideal para squads de análise pessoal, criação de conteúdo individual, ou exploração de novas capacidades.</p>
+<h4 id="nivel-2-uso-em-equipe">Nível 2: Uso em Equipe</h4>
+<p>O squad é versionado no repositório do projeto e a equipe inteira tem acesso. A memória é compartilhada (arquivo MEMORY.md no repositório) e os dados de primeiro partido são centralizados.</p>
+<p>Este nível requer atenção ao controle de acesso: quem pode alimentar dados para o squad? Quem pode modificar as personas dos agentes? Essas decisões precisam ser explícitas.</p>
+<h4 id="nivel-3-squad-como-api">Nível 3: Squad como API</h4>
+<p>O squad expõe uma interface de API que outros sistemas podem chamar. Um sistema de CRM pode chamar o squad de análise de clientes. Um pipeline de dados pode chamar o squad de research para enriquecer registros.</p>
+<p>Esse nível envolve empacotamento do squad como serviço e é tratado em detalhe no Capítulo 13.</p>
+<h4 id="nivel-4-squad-como-produto">Nível 4: Squad como Produto</h4>
+<p>O squad se torna um produto que usuários externos acessam através de uma interface. Pode ser um CLI, uma interface web, um bot de Slack, ou uma integração com outro sistema.</p>
+<p>Este é o nível de productização máximo — o squad deixa de ser uma ferramenta interna e se torna um produto entregável.</p>
+<hr />
+<h3 id="conectando-squads-e-o-ciclo-de-desenvolvimento">Conectando Squads e o Ciclo de Desenvolvimento</h3>
+<p>Uma pergunta comum: squads e o SDC são coisas separadas?</p>
+<p>A resposta é: são complementares e integrados.</p>
+<p>O SDC governa o desenvolvimento do software que implementa os squads, ou que usa os squads como componente. Se você está construindo um produto onde um squad de análise é um feature, o desenvolvimento desse produto segue o SDC normal. O squad é o que é entregue pelo produto, não o processo de desenvolvimento do produto.</p>
+<p>Pense assim: você usa o SDC para construir o carro. O squad é o motor do carro. São camadas diferentes que trabalham juntas.</p>
+<p>O próximo capítulo vai guiar você pelo processo prático de montar seu primeiro squad do zero — da escolha do domínio até o primeiro output em produção.</p>
+      </article>
+
+      <div class="nav-footer">
+        <a href="10-workflows-avancados.html" class=""><div class="label">← Anterior</div><div class="title">Cap 10 · Spec Pipeline e Brownfield: Workflows Avançados</div></a>
+        <a href="12-primeiro-squad.html" class="nav-next"><div class="label">Próximo →</div><div class="title">Cap 12 · Montando Seu Primeiro Squad</div></a>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<button class="to-top" id="to-top" aria-label="Voltar ao topo">↑</button>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+</body>
+</html>

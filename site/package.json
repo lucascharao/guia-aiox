@@ -1,0 +1,14 @@
+{
+  "name": "aiox-guia-tecnico",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Guia técnico interativo AIOX com chat Gemini",
+  "scripts": {
+    "gen": "python3 build_chapters.py",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@google/genai": "^0.14.0"
+  }
+}

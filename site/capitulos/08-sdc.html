@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap 08 — Seu Primeiro Ciclo: Story Development Cycle · AIOX Squad</title>
+<meta name="description" content="O SDC é o coração do AIOX. 4 fases, 5 agentes, 2 gates de qualidade. Do vazio ao deploy em produção, com rastreabilidade total.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="../assets/chat.css">
+<link rel="icon" type="image/svg+xml" href="../assets/logo-aiox.svg">
+</head>
+<body data-chapter="8">
+
+<div class="app">
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html"><img src="../assets/logo-aiox.svg" alt="AIOX Squad"></a>
+      <span class="sidebar-badge">Guia Técnico</span>
+      <div class="sidebar-title">AIOX Squad</div>
+      <div class="sidebar-subtitle">17 capítulos · Synkra</div>
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="sidebar-progress-label"><span>Progresso</span><span id="sb-pct">0/17</span></div>
+      <div class="progress-bar"><div id="sb-bar"></div></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Capítulos</div>
+      <div id="sidebar-chapters"></div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="../index.html">← Voltar à home</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="top-nav">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="../index.html">Capítulos</a>
+        <span class="sep">/</span>
+        <span class="current">Cap 08</span>
+      </div>
+      <div class="top-actions">
+        <button class="gsearch-trigger" data-gsearch-open aria-label="Buscar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <span class="hint">Buscar</span>
+          <kbd>/</kbd>
+        </button>
+        <a class="btn-sm" href="07-agentes.html">← Anterior</a>
+        <a class="btn-sm" href="09-qualidade.html">Próximo →</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section class="hero">
+        <span class="hero-tag">Capítulo 08 · INTERMEDIARIO</span>
+        <h1 class="hero-title">Seu Primeiro Ciclo: Story Development Cycle</h1>
+        <p class="hero-subtitle">O SDC é o coração do AIOX. 4 fases, 5 agentes, 2 gates de qualidade. Do vazio ao deploy em produção, com rastreabilidade total.</p>
+        <div class="meta-row">
+          <span class="meta-chip">⏱ <strong>50 min</strong> de leitura</span>
+          <span class="meta-chip">🎯 <strong>4</strong> objetivos</span>
+          <span class="meta-chip">🧩 <strong>5</strong> conceitos-chave</span>
+          <span class="meta-chip">⌨ <strong>6</strong> comandos CLI</span>
+        </div>
+      </section>
+
+      <div class="tldr">
+        <div class="tldr-label">TL;DR</div>
+        <div class="tldr-text">O SDC é o coração do AIOX. 4 fases, 5 agentes, 2 gates de qualidade. Do vazio ao deploy em produção, com rastreabilidade total.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Você vai aprender</h3>
+          <ul><li>Executar um SDC completo</li><li>Entender cada fase e handoff</li><li>Dominar os 3 modos de @dev</li><li>Aplicar os 7 checks do QA Gate</li></ul>
+        </div>
+        <div class="card">
+          <h3>Conceitos-chave</h3>
+          <div class="chips"><span class="chip">Story Development Cycle</span><span class="chip">4 fases (Create/Validate/Implement/QA)</span><span class="chip">PO Checklist (10 pontos)</span><span class="chip">QA Gate (7 checks)</span><span class="chip">3 modos (Interactive/YOLO/Pre-Flight)</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin: 28px 0;"><h3>Comandos deste capítulo</h3><ul><li><code>@sm *create-story</code></li><li><code>@po *validate-story-draft</code></li><li><code>@dev *task dev-develop-story</code></li><li><code>@dev *task dev-develop-story --mode=yolo</code></li><li><code>@qa *task qa-gate</code></li><li><code>@devops *push</code></li></ul></div>
+
+      <article class="prose">
+        <hr />
+<h3 id="81-o-sdc-em-visao-geral">8.1 O SDC em Visão Geral</h3>
+<p>Todo sistema de desenvolvimento profissional tem um ciclo de vida. No AIOX, esse ciclo se chama <strong>Story Development Cycle</strong>, ou simplesmente SDC. Ele é o coração pulsante do framework — o processo que transforma uma ideia no backlog em código versionado e entregue.</p>
+<p>Antes de entrar nos detalhes de cada fase, é importante entender por que o SDC existe e por que ele tem exatamente essa forma.</p>
+<p>O desenvolvimento de software sem processo tem um padrão universal de falha: alguém tem uma ideia, alguém implementa (nem sempre a mesma pessoa que entendeu a ideia), o código vai para produção sem revisão adequada, e bugs surgem porque ninguém validou se a implementação correspondia ao requisito original. O post-mortem revela sempre a mesma coisa: "ninguém especificou claramente o que precisava ser feito", ou "ninguém revisou antes de fazer deploy", ou "não havia critérios de aceite claros".</p>
+<p>O SDC resolve esses três problemas estruturais de uma vez. Ele força que toda unidade de trabalho passe por quatro portões antes de ser entregue:</p>
+<p><strong>Criação com contexto suficiente</strong> → <strong>Validação antes da implementação</strong> → <strong>Implementação dentro do escopo</strong> → <strong>QA antes do deploy</strong></p>
+<p>O fluxo completo envolve cinco agentes em sequência, cada um com autoridade exclusiva sobre sua fase:</p>
+<pre><code>@sm (River)   → Fase 1: Criar a story
+@po (Pax)     → Fase 2: Validar a story
+@dev (Dex)    → Fase 3: Implementar
+@qa (Quinn)   → Fase 4: QA Gate
+@devops (Gage)→ Entrega: Push e PR
+</code></pre>
+<p>Essa sequência não é arbitrária. Cada transição representa uma mudança de responsabilidade e uma validação de qualidade. Pular qualquer uma dessas fases é possível tecnicamente — o AIOX não te impede fisicamente de fazer <code>git push</code> com <code>@dev</code>. Mas fazer isso é como dirigir em alta velocidade sem cinto de segurança. Você pode chegar ao destino. Mas quando algo dá errado, as consequências são piores do que precisariam ser.</p>
+<p>Vamos percorrer cada fase em detalhe.</p>
+<hr />
+<h3 id="82-fase-1-criar-a-story-sm-river">8.2 Fase 1: Criar a Story — @sm (River)</h3>
+<h4 id="ativando-river">Ativando River</h4>
+<p>Para iniciar o SDC, você ativa o Scrum Master:</p>
+<pre><code>@sm
+</code></pre>
+<p>River entra em modo ativo e responde com um resumo do estado atual: epic ativo, stories pendentes, e o que está pronto para a próxima story a ser criada. Se não há epic ativo, River vai pedir que você defina um ponto de partida antes de continuar.</p>
+<p>O comando central de River nessa fase é:</p>
+<pre><code>@sm *create-story
+</code></pre>
+<p>Esse comando executa a task <code>create-next-story.md</code> — um dos processos mais importantes do framework. Essa task não é simplesmente "escreva uma story". É um processo estruturado de elicitação de contexto, validação de dependências, e formatação segundo o template oficial.</p>
+<h4 id="o-processo-create-next-story">O Processo create-next-story</h4>
+<p>Quando você executa <code>*create-story</code>, River vai passar por um processo de elicitação que inclui:</p>
+<p><strong>1. Identificar o epic pai.</strong> Toda story pertence a um epic. River verifica qual é o epic ativo e extrai o contexto relevante: objetivos, critérios de sucesso do epic, e as stories já existentes para evitar duplicação.</p>
+<p><strong>2. Identificar a próxima story natural.</strong> Com base no epic e nas stories já criadas, River sugere qual é a próxima unidade de trabalho lógica — o menor incremento que entrega valor sem criar dependências circulares.</p>
+<p><strong>3. Elicitar os critérios de aceite.</strong> Essa é a parte mais crítica. River não aceita critérios vagos. Cada critério de aceite precisa ser verificável: "o botão de submit funciona" não é um critério — "ao clicar em submit com formulário válido, a requisição POST /api/users retorna HTTP 201 em menos de 500ms" é um critério.</p>
+<p><strong>4. Identificar dependências e riscos.</strong> River verifica se há dependências de outras stories ou de sistemas externos, e mapeia os riscos técnicos que o desenvolvedor vai precisar considerar.</p>
+<p><strong>5. Estimar o esforço.</strong> Uma estimativa simples de complexidade — não em horas, mas em pontos ou tamanho relativo — que ajuda a dimensionar se a story está bem delimitada ou se é grande demais para uma única iteração.</p>
+<h4 id="o-template-de-story">O Template de Story</h4>
+<p>O output de <code>*create-story</code> é um arquivo no formato <code>docs/stories/{epicNum}.{storyNum}.story.md</code>. O template padrão tem a seguinte estrutura:</p>
+<pre><code class="language-markdown"># Story {epicNum}.{storyNum}: {Título}
+
+## Status
+Draft
+
+## Context
+{Contexto relevante para quem vai implementar}
+
+## Requirements
+{Lista numerada de requisitos funcionais}
+
+## Acceptance Criteria
+- [ ] AC-1: {Critério verificável}
+- [ ] AC-2: {Critério verificável}
+- [ ] AC-3: {Critério verificável}
+
+## Technical Notes
+{Notas técnicas, restrições, considerações de arquitetura}
+
+## Dependencies
+- {Story ou sistema do qual esta story depende}
+
+## Risk Assessment
+- {Risco identificado e mitigação proposta}
+
+## Estimation
+{Complexidade estimada}
+
+## File List
+{Preenchido durante implementação}
+
+## Dev Notes
+{Preenchido durante implementação}
+</code></pre>
+<p>O status <code>Draft</code> é o ponto de partida. Uma story em Draft está pronta para ser validada pelo PO, mas não está pronta para implementação. Essa distinção é fundamental.</p>
+<h4 id="quando-usar-modo-draft-vs-create-story">Quando Usar Modo <em>draft vs </em>create-story</h4>
+<p><code>*draft</code> é uma versão mais rápida do processo — cria o esqueleto da story com menos elicitação, útil quando você tem contexto suficiente e quer iterar rapidamente. <code>*create-story</code> é o processo completo com elicitação guiada, recomendado para qualquer story de complexidade média ou alta, ou quando o contexto ainda não está totalmente claro.</p>
+<hr />
+<h3 id="83-fase-2-validar-po-pax">8.3 Fase 2: Validar — @po (Pax)</h3>
+<h4 id="o-problema-que-a-validacao-resolve">O Problema que a Validação Resolve</h4>
+<p>Existe um padrão de falha clássico em desenvolvimento: o desenvolvedor começa a implementar uma story, no meio do caminho percebe que os critérios de aceite são ambíguos, toma uma decisão de implementação baseada na sua interpretação, e entrega algo que não corresponde ao que o stakeholder queria.</p>
+<p>O resultado: retrabalho. Às vezes algumas horas. Às vezes dias inteiros.</p>
+<p>A Fase 2 existe para eliminar essa possibilidade. Antes de qualquer linha de código ser escrita, Pax verifica se a story está suficientemente bem especificada para implementação sem ambiguidade.</p>
+<h4 id="ativando-pax-e-executando-a-validacao">Ativando Pax e Executando a Validação</h4>
+<pre><code>@po *validate-story-draft
+</code></pre>
+<p>Pax executa a task <code>validate-next-story.md</code> e aplica o <strong>checklist de 10 pontos</strong> sobre a story em Draft:</p>
+<p><strong>Ponto 1: Critérios de aceite são mensuráveis e verificáveis?</strong>
+Cada AC precisa ter uma condição clara de verdadeiro/falso. "Sistema funciona corretamente" falha nesse ponto. "Endpoint retorna HTTP 200 com payload JSON contendo campo <code>id</code> quando autenticado" passa.</p>
+<p><strong>Ponto 2: Todos os critérios rastreiam a documentação de requisitos?</strong>
+Os ACs precisam ter rastreabilidade para FR-<em> (Functional Requirements) ou NFR-</em> (Non-Functional Requirements) documentados. Isso garante que não há ACs inventados que não foram solicitados.</p>
+<p><strong>Ponto 3: O contexto é suficiente para implementar sem perguntas adicionais?</strong>
+Um desenvolvedor que nunca viu o projeto antes deve conseguir ler a story e saber o que precisa ser feito. Se há lacunas de contexto que obrigariam o desenvolvedor a perguntar, a story volta para completar esse contexto.</p>
+<p><strong>Ponto 4: As dependências estão identificadas e em status adequado?</strong>
+Se a story depende de uma outra story que ainda está em Draft, a implementação vai bloquear. Pax verifica se as dependências estão em status compatível com o início da implementação.</p>
+<p><strong>Ponto 5: O escopo está claramente delimitado?</strong>
+O que está FORA do escopo é tão importante quanto o que está dentro. Pax verifica se há uma declaração explícita de escopo, prevenindo que o desenvolvedor adicione features não solicitadas (scope creep).</p>
+<p><strong>Ponto 6: Os riscos técnicos foram identificados?</strong>
+Toda story tem riscos: integração com sistema externo instável, mudança de comportamento de módulo compartilhado, performance em escala. Pax verifica se esses riscos foram mapeados.</p>
+<p><strong>Ponto 7: A estimativa de esforço é razoável para o escopo?</strong>
+Uma story estimada como "pequena" com dezessete critérios de aceite é uma inconsistência. Pax verifica o alinhamento entre escopo e estimativa.</p>
+<p><strong>Ponto 8: Os critérios de teste estão contemplados?</strong>
+Como a story será testada? Testes unitários, integração, end-to-end? Isso precisa estar explícito.</p>
+<p><strong>Ponto 9: A documentação necessária foi identificada?</strong>
+Algumas features precisam de documentação — um novo endpoint precisa de documentação de API, uma nova configuração precisa de atualização no guia de setup. Pax verifica se isso foi considerado.</p>
+<p><strong>Ponto 10: Um desenvolvedor lendo a story saberia exatamente o que fazer?</strong>
+Este é o ponto de síntese. Mesmo que os nove anteriores estejam bem respondidos, Pax faz a pergunta holística: alguém com o background técnico adequado conseguiria implementar isso sem bloquear uma vez?</p>
+<h4 id="a-decisao-go-no-go">A Decisão GO / NO-GO</h4>
+<p>O resultado da validação é um score de 0 a 10:</p>
+<ul>
+<li><strong>Score &gt;= 7 (GO):</strong> A story avança para status <code>Ready</code>. Está pronta para implementação.</li>
+<li><strong>Score 5-6 (NO-GO com lista):</strong> A story volta para revisão com a lista específica dos pontos que falharam. River ou o humano corrige e submete novamente.</li>
+<li><strong>Score &lt;= 4 (REJEIÇÃO):</strong> A story precisa ser reescrita. Há problemas fundamentais de especificação que correções parciais não vão resolver.</li>
+</ul>
+<p>Esse gate pode parecer burocrático quando você está em ritmo acelerado. Não é. Cada minuto investido em validar uma story antes da implementação evita potencialmente horas de retrabalho depois.</p>
+<hr />
+<h3 id="84-fase-3-implementar-dev-dex">8.4 Fase 3: Implementar — @dev (Dex)</h3>
+<h4 id="ativando-dex">Ativando Dex</h4>
+<pre><code>@dev
+</code></pre>
+<p>Dex assume o controle com contexto da story em Ready. O comando central desta fase é:</p>
+<pre><code>@dev *task dev-develop-story
+</code></pre>
+<p>Isso executa a task <code>dev-develop-story.md</code> — o processo completo de implementação guiado pelo AIOX.</p>
+<h4 id="os-3-modos-de-implementacao">Os 3 Modos de Implementação</h4>
+<p>O AIOX oferece três modos de implementação, cada um com trade-offs diferentes entre velocidade, controle humano, e segurança.</p>
+<h5 id="modo-interactive-padrao">Modo Interactive (Padrão)</h5>
+<p>No modo Interactive, Dex apresenta o plano de implementação antes de cada decisão técnica significativa e pede confirmação antes de avançar. Ideal para:</p>
+<ul>
+<li>Features que você não entende completamente antes de começar</li>
+<li>Código em áreas críticas ou sensíveis</li>
+<li>Sua primeira implementação num projeto novo</li>
+<li>Qualquer situação onde você quer manter controle próximo</li>
+</ul>
+<p>O fluxo parece assim:</p>
+<pre><code>Dex: &quot;Vou criar o módulo de autenticação em src/modules/auth/.
+      Pretendo usar JWT com refresh token. Confirma?&quot;
+
+Você: &quot;Sim, mas usa 24h de expiração para o access token.&quot;
+
+Dex: &quot;Entendido. Implementando com access token de 24h...&quot;
+</code></pre>
+<p>Mais lento, mais controlado, mais seguro para código crítico.</p>
+<h5 id="modo-yolo">Modo YOLO</h5>
+<p>No modo YOLO, Dex implementa de forma autônoma sem pedir confirmações intermediárias. Você fornece a story, Dex implementa, e você revisa o resultado no final.</p>
+<pre><code>@dev *task dev-develop-story --mode=yolo
+</code></pre>
+<p>Ideal para:
+- Stories simples e bem especificadas
+- Features que você entende bem tecnicamente
+- Bugs fixes com critérios claros
+- Código em áreas não-críticas</p>
+<p><strong>Cuidado:</strong> YOLO não significa sem regras. Dex ainda segue todos os padrões do projeto, ainda registra as decisões tomadas, e ainda atualiza a story com o File List. A diferença é que ele não para para pedir permissão a cada passo.</p>
+<h5 id="modo-pre-flight">Modo Pre-Flight</h5>
+<p>Pre-Flight é um modo de revisão antes da implementação. Dex analisa a story, identifica todos os pontos de decisão técnica, e apresenta um plano completo de implementação <strong>sem escrever nenhum código</strong>. Você revisa o plano, ajusta o que precisar, e depois decide em qual modo executar a implementação real.</p>
+<pre><code>@dev *task dev-develop-story --mode=preflight
+</code></pre>
+<p>Ideal para:
+- Stories de alta complexidade ou alto risco
+- Features que envolvem decisões arquiteturais
+- Antes de implementações que vão afetar múltiplos módulos
+- Quando você quer garantir alinhamento antes de qualquer código</p>
+<h4 id="atualizando-checkboxes-e-file-list">Atualizando Checkboxes e File List</h4>
+<p>Um dos padrões mais importantes do AIOX durante a implementação é a atualização contínua da story. Dex não escreve código e depois atualiza a story no final — ele atualiza conforme avança.</p>
+<p>Cada critério de aceite completado recebe um <code>[x]</code>:</p>
+<pre><code class="language-markdown">## Acceptance Criteria
+- [x] AC-1: Endpoint POST /api/users retorna HTTP 201 com payload correto
+- [x] AC-2: Senha é armazenada com bcrypt, mínimo 12 rounds
+- [ ] AC-3: Email de boas-vindas é enviado via serviço de email
+</code></pre>
+<p>O <strong>File List</strong> é atualizado com cada arquivo criado ou modificado:</p>
+<pre><code class="language-markdown">## File List
+- src/modules/auth/auth.controller.ts (criado)
+- src/modules/auth/auth.service.ts (criado)
+- src/modules/auth/auth.module.ts (criado)
+- src/modules/auth/dto/create-user.dto.ts (criado)
+- src/app.module.ts (modificado — adicionado AuthModule)
+- tests/auth/auth.controller.spec.ts (criado)
+</code></pre>
+<p>Esse registro tem dois propósitos: accountability (você sabe exatamente o que mudou), e facilitação do QA (Quinn sabe exatamente onde olhar).</p>
+<h4 id="git-local-a-regra-do-dev">Git Local: A Regra do @dev</h4>
+<p>Dex tem autoridade total sobre operações de git no repositório <strong>local</strong>. Ele pode e deve fazer commits frequentes durante a implementação:</p>
+<pre><code class="language-bash">git add src/modules/auth/
+git commit -m &quot;feat: implement user registration endpoint [Story 1.3]&quot;
+</code></pre>
+<p>O que Dex <strong>não pode</strong> fazer é <code>git push</code>. Enviar código para o repositório remoto é responsabilidade exclusiva de Gage (<code>@devops</code>). Essa separação existe para garantir que todo código que vai para o repositório passou pelo gate de QA.</p>
+<p><strong>Por que esse limite?</strong> Imagine que Dex termina a implementação às 23h, está satisfeito com o resultado, e faz <code>git push</code> diretamente. O código vai para produção (se há CI/CD automático) sem revisão de qualidade. Na manhã seguinte, você descobre que havia um bug crítico que um QA de cinco minutos teria identificado.</p>
+<p>O gate de QA existe exatamente para essa situação. E o bloqueio de <code>git push</code> para @dev é o que garante que o gate seja respeitado, mesmo quando a tentação de "só mandar logo" é grande.</p>
+<hr />
+<h3 id="85-fase-4-qa-gate-qa-quinn">8.5 Fase 4: QA Gate — @qa (Quinn)</h3>
+<h4 id="a-filosofia-de-quinn">A Filosofia de Quinn</h4>
+<p>Quinn não é um inimigo do progresso. É o guardião da qualidade — e existe uma diferença fundamental entre os dois papéis.</p>
+<p>Um inimigo do progresso busca encontrar problemas para atrasar entregas. Um guardião da qualidade busca identificar problemas antes que eles cheguem ao usuário final — e portanto está acelerando o progresso no longo prazo, mesmo que às vezes cause atrasos no curto prazo.</p>
+<p>Quinn opera com esse mindset: rigoroso sem ser paralisante, criterioso sem ser perfeccionista, e orientado a veredictos claros e acionáveis.</p>
+<h4 id="os-7-quality-checks">Os 7 Quality Checks</h4>
+<pre><code>@qa *task qa-gate
+</code></pre>
+<p>Quinn executa a task <code>qa-gate.md</code> e passa a story por <strong>7 verificações de qualidade</strong>:</p>
+<p><strong>Check 1: Todos os critérios de aceite foram implementados?</strong>
+Quinn verifica cada AC da story contra o código produzido. Cada <code>[x]</code> na story corresponde a uma implementação verificável no código.</p>
+<p><strong>Check 2: Os testes cobrem os cenários críticos?</strong>
+Não apenas "existem testes" — mas "os testes cobrem os casos que importam". Cenários felizes, casos de erro, edge cases.</p>
+<p><strong>Check 3: O código segue os padrões estabelecidos?</strong>
+Naming conventions, estrutura de módulos, patterns arquiteturais definidos no projeto. Quinn não aceita código funcionalmente correto mas estruturalmente inconsistente.</p>
+<p><strong>Check 4: Não há regressões introduzidas?</strong>
+A implementação da story não deve quebrar funcionalidade existente. Quinn verifica os testes existentes e analisa as mudanças no código para identificar potenciais regressões.</p>
+<p><strong>Check 5: A documentação foi atualizada quando necessário?</strong>
+Se a story criou um novo endpoint, a documentação de API foi atualizada? Se criou uma nova configuração, o guia de setup foi atualizado? Quinn verifica o File List da story e valida as documentações correspondentes.</p>
+<p><strong>Check 6: Não há vulnerabilidades de segurança óbvias?</strong>
+Inputs não sanitizados, senhas hardcoded, queries SQL construídas via concatenação de strings. Quinn não é um security audit completo, mas captura os problemas óbvios.</p>
+<p><strong>Check 7: A implementação está dentro do escopo definido?</strong>
+Às vezes desenvolvedores adicionam features não solicitadas por acharem útil — "já que eu estava aqui, adicionei também X". Essas adições não foram especificadas, não foram testadas adequadamente, e introduzem risco. Quinn identifica e questiona qualquer coisa que está no código mas não está na story.</p>
+<h4 id="os-4-veredictos">Os 4 Veredictos</h4>
+<p>O resultado do QA Gate é um dos quatro veredictos:</p>
+<p><strong>PASS:</strong> Todos os checks passaram. A story está pronta para entrega. O status muda para <code>InReview</code> e o processo avança para <code>@devops</code>.</p>
+<p><strong>CONCERNS:</strong> Um ou mais checks identificaram problemas que não são bloqueantes mas que precisam de atenção. Quinn documenta os concerns, e a decisão de avançar ou corrigir antes do push é escalada para o humano responsável. Concerns comuns: cobertura de testes ligeiramente abaixo do esperado, documentação incompleta em parte não crítica, refatoração sugerida mas não obrigatória.</p>
+<p><strong>FAIL:</strong> Um ou mais checks identificaram problemas bloqueantes. A story volta para <code>@dev</code> com lista específica do que precisa ser corrigido. O status volta para <code>InProgress</code>. Não há negociação nesse ponto — código que falha no QA Gate não vai para produção.</p>
+<p><strong>WAIVED:</strong> Em situações excepcionais e documentadas, um ou mais checks podem ser explicitamente dispensados. Isso requer justificativa documentada na story e é uma decisão consciente, não uma omissão. Exemplos legítimos de waiver: teste de integração impossível em ambiente de CI por dependência de sistema externo sem mock disponível; documentação de API postergada por acordo com stakeholder.</p>
+<h4 id="o-status-na-story">O Status na Story</h4>
+<p>Ao final do QA Gate, o status da story reflete o resultado:</p>
+<ul>
+<li>PASS → <code>InReview</code></li>
+<li>FAIL → <code>InProgress</code> (volta para @dev)</li>
+<li>CONCERNS → <code>InReview</code> (com nota)</li>
+<li>WAIVED → <code>InReview</code> (com justificativa documentada)</li>
+</ul>
+<hr />
+<h3 id="86-entrega-devops-gage">8.6 Entrega — @devops (Gage)</h3>
+<h4 id="a-ultima-milha">A Última Milha</h4>
+<p>O código passou por criação, validação, implementação, e QA. Está pronto para ir para o mundo. Essa última milha é propriedade exclusiva de Gage.</p>
+<pre><code>@devops *push
+</code></pre>
+<p>Gage executa uma sequência de operações que garante que a entrega seja feita de forma controlada e rastreável:</p>
+<p><strong>1. Verificação pré-push.</strong> Gage confirma que a story está em status <code>InReview</code>, que todos os ACs estão marcados como completos, e que o QA Gate foi executado com resultado PASS ou WAIVED documentado.</p>
+<p><strong>2. Git push.</strong> O branch com a implementação é enviado para o repositório remoto:</p>
+<pre><code class="language-bash">git push origin feat/story-1-3-user-registration
+</code></pre>
+<p><strong>3. Pull Request.</strong> Gage cria o PR com título, descrição, e referências adequadas:</p>
+<pre><code class="language-bash">gh pr create \
+  --title &quot;feat: user registration endpoint [Story 1.3]&quot; \
+  --body &quot;## Summary
+Implementa o endpoint POST /api/users para registro de novos usuários.
+
+## Story
+[Story 1.3](docs/stories/1.3.story.md)
+
+## Changes
+- Novo módulo auth com controller, service e DTOs
+- Testes unitários com cobertura de 94%
+- Documentação de API atualizada
+
+## QA Gate
+PASS — Todos os 7 checks passaram.&quot;
+</code></pre>
+<p><strong>4. Atualização de status.</strong> A story muda de <code>InReview</code> para <code>Done</code>.</p>
+<h4 id="por-que-apenas-devops-pode-fazer-push">Por Que Apenas @devops Pode Fazer Push?</h4>
+<p>Esta regra está entre as mais importantes — e mais frequentemente questionadas — do AIOX. A resposta tem três dimensões:</p>
+<p><strong>Accountability clara.</strong> Quando você olha o histórico de merges no repositório, sabe exatamente que cada push passou por Gage. Se algo problemático chegou ao repositório, o ponto de investigação é a entrega feita por Gage — e você pode verificar se o processo foi seguido.</p>
+<p><strong>Gate de qualidade final.</strong> Gage verifica status, ACs, e QA Gate antes de qualquer push. É um segundo par de olhos no processo completo, garantindo que nada passou pelas brechas.</p>
+<p><strong>Separação de concerns.</strong> Desenvolvedores focam em implementar. DevOps foca em entregar de forma segura. Misturar essas responsabilidades cria situações onde a pressão para "entregar logo" sobrepõe a necessidade de "entregar com qualidade".</p>
+<hr />
+<h3 id="87-retrospectiva-o-que-aconteceu">8.7 Retrospectiva: O Que Aconteceu</h3>
+<p>Ao completar seu primeiro SDC, vale pausar para entender o que acabou de acontecer.</p>
+<h4 id="o-que-foi-criado">O Que Foi Criado</h4>
+<p>Uma story que começou como uma ideia no backlog percorreu um caminho estruturado:</p>
+<ol>
+<li><strong>Especificação</strong> com critérios verificáveis (River)</li>
+<li><strong>Validação</strong> por um guardião de valor (Pax)</li>
+<li><strong>Implementação</strong> com rastreabilidade completa (Dex)</li>
+<li><strong>QA</strong> com checks objetivos (Quinn)</li>
+<li><strong>Entrega</strong> controlada e documentada (Gage)</li>
+</ol>
+<p>O resultado é código no repositório com uma trilha completa: sabe-se por que foi pedido (story), o que foi implementado (File List), como foi testado (QA Gate), e quem aprovou cada etapa (logs de agente).</p>
+<h4 id="a-proporcao-deterministico-vs-ia">A Proporção Determinístico vs. IA</h4>
+<p>Um dos insights mais valiosos que o SDC revela é a proporção entre o que é determinístico e o que realmente exige inteligência artificial.</p>
+<p><strong>Python/determinístico:</strong>
+- Scaffolding de arquivos e pastas
+- Validação de schema da story
+- Verificação de status (story está em estado correto?)
+- Contagem de ACs completos vs. pendentes
+- Checks estruturais do QA (arquivo existe? testes passam?)
+- Git operations (add, commit, push, pr create)</p>
+<p><strong>IA genuinamente necessária:</strong>
+- Avaliar se os critérios de aceite são suficientemente claros
+- Implementar a lógica de negócio
+- Identificar riscos técnicos não óbvios
+- Avaliar se o código segue padrões (não apenas estrutura, mas estilo e intenção)
+- Identificar potenciais bugs e vulnerabilidades</p>
+<p>Em projetos típicos, 60-70% das operações do SDC são determinísticas. A IA é invocada seletivamente para as partes que genuinamente requerem julgamento. Isso tem implicações diretas no custo: cada token economizado em operação determinística é um token disponível para o trabalho que a IA faz melhor.</p>
+<h4 id="o-papel-do-humano-no-sdc">O Papel do Humano no SDC</h4>
+<p>Uma pergunta legítima: "Se os agentes fazem tudo isso, qual é o meu papel?"</p>
+<p>Seu papel é o de <strong>operador consciente</strong>. Você:</p>
+<ul>
+<li>Define o epic e as prioridades de negócio</li>
+<li>Decide quando a story está pronta para avançar para cada fase</li>
+<li>Revisa os outputs dos agentes com olhar crítico</li>
+<li>Toma decisões de escalação quando verdicts são ambíguos</li>
+<li>Mantém o contexto de produto que nenhum agente pode ter</li>
+</ul>
+<p>O AIOX não substitui a inteligência humana no processo. Amplifica ela. Um agente pode validar se um AC é verificável; você decide se o AC correto foi pedido. Um agente pode identificar que o código segue os padrões; você decide se os padrões corretos foram estabelecidos.</p>
+<hr />
+<h3 id="exercicio-execute-o-sdc-completo">Exercício: Execute o SDC Completo</h3>
+<p>Este exercício vai guiar você pelo seu primeiro SDC completo. Escolha uma feature simples — criação de um endpoint de health check, por exemplo — e execute as cinco fases.</p>
+<p><strong>Pré-requisito:</strong> Um projeto com epic ativo em <code>docs/</code> e configuração básica do AIOX.</p>
+<p><strong>Passo 1 — Criar a Story:</strong></p>
+<pre><code>@sm *create-story
+</code></pre>
+<p>Responda às perguntas de elicitação de River. Defina pelo menos 3 critérios de aceite verificáveis. Salve a story em status <code>Draft</code>.</p>
+<p><strong>Passo 2 — Validar:</strong></p>
+<pre><code>@po *validate-story-draft
+</code></pre>
+<p>Observe o checklist sendo aplicado. Se o score for &lt; 7, identifique quais pontos falharam e corrija a story. Execute novamente até atingir GO.</p>
+<p><strong>Passo 3 — Implementar:</strong></p>
+<pre><code>@dev *task dev-develop-story
+</code></pre>
+<p>Use modo Interactive para seu primeiro SDC. Observe Dex atualizar os checkboxes e o File List conforme avança. Note que os commits são feitos localmente.</p>
+<p><strong>Passo 4 — QA Gate:</strong></p>
+<pre><code>@qa *task qa-gate
+</code></pre>
+<p>Observe Quinn executar os 7 checks. Identifique quais checks são automatizáveis (estrutural) e quais requerem julgamento de IA.</p>
+<p><strong>Passo 5 — Entrega:</strong></p>
+<pre><code>@devops *push
+</code></pre>
+<p>Observe Gage verificar as condições, fazer o push, e criar o PR.</p>
+<p><strong>Reflexão pós-exercício:</strong>
+- Quantos itens do checklist de Pax a sua story inicial falhou?
+- Em qual modo de implementação você se sentiu mais confortável? Por quê?
+- Qual dos 7 checks do QA Gate você consideraria mais importante para o seu tipo de projeto?
+- Qual foi a proporção entre operações determinísticas e operações que genuinamente exigiram julgamento de IA?</p>
+<p>O SDC pode parecer pesado na primeira vez. Na décima vez, vai parecer natural. Na centésima, vai ser tão automático quanto commit/push manual — mas com uma qualidade de entrega completamente diferente.</p>
+<hr />
+<h3 id="88-caso-pratico-landing-page-do-zero-ao-deploy">8.8 Caso Prático: Landing Page do Zero ao Deploy</h3>
+<p>Teoria sem prática é arquitetura sem construção. Esta seção documenta um caso real — demonstrado em aula no dia 26 de março de 2026 — onde o SDC foi aplicado do zero para entregar uma landing page completa de assessoria esportiva individual, com captura de leads armazenada no Supabase e publicada na web via Vercel.</p>
+<p>Em aproximadamente 40 minutos de aula, saímos do zero para uma URL pública funcional capturando nome e WhatsApp de visitantes reais. Este é o AIOX em operação.</p>
+<h4 id="o-cenario">O Cenário</h4>
+<p>Uma landing page de vendas para assessoria esportiva individual. Público-alvo: pessoas que treinam mas se sentem sem suporte e direção. O objetivo da página é converter visitantes em leads — capturando nome e WhatsApp — e armazenar esses dados em banco de dados para contato posterior.</p>
+<p>Stack definida: Next.js com Tailwind CSS e Shadcn/ui no frontend, Supabase com PostgreSQL como banco, e Vercel como plataforma de deploy.</p>
+<h4 id="a-analogia-do-restaurante">A Analogia do Restaurante</h4>
+<p>Antes de detalhar os passos, vale entender a arquitetura do ponto de vista de um leigo. Pense no sistema como um restaurante:</p>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Analogia</th>
+<th>Tecnologia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GitHub</td>
+<td>A cozinha — onde tudo é preparado</td>
+<td>Git/GitHub</td>
+</tr>
+<tr>
+<td>Vercel</td>
+<td>O salão — o que o cliente vê</td>
+<td>Vercel (deploy)</td>
+</tr>
+<tr>
+<td>Supabase</td>
+<td>O depósito — onde os dados ficam guardados</td>
+<td>Supabase/PostgreSQL</td>
+</tr>
+</tbody>
+</table>
+<p>O GitHub guarda o código e o histórico de tudo que foi feito. O Vercel pega esse código e o transforma em um site acessível por qualquer pessoa com a URL. O Supabase é o banco de dados onde os leads capturados pelo formulário são persistidos.</p>
+<p>Nenhum dos três faz sentido isolado. Os três juntos formam um sistema de produção completo.</p>
+<h4 id="o-passo-a-passo">O Passo a Passo</h4>
+<h5 id="passo-1-criar-um-squad-de-copywriting">Passo 1 — Criar um Squad de Copywriting</h5>
+<p>Antes de chamar o <code>@dev</code>, você precisa do conteúdo. Desenvolvedores sem copy constroem páginas com texto placeholder — e placeholder nunca vira copy de conversão. A ordem certa é: copy primeiro, código depois.</p>
+<p>Para isso, o primeiro passo foi criar um squad especializado via Squad Creator:</p>
+<pre><code>Crie um squad com um único agente copywriter para escrever copy
+de alta conversão para uma landing page. Simples e rápido.
+</code></pre>
+<p>O resultado foi a pasta <code>squads/copywriter/</code> com a definição do agente e a task correspondente.</p>
+<h5 id="passo-2-gerar-o-copy">Passo 2 — Gerar o Copy</h5>
+<p>Com o agente copywriter ativo, as coordenadas foram passadas:</p>
+<ul>
+<li><strong>Produto:</strong> Assessoria esportiva individual</li>
+<li><strong>Público:</strong> Pessoas que treinam mas se sentem sem suporte</li>
+<li><strong>Promessa:</strong> Resultados rápidos sem complicação</li>
+<li><strong>CTA:</strong> Capturar nome e WhatsApp</li>
+</ul>
+<p>Uma instrução crítica foi incluída de forma explícita: <em>"Salve apenas o copy em markdown, NÃO crie HTML. Arquivo em docs/copy/assessoria-esportiva.md."</em></p>
+<p>Por quê essa instrução? Porque sem ela, um agente de copywriting pode interpretar "criar a página" como criar o HTML diretamente — pulando etapas e gerando um arquivo que conflita com o que o <code>@dev</code> vai criar depois. Copy em markdown é apenas conteúdo; a estrutura HTML será responsabilidade de Dex.</p>
+<h5 id="passo-3-criar-o-prd-com-pm">Passo 3 — Criar o PRD com @pm</h5>
+<p>Com o copy pronto, o Product Manager foi ativado:</p>
+<pre><code>@pm *create-prd
+</code></pre>
+<p>O contexto fornecido incluiu: página de vendas simples, copy já disponível em <code>/docs/copy/assessoria-esportiva.md</code>, stack com Tailwind + Shadcn/ui, formulário capturando nome e WhatsApp, dados persistidos no Supabase.</p>
+<p>O PRD gerado por Morgan formalizou os requisitos funcionais, os requisitos não-funcionais, os critérios de aceite, a definição de stack e o schema do banco de dados.</p>
+<p>Aqui vale uma distinção fundamental que o PRD deixa explícita:</p>
+<p><strong>Requisitos funcionais</strong> descrevem O QUE o sistema faz: "formulário captura nome e WhatsApp", "dados são salvos no banco", "usuário vê mensagem de confirmação após envio".</p>
+<p><strong>Requisitos não-funcionais</strong> descrevem COMO o sistema se comporta: "página carrega em menos de 3 segundos", "funciona em dispositivos móveis", "formulário valida formato de WhatsApp antes de enviar".</p>
+<p>A distinção importa porque influencia diretamente quais testes precisam ser escritos e quais são os critérios de aceite verificáveis.</p>
+<h5 id="passo-4-criar-a-story-com-sm">Passo 4 — Criar a Story com @sm</h5>
+<p>Com PRD em mãos, River criou a story:</p>
+<pre><code>@sm *create-story
+</code></pre>
+<p>A story resultante continha: critérios de aceite verificáveis, notas de urgência, definição de stack, caminhos de arquivo esperados. Status inicial: <code>Draft</code>.</p>
+<h5 id="passo-5-implementar-com-dev-modo-yolo">Passo 5 — Implementar com @dev (modo YOLO)</h5>
+<p>Para uma story bem especificada como essa — copy pronto, PRD detalhado, stack definida — o modo YOLO foi a escolha certa. Dex implementou de forma autônoma:</p>
+<ul>
+<li>Criou a pasta <code>landing/</code> com projeto Next.js completo</li>
+<li>Instalou as dependências: next, tailwindcss, shadcn/ui, @supabase/supabase-js</li>
+<li>Construiu os componentes da landing page usando o copy do arquivo markdown</li>
+<li>Criou <code>.env.local</code> com as variáveis de ambiente placeholder</li>
+<li>Gerou o SQL para criação da tabela de leads no Supabase</li>
+</ul>
+<p>Ao final, a story estava com todos os ACs marcados como <code>[x]</code> e o File List completo.</p>
+<h5 id="passo-6-criar-o-projeto-no-supabase">Passo 6 — Criar o Projeto no Supabase</h5>
+<p>O banco de dados não se cria sozinho. Acessando supabase.com:</p>
+<ol>
+<li>New Project → nome do projeto, senha do banco, região (South America — São Paulo)</li>
+<li>Aguardar cerca de 2 minutos para provisionamento</li>
+<li>Acessar as credenciais: Project Settings → API → copiar Project URL e anon public key</li>
+</ol>
+<p>Um detalhe crítico de segurança: o Supabase oferece duas chaves de acesso. A <code>anon key</code> é para uso no frontend — tem permissões limitadas definidas pelas políticas de RLS. A <code>service_role key</code> tem permissões de administrador completo e <strong>nunca deve ser usada no frontend</strong>. Exposta no código cliente, ela daria a qualquer visitante da página controle total sobre o banco de dados.</p>
+<h5 id="passo-7-configurar-o-envlocal">Passo 7 — Configurar o .env.local</h5>
+<p>Com as credenciais em mãos, o arquivo <code>.env.local</code> foi preenchido:</p>
+<pre><code class="language-env">NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbG...
+</code></pre>
+<p>Esse arquivo nunca vai para o GitHub — está no <code>.gitignore</code> por padrão em projetos Next.js. As variáveis prefixadas com <code>NEXT_PUBLIC_</code> ficam expostas no bundle do cliente, o que é aceitável para a URL e a chave anônima do Supabase. Variáveis sem esse prefixo ficam apenas no servidor.</p>
+<h5 id="passo-8-criar-a-tabela-no-supabase">Passo 8 — Criar a Tabela no Supabase</h5>
+<p>No SQL Editor do dashboard do Supabase, o SQL gerado por Dex na Fase 5 foi executado:</p>
+<pre><code class="language-sql">CREATE TABLE leads (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  nome TEXT,
+  whatsapp TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+</code></pre>
+<p>Simples e direto. Cada lead capturado recebe um ID único gerado automaticamente, nome, WhatsApp, e timestamp de criação. Extensões de schema — como campos opcionais ou índices — podem ser adicionadas depois, quando houver necessidade real.</p>
+<h5 id="passo-9-push-com-devops">Passo 9 — Push com @devops</h5>
+<p>Com tudo pronto localmente, Gage foi ativado:</p>
+<pre><code>@devops
+Sobe meu GitHub com tudo.
+</code></pre>
+<p>Gage executou uma sequência importante antes de qualquer commit:</p>
+<ol>
+<li><strong>Verificou que <code>.env.local</code> está no <code>.gitignore</code></strong> — credenciais nunca vão para o repositório</li>
+<li><strong>Detectou e removeu o <code>.git</code> interno da pasta <code>landing/</code></strong> — quando o <code>npx create-next-app</code> inicializa um projeto, ele cria um repositório Git próprio dentro da pasta. Se esse <code>.git</code> interno não for removido, o repositório pai trata a pasta como um submódulo Git, e ela aparece vazia no GitHub</li>
+<li><strong>Executou git add + commit + push</strong></li>
+</ol>
+<p>O problema do submódulo é um dos mais comuns nesse fluxo — e um dos mais confusos para quem não conhece o comportamento. O sintoma: pasta <code>landing/</code> aparece no GitHub mas está vazia, sem nenhum arquivo visível. A causa: repositório aninhado. A solução: remover o <code>.git</code> interno antes do push.</p>
+<h5 id="passo-10-deploy-no-vercel">Passo 10 — Deploy no Vercel</h5>
+<p>Com o código no GitHub, o deploy na Vercel seguiu o processo padrão:</p>
+<ol>
+<li>vercel.com → Add New → Project → Import from GitHub</li>
+<li><strong>CRÍTICO: configurar o Root Directory como <code>landing/</code></strong> — o Vercel precisa saber que o projeto Next.js está dentro de uma subpasta, não na raiz do repositório</li>
+<li>Importar as variáveis de ambiente do <code>.env.local</code></li>
+<li>Deploy → aguardar 2-3 minutos → URL de produção disponível</li>
+</ol>
+<p>O detalhe do Root Directory é o segundo erro mais comum nesse fluxo. Sem ele, o Vercel tenta fazer build da raiz do repositório, não encontra um projeto Next.js válido, e falha com erro de configuração.</p>
+<h5 id="passo-11-corrigir-erros-via-vercel-logs">Passo 11 — Corrigir Erros via Vercel Logs</h5>
+<p>Em builds reais, erros acontecem. O fluxo de correção é direto:</p>
+<ol>
+<li>Copiar o erro do painel de Logs da Vercel</li>
+<li>Colar no Claude Code com contexto: "O build falhou com esse erro, corrija"</li>
+<li>O agente corrige o problema</li>
+<li><code>@devops</code> faz push</li>
+<li>A Vercel detecta o novo commit e re-executa o deploy automaticamente</li>
+</ol>
+<p>Esse ciclo de correção é rápido porque a integração GitHub-Vercel é automática. Todo push para a branch configurada dispara um novo build. Você não precisa re-importar o projeto ou fazer configurações adicionais.</p>
+<h4 id="erros-comuns-documentados">Erros Comuns Documentados</h4>
+<p>Dois problemas se repetiram em diferentes execuções desse fluxo e merecem registro explícito:</p>
+<p><strong>Submódulo vazio no GitHub.</strong> Causa: <code>npx create-next-app</code> cria um <code>.git</code> interno na pasta <code>landing/</code>. O repositório pai interpreta isso como submódulo Git, e a pasta aparece vazia no GitHub. Solução: antes do primeiro push, Gage remove o <code>.git</code> interno (<code>rm -rf landing/.git</code>) e recomeça o processo de staging.</p>
+<p><strong>Vercel não encontra o projeto.</strong> Causa: Root Directory não configurado. O Vercel tenta fazer build da raiz do repositório em vez da pasta <code>landing/</code>. Solução: durante a importação do projeto, configurar Root Directory como <code>landing/</code>. Se o projeto já foi importado sem essa configuração, acesse Settings → General → Root Directory no dashboard da Vercel.</p>
+<p>Um terceiro problema é menos técnico mas igualmente comum: <strong>a página não atualiza depois do deploy</strong>. Causa: cache do navegador. Solução: hard refresh com Ctrl+Shift+R (ou Cmd+Shift+R no Mac).</p>
+<h4 id="o-que-este-caso-ensina">O Que Este Caso Ensina</h4>
+<p>Quarenta minutos do zero à URL pública. Isso não é marketing — foi o tempo real em aula.</p>
+<p>O que torna isso possível não é velocidade imprudente. É a combinação de responsabilidades bem distribuídas: o copywriter fez o copy antes do código existir, o PM formalizou os requisitos antes da implementação começar, o Dev implementou dentro de um escopo claro, e o DevOps garantiu que as credenciais ficaram seguras e o repositório estava limpo antes do push.</p>
+<p>Cada etapa fez exatamente o que deveria fazer. Nenhum agente inventou requisitos. Nenhuma etapa foi pulada por pressão de tempo. E o resultado foi um sistema funcional — não um protótipo, não um mockup — um sistema que captura dados reais e os persiste em banco de dados de produção.</p>
+<p>Esse é o princípio fundamental do AIOX: a IA amplifica a inteligência humana, não a substitui. As decisões estratégicas — o que construir, para quem, com qual mensagem — foram humanas. A execução — scaffolding, configuração, implementação, deploy — foi dos agentes. A combinação produz resultados em uma fração do tempo que qualquer um dos dois conseguiria sozinho.</p>
+      </article>
+
+      <div class="nav-footer">
+        <a href="07-agentes.html" class=""><div class="label">← Anterior</div><div class="title">Cap 07 · Conhecendo Seus Agentes</div></a>
+        <a href="09-qualidade.html" class="nav-next"><div class="label">Próximo →</div><div class="title">Cap 09 · Qualidade Sem Compromisso: Gates e QA Loop</div></a>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<button class="to-top" id="to-top" aria-label="Voltar ao topo">↑</button>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap 16 — Patterns e Anti-Patterns · AIOX Squad</title>
+<meta name="description" content="10 patterns que funcionam + 19 anti-patterns observados no cohort real. Reconheça os sinais antes de cometer os erros.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="../assets/chat.css">
+<link rel="icon" type="image/svg+xml" href="../assets/logo-aiox.svg">
+</head>
+<body data-chapter="16">
+
+<div class="app">
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html"><img src="../assets/logo-aiox.svg" alt="AIOX Squad"></a>
+      <span class="sidebar-badge">Guia Técnico</span>
+      <div class="sidebar-title">AIOX Squad</div>
+      <div class="sidebar-subtitle">17 capítulos · Synkra</div>
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="sidebar-progress-label"><span>Progresso</span><span id="sb-pct">0/17</span></div>
+      <div class="progress-bar"><div id="sb-bar"></div></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Capítulos</div>
+      <div id="sidebar-chapters"></div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="../index.html">← Voltar à home</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="top-nav">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="../index.html">Capítulos</a>
+        <span class="sep">/</span>
+        <span class="current">Cap 16</span>
+      </div>
+      <div class="top-actions">
+        <button class="gsearch-trigger" data-gsearch-open aria-label="Buscar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <span class="hint">Buscar</span>
+          <kbd>/</kbd>
+        </button>
+        <a class="btn-sm" href="15-otimizacao.html">← Anterior</a>
+        <a class="btn-sm" href="17-referencia.html">Próximo →</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section class="hero">
+        <span class="hero-tag">Capítulo 16 · AVANCADO</span>
+        <h1 class="hero-title">Patterns e Anti-Patterns</h1>
+        <p class="hero-subtitle">10 patterns que funcionam + 19 anti-patterns observados no cohort real. Reconheça os sinais antes de cometer os erros.</p>
+        <div class="meta-row">
+          <span class="meta-chip">⏱ <strong>50 min</strong> de leitura</span>
+          <span class="meta-chip">🎯 <strong>4</strong> objetivos</span>
+          <span class="meta-chip">🧩 <strong>7</strong> conceitos-chave</span>
+          
+        </div>
+      </section>
+
+      <div class="tldr">
+        <div class="tldr-label">TL;DR</div>
+        <div class="tldr-text">10 patterns que funcionam + 19 anti-patterns observados no cohort real. Reconheça os sinais antes de cometer os erros.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Você vai aprender</h3>
+          <ul><li>Aplicar os 10 patterns consistentes</li><li>Identificar anti-patterns antes de cometê-los</li><li>Adotar mentalidade de operador consciente</li><li>Aprender com lições reais do cohort</li></ul>
+        </div>
+        <div class="card">
+          <h3>Conceitos-chave</h3>
+          <div class="chips"><span class="chip">10 Patterns</span><span class="chip">19 Anti-Patterns</span><span class="chip">Mentalidade de Operador</span><span class="chip">Doc Rot</span><span class="chip">Modo Epifania</span><span class="chip">Squad Decorativo</span><span class="chip">Prompt Monolítico</span></div>
+        </div>
+      </div>
+
+      
+
+      <article class="prose">
+        <hr />
+<h3 id="introducao-aprendendo-com-quem-errou-primeiro">Introdução: Aprendendo com Quem Errou Primeiro</h3>
+<p>Nenhum framework nasce maduro. Os patterns documentados aqui emergiram de uso real — projetos que funcionaram, projetos que falharam, e a análise honesta de por quê cada um foi como foi.</p>
+<p>Um pattern é uma solução que funcionou em contextos múltiplos e pode ser intencionalmente replicada. Um anti-pattern é um problema recorrente — uma solução aparente que cria problemas maiores do que resolve.</p>
+<p>A diferença entre um usuário iniciante e um usuário avançado do AIOX é frequentemente a capacidade de reconhecer esses patterns em tempo real e ajustar o curso antes que os problemas se acumulem.</p>
+<hr />
+<h3 id="os-10-patterns">Os 10 Patterns</h3>
+<h4 id="pattern-1-story-antes-de-tudo">Pattern 1: Story Antes de Tudo</h4>
+<p><strong>Descrição:</strong> Todo trabalho começa com uma story. Sem exceção. Bug fix urgente? Story. Refatoração rápida? Story. Hotfix às 23h? Story — mesmo que seja um parágrafo.</p>
+<p><strong>Por que funciona:</strong> A story não é burocracia. É o mecanismo que garante que existe um registro de por que o trabalho foi feito, o que foi feito, e quem aprovou. Sem story, você tem um repositório com commits que ninguém sabe de onde vieram. Com story, você tem rastreabilidade completa.</p>
+<p><strong>Implementação:</strong></p>
+<pre><code># Antes de qualquer implementação:
+@sm *draft  # versão rápida para bugs e patches urgentes
+</code></pre>
+<p>O draft pode ser um parágrafo. O que importa é que existe e tem pelo menos um AC verificável.</p>
+<h4 id="pattern-2-po-gate-como-investimento">Pattern 2: PO Gate Como Investimento</h4>
+<p><strong>Descrição:</strong> Trate o checklist de 10 pontos do Pax como investimento, não como overhead. Cada minuto de validação economiza potencialmente horas de retrabalho.</p>
+<p><strong>A matemática:</strong> Uma story mal especificada que passa direto para implementação e descobre um problema de requisito no meio da implementação custa: o tempo já investido na implementação errada + o tempo de corrigir o problema + o custo cognitivo de trocar de contexto. Em média, 4-8 horas desperdiçadas.</p>
+<p>O mesmo problema identificado por Pax no checklist: 15 minutos para corrigir a story.</p>
+<p><strong>Quando o pattern falha:</strong> Times que usam Pax como carimbo automático de aprovação sem realmente engajar com o checklist. O checklist precisa ser executado de forma genuína — não como formalidade.</p>
+<h4 id="pattern-3-commits-frequentes-e-descritivos">Pattern 3: Commits Frequentes e Descritivos</h4>
+<p><strong>Descrição:</strong> Dex (e você) devem fazer commits frequentes durante a implementação, com mensagens que referenciam a story e o AC sendo implementado.</p>
+<p><strong>Por que funciona:</strong> Commits granulares têm três benefícios: permitem reverter mudanças específicas sem perder o trabalho inteiro, tornam o code review mais focado (cada commit é uma mudança atômica), e criam uma trilha narrativa da implementação.</p>
+<pre><code class="language-bash"># Bom
+git commit -m &quot;feat: add JWT generation in auth.service [Story 3.3 AC-1]&quot;
+git commit -m &quot;feat: implement refresh token rotation [Story 3.3 AC-4]&quot;
+git commit -m &quot;test: add unit tests for JWT service [Story 3.3]&quot;
+
+# Ruim
+git commit -m &quot;implementei autenticação&quot;
+</code></pre>
+<h4 id="pattern-4-memoria-como-ativo">Pattern 4: Memória como Ativo</h4>
+<p><strong>Descrição:</strong> Trate o MEMORY.md de cada agente como um ativo de projeto, não como um arquivo de log. Cuide dele ativamente — adicione decisões importantes, remova contexto obsoleto, organize por relevância.</p>
+<p><strong>O sinal de que está funcionando:</strong> No início de uma nova sessão, o agente tem contexto suficiente para continuar exatamente onde parou, sem você precisar re-explicar o projeto.</p>
+<p><strong>Implementação prática:</strong> Ao final de cada sessão significativa, peça ao agente que atualize seu MEMORY.md:</p>
+<pre><code>@dev: &quot;Antes de finalizar, registre no MEMORY.md as decisões
+      técnicas importantes que tomamos hoje.&quot;
+</code></pre>
+<h4 id="pattern-5-fail-fast-no-qa-loop">Pattern 5: Fail Fast no QA Loop</h4>
+<p><strong>Descrição:</strong> Quando o QA Loop identifica um problema HIGH severity, não continue com os outros checks. Escalate imediatamente.</p>
+<p><strong>Por que funciona:</strong> Um problema HIGH severity em check inicial frequentemente indica problemas fundamentais de implementação que vão invalidar os outros checks. Continuar avaliando numa implementação com problema fundamental desperdiça tempo e tokens.</p>
+<pre><code>Quinn: &quot;Check 1 — Cobertura de ACs: AC-4 não implementado.
+       Severidade: HIGH (AC-4 é o critério de segurança principal).
+       Ação: REJEITAR imediatamente. Não continuar avaliação.&quot;
+</code></pre>
+<h4 id="pattern-6-spec-pipeline-para-incerteza-alta">Pattern 6: Spec Pipeline para Incerteza Alta</h4>
+<p><strong>Descrição:</strong> Sempre que você perceber que está redefinindo os critérios de aceite de uma story várias vezes antes de começar a implementar — pare. Isso é sinal de incerteza alta. Execute o Spec Pipeline antes de criar a story.</p>
+<p><strong>O teste de incerteza:</strong> Se você tem dificuldade de escrever três critérios de aceite verificáveis para a feature, você não entende a feature bem o suficiente para implementá-la. Spec Pipeline primeiro.</p>
+<h4 id="pattern-7-brownfield-antes-de-qualquer-coisa-em-projetos-legados">Pattern 7: Brownfield Antes de Qualquer Coisa em Projetos Legados</h4>
+<p><strong>Descrição:</strong> Ao assumir um projeto existente sem documentação, o primeiro épico é sempre Brownfield Discovery. Não crie stories de feature antes de ter o assessment técnico.</p>
+<p><strong>A tentação a resistir:</strong> "Eu sei o suficiente para começar a implementar. O Brownfield vai demorar demais."</p>
+<p><strong>Por que resistir:</strong> O Brownfield Discovery não é optional. Projetos legados têm surpresas. O custo de descobrir essas surpresas no meio de uma implementação é sempre maior que o custo de mapeá-las antes de começar.</p>
+<h4 id="pattern-8-escalacao-imediata-de-blocked">Pattern 8: Escalação Imediata de BLOCKED</h4>
+<p><strong>Descrição:</strong> Quando qualquer agente retorna BLOCKED, escale para <code>@aiox-master</code> imediatamente. Não tente resolver um BLOCKED circulando entre @dev e @qa em loop.</p>
+<p><strong>O anti-pattern correspondente:</strong> @dev e @qa entrando em ciclo de "corrige / identifica problema / corrige / identifica problema" para um problema que é fundamentalmente de especificação e não de implementação.</p>
+<p>BLOCKED significa "esse problema não pode ser resolvido neste nível". A escalação não é sinal de falha — é o protocolo correto.</p>
+<h4 id="pattern-9-dashboard-de-custo-como-ritual-semanal">Pattern 9: Dashboard de Custo como Ritual Semanal</h4>
+<p><strong>Descrição:</strong> Reserve 15 minutos semanalmente para revisar o dashboard de custo via <code>aiox stats</code>. Identifique anomalias e operações que poderiam ser determinizadas.</p>
+<p><strong>O que procurar:</strong> Spikes de custo inexplicados, operações que cresceram desproporcionalmente, oportunidades de migração para Python.</p>
+<p><strong>O resultado a longo prazo:</strong> Projetos que fazem esse ritual consistentemente têm custo estável ou decrescente mesmo com volume crescente de uso. Projetos que não fazem têm custo que cresce linearmente com o volume.</p>
+<h4 id="pattern-10-versionamento-de-personas">Pattern 10: Versionamento de Personas</h4>
+<p><strong>Descrição:</strong> Trate as personas dos agentes como código — versione-as, documente as mudanças, e tenha um processo formal para mudanças significativas.</p>
+<p><strong>Por que importa:</strong> Uma mudança inadvertida numa persona pode alterar o comportamento do agente de formas sutis que só se manifestam em situações específicas. Com versionamento, você pode reverter para a versão anterior quando identifica degradação.</p>
+<pre><code class="language-bash"># Mudança de persona é um commit com mensagem descritiva
+git commit -m &quot;feat(agents/dev): add React Native expertise to Dex persona [Story 5.1]&quot;
+</code></pre>
+<hr />
+<h3 id="os-10-anti-patterns">Os 10 Anti-Patterns</h3>
+<h4 id="anti-pattern-1-o-prompt-monolitico">Anti-Pattern 1: O Prompt Monolítico</h4>
+<p><strong>Descrição:</strong> Em vez de usar o sistema de agentes, você escreve um único prompt gigante que tenta fazer tudo de uma vez: "Crie uma story, valide-a, implemente-a, e faça QA em um único response."</p>
+<p><strong>Por que falha:</strong> O resultado é superficial em tudo e profundo em nada. O que o sistema de agentes compra — perspectivas especializadas, gates de qualidade, autoridade delimitada — se perde completamente.</p>
+<p><strong>O sinal:</strong> Você está copiando e colando o resultado de uma "fase" como input da "próxima fase" manualmente, sem usar os agentes especializados.</p>
+<h4 id="anti-pattern-2-memorymd-negligenciado">Anti-Pattern 2: MEMORY.md Negligenciado</h4>
+<p><strong>Descrição:</strong> O MEMORY.md de cada agente cresce indefinidamente sem curadoria, acumulando contexto desatualizado e conflitante.</p>
+<p><strong>Sintomas:</strong>
+- Agentes produzindo outputs inconsistentes entre sessões
+- Tempo crescente de "orientação" no início de cada sessão
+- Agente "lembrando" decisões que foram revertidas meses atrás</p>
+<p><strong>A correção:</strong> Auditoria mensal do MEMORY.md. Remova entradas com mais de 90 dias que não têm impacto ativo. Consolide entradas relacionadas. Mantenha abaixo de 5KB por agente.</p>
+<h4 id="anti-pattern-3-skip-do-po-gate">Anti-Pattern 3: Skip do PO Gate</h4>
+<p><strong>Descrição:</strong> Pular a validação do Pax para economizar tempo, especialmente em stories "simples".</p>
+<p><strong>Por que é um anti-pattern:</strong> Não existe story "simples o suficiente para pular o PO Gate". A complexidade não é o ponto — a clareza de critérios é. Uma story de aparência simples com AC ambíguo vai gerar retrabalho independente de quão simples o código seja.</p>
+<p><strong>A consequência real:</strong> Você não economiza tempo. Você desloca o custo para a fase de implementação e QA, onde ele é mais caro.</p>
+<h4 id="anti-pattern-4-dev-fazendo-push">Anti-Pattern 4: @dev Fazendo Push</h4>
+<p><strong>Descrição:</strong> Dar permissão para @dev fazer <code>git push</code> diretamente para o repositório remoto, "porque é mais rápido".</p>
+<p><strong>Por que é anti-pattern:</strong> Essa "otimização" remove o gate de QA da entrega. Você vai descobrir isso quando code sem QA causar um problema em produção que teria sido encontrado em 5 minutos de revisão.</p>
+<p><strong>A regra é inegociável:</strong> <code>@devops *push</code> apenas. Sem exceções.</p>
+<h4 id="anti-pattern-5-epico-sem-criterios-de-sucesso">Anti-Pattern 5: Épico Sem Critérios de Sucesso</h4>
+<p><strong>Descrição:</strong> Criar um épico com uma lista de stories mas sem critérios de sucesso claros para o épico como um todo.</p>
+<p><strong>O problema:</strong> Você pode completar todas as stories do épico e ainda não saber se o épico foi bem-sucedido. Sem critérios de sucesso, o épico é um conjunto de trabalho, não um objetivo.</p>
+<p><strong>A correção:</strong> Todo épico precisa de pelo menos 3 critérios de sucesso verificáveis antes de ser iniciado.</p>
+<h4 id="anti-pattern-6-squad-para-tudo">Anti-Pattern 6: Squad Para Tudo</h4>
+<p><strong>Descrição:</strong> Criar squads para toda necessidade de análise, mesmo para perguntas pontuais e não-recorrentes.</p>
+<p><strong>O custo:</strong> Setup de squad tem overhead. Para uma pergunta que você vai fazer uma vez, um agente individual com contexto ad-hoc é mais eficiente.</p>
+<p><strong>A heurística:</strong> Squads para problemas recorrentes de domínio específico. Agentes individuais para consultas pontuais.</p>
+<h4 id="anti-pattern-7-spec-paralysis">Anti-Pattern 7: Spec Paralysis</h4>
+<p><strong>Descrição:</strong> Usar o Spec Pipeline como razão para nunca começar a implementação — "a spec não está perfeita ainda".</p>
+<p><strong>Por que é anti-pattern:</strong> Uma spec 80% completa que inicia implementação gera feedback real. Uma spec 100% perfeita que nunca chega à implementação não entrega valor.</p>
+<p><strong>A regra prática:</strong> Spec Pipeline deve resultar em stories executáveis. Se após duas iterações de critique a spec ainda não está executável, o problema é de requisitos — não de spec. Escale para <code>@aiox-master</code>.</p>
+<h4 id="anti-pattern-8-personas-genericas">Anti-Pattern 8: Personas Genéricas</h4>
+<p><strong>Descrição:</strong> Criar agentes (de squad ou de desenvolvimento) com personas vagas e sem especificidade de domínio. "Marina é uma analista experiente que sabe de finanças."</p>
+<p><strong>O resultado:</strong> Análises genéricas que não justificam o overhead de usar um squad em vez de um único agente genérico.</p>
+<p><strong>A correção:</strong> Personas específicas com background concreto, perspectiva característica definida, skills operacionais listadas, e limitações explícitas.</p>
+<h4 id="anti-pattern-9-ignorar-os-sinais-de-degradacao">Anti-Pattern 9: Ignorar os Sinais de Degradação</h4>
+<p><strong>Descrição:</strong> Não monitorar a qualidade dos outputs ao longo do tempo, ignorando sinais de degradação como aumento de rejeições do PO, mais iterações no QA Loop, ou feedback negativo de usuários.</p>
+<p><strong>O problema:</strong> Degradação de qualidade é geralmente gradual — não acontece abruptamente, acontece por acumulação de pequenas mudanças. Sem monitoramento, você descobre o problema tarde.</p>
+<p><strong>A correção:</strong> Monitoramento proativo. Dashboard de custo semanal. Auditoria de qualidade mensal.</p>
+<h4 id="anti-pattern-10-o-operador-ausente">Anti-Pattern 10: O Operador Ausente</h4>
+<p><strong>Descrição:</strong> Configurar o AIOX e assumir que vai funcionar autonomamente sem supervisão ativa — o operador humano se torna apenas um receptor de outputs.</p>
+<p><strong>Por que é anti-pattern:</strong> O AIOX amplifica inteligência humana — não a substitui. O operador precisa estar presente para: identificar quando os critérios de produto estão corretos, reconhecer quando o contexto de negócio mudou e as decisions de produto anteriores precisam ser revisitadas, e validar que os critérios de aceite das stories correspondem ao valor que o produto deve entregar.</p>
+<p>Um AIOX sem operador ativo produz código correto que pode não resolver o problema certo.</p>
+<hr />
+<h3 id="a-mentalidade-de-operador">A Mentalidade de Operador</h3>
+<p>Os 10 patterns e 10 anti-patterns acima podem ser condensados numa única mentalidade: <strong>o operador do AIOX não é um usuário passivo do sistema — é o responsável pelo output final</strong>.</p>
+<p>Os agentes executam. Os gates validam. Os workflows estruturam. Mas a inteligência de produto — o "por que estamos fazendo isso" e o "isso está entregando o valor que precisamos" — é sempre responsabilidade do operador humano.</p>
+<p>A melhor forma de usar o AIOX não é "confiar no sistema e verificar o resultado". É "usar o sistema como multiplicador da sua própria inteligência, mantendo sempre o controle sobre as decisões que importam".</p>
+<h4 id="o-checklist-do-operador-consciente">O Checklist do Operador Consciente</h4>
+<p>Aplique este checklist ao final de cada semana de uso do AIOX:</p>
+<p><strong>Rastreabilidade:</strong>
+- [ ] Todo código que foi para o repositório tem uma story correspondente?
+- [ ] Todas as stories têm critérios de aceite verificáveis?
+- [ ] As stories completadas correspondem ao que os stakeholders esperavam?</p>
+<p><strong>Processo:</strong>
+- [ ] O PO Gate foi genuinamente executado ou apenas carimbado?
+- [ ] O QA Gate identificou problemas reais ou está virando formalidade?
+- [ ] O QA Loop está convergindo ou circulando?</p>
+<p><strong>Qualidade:</strong>
+- [ ] Os outputs dos agentes estão melhores, iguais, ou piores que mês passado?
+- [ ] Os agentes estão produzindo outputs consistentes entre sessões?
+- [ ] O MEMORY.md reflete o estado atual do projeto?</p>
+<p><strong>Custo:</strong>
+- [ ] O custo semanal está dentro da expectativa?
+- [ ] Há operações que poderiam ser determinizadas?
+- [ ] O routing de modelos está otimizado?</p>
+<p>Um operador que responde estas perguntas honestamente toda semana está usando o AIOX da forma para a qual foi projetado: como um sistema de amplificação da inteligência humana, não um substituto para ela.</p>
+<hr />
+<h3 id="anti-patterns-adicionais-licoes-do-uso-real">Anti-Patterns Adicionais: Lições do Uso Real</h3>
+<h4 id="anti-pattern-11-pular-o-prd-e-ir-direto-para-o-dev">Anti-Pattern 11: Pular o PRD e ir direto para o Dev</h4>
+<p><strong>Descrição:</strong> Muitos estudantes tentam chamar o @dev diretamente com uma descrição vaga do que querem construir — "crie uma tela de login com autenticação social".</p>
+<p><strong>Por que falha:</strong> Sem PRD, o Dev inventa features, preenche lacunas com texto placeholder, e toma decisões arquiteturais que deveriam ter sido tomadas pelo @architect ou pelo @pm. O resultado é uma implementação tecnicamente funcional que resolve o problema errado.</p>
+<p><strong>A causa raiz:</strong> O PRD é a "lei" do projeto — define escopo, requisitos e restrições. Sem ele, cada agente opera no escuro, fazendo suposições que podem ou não corresponder à sua visão real. Um @dev sem PRD é como um desenvolvedor sem especificação: ele vai construir algo, mas não necessariamente o que você queria.</p>
+<p><strong>A correção:</strong> PRD antes de qualquer chamada ao @dev. Sempre. O investimento de 30 minutos no PRD economiza horas de retrabalho.</p>
+<h4 id="anti-pattern-12-usar-ia-para-tudo-sem-pensar-no-processo-real">Anti-Pattern 12: Usar IA para tudo sem pensar no processo real</h4>
+<p><strong>Descrição:</strong> Tentar usar IA sem antes pensar em como o processo funcionaria na vida real. "Quero lançar um produto digital" — e imediatamente chamar agentes, sem estruturar o pensamento.</p>
+<p><strong>O problema fundamental:</strong> Os agentes do AIOX espelham um time de software real. @pm faz o que um Product Manager faz. @architect faz o que um arquiteto sênior faz. @dev faz o que um desenvolvedor faz. Se você não saberia pular uma etapa num time real (como ignorar o QA antes de ir para produção), não pule com os agentes.</p>
+<p><strong>A raiz do anti-pattern:</strong> O material de Framework Thinking existe por esta razão. Pensar em blocos pequenos, identificar patterns, estruturar o raciocínio ANTES de engajar a IA — é o que separa quem usa o AIOX como ferramenta de quem o usa como gerador de texto aleatório.</p>
+<p><strong>A correção:</strong> Para cada tarefa, decomponha o processo real primeiro. Qual seria o fluxo num time humano? Quem você chamaria primeiro? Qual seria a sequência lógica? Só então engaje os agentes nessa mesma sequência.</p>
+<h4 id="anti-pattern-13-mcp-do-supabase-sem-permissoes-configuradas">Anti-Pattern 13: MCP do Supabase sem permissões configuradas</h4>
+<p><strong>Descrição:</strong> Conectar o Claude Code ao Supabase via MCP sem configurar restrições de permissão adequadas.</p>
+<p><strong>O caso real:</strong> Um estudante da cohort teve o banco de dados Supabase inteiro deletado porque o Claude Code com MCP tinha permissões irrestritas configuradas. O agente, ao tentar "limpar" dados de desenvolvimento, executou operações que não deveriam ter sido possíveis.</p>
+<p><strong>Por que acontece:</strong> A velocidade de setup encoraja pular configurações de segurança. "Vou configurar as permissões depois" — e o depois não chega.</p>
+<p><strong>A correção em duas etapas:</strong>
+1. <strong>Aprenda o Supabase manualmente primeiro</strong> — SQL Editor, Table Editor, entenda o que cada operação faz antes de automatizá-la
+2. <strong>Configure permissões restritivas antes de conectar o MCP</strong> — defina exatamente quais operações o agente pode executar, e bloqueie todo o resto por padrão</p>
+<p>Automatização sem entendimento é delegação às cegas. Entenda a ferramenta primeiro; automatize depois.</p>
+<h4 id="anti-pattern-14-copy-como-pensamento-posterior">Anti-Pattern 14: Copy como pensamento posterior</h4>
+<p><strong>Descrição:</strong> Solicitar ao @dev que crie páginas e interfaces sem fornecer o copy (conteúdo textual) antecipadamente.</p>
+<p><strong>O resultado previsível:</strong> O agente preenche a página com placeholder text — "Lorem ipsum", "Título aqui", "Descrição do produto", "Clique para saber mais". O design funciona, mas o produto parece uma maquete. Você então precisa voltar e substituir tudo manualmente, ou pedir ao agente que refaça — duas vezes o trabalho.</p>
+<p><strong>O pattern correto:</strong>
+1. Crie o copy primeiro — via squad de copy, manualmente, ou com um agente especializado
+2. Referencie o arquivo de copy no PRD
+3. Só então chame o @dev</p>
+<p><strong>A mentalidade:</strong> O copy não é detalhe de acabamento — é parte da especificação. Uma tela sem copy definitivo não está especificada; está incompleta. O @dev precisa do copy para construir a tela correta, não uma versão que você vai ter que consertar depois.</p>
+<h4 id="anti-pattern-15-squad-decorativo">Anti-Pattern 15: Squad Decorativo</h4>
+<p><strong>Descrição:</strong> Criar squads que são consultivos — respondem perguntas, geram insights — mas nunca resolvem problemas reais. O squad existe, tem agentes bonitos, mas não produz output acionável.</p>
+<p><strong>Sintoma:</strong> Você tem 5 squads criados e nenhum problema concreto resolvido. O squad de copy gera textos que você não usa. O squad de análise produz relatórios que ninguém lê. É "epifania mode" — a criação é satisfatória, mas a execução não acontece.</p>
+<p><strong>A correção:</strong> Squad operacional &gt; Squad decorativo. Antes de criar um squad, pergunte: "Que problema específico e recorrente este squad vai resolver?" Se a resposta for vaga, pare. Resolva o problema manualmente primeiro. Depois automatize com squad.</p>
+<h4 id="anti-pattern-16-modo-epifania-criar-sem-resolver">Anti-Pattern 16: Modo Epifania (Criar Sem Resolver)</h4>
+<p><strong>Descrição:</strong> Ficar criando squads, agentes, e workflows infinitamente sem nunca entregar valor real. A criação é viciante — mas criar não é resolver.</p>
+<p><strong>O salto necessário:</strong> Do squad decorativo para o squad operacional. Do operacional para o produto. Cada nível exige parar de criar e começar a resolver. Como Alan enfatiza: "Método sem execução é apenas epifania."</p>
+<p><strong>A correção:</strong> Estabeleça um gate pessoal: não crie o próximo squad sem que o atual tenha resolvido pelo menos 3 problemas reais para clientes ou para você.</p>
+<h4 id="anti-pattern-17-deixar-a-ia-criar-tabelas-de-banco-de-dados">Anti-Pattern 17: Deixar a IA Criar Tabelas de Banco de Dados</h4>
+<p><strong>Descrição:</strong> Pedir para um agente "crie o banco de dados para meu sistema" sem definir entidades, status, e relações antes.</p>
+<p><strong>O resultado:</strong> Overengineering. A IA cria 20 tabelas quando 5 resolveriam. Cria campos que ninguém pediu. Inventa relações que não existem no domínio. E o pior: o operador aceita porque "parece profissional".</p>
+<p><strong>A correção da Aula 07:</strong> Defina entidades e suas taxonomias ANTES de tocar no banco. Use enums e categorizações antes de criar tabelas. Considere o Content Type Pattern — uma tabela genérica de conteúdo pode substituir 20 tabelas específicas. Deixe <code>@data-engineer</code> implementar o DDL, mas as decisões de entidade são suas.</p>
+<h4 id="anti-pattern-18-documentacao-estatica-doc-rot">Anti-Pattern 18: Documentação Estática (Doc Rot)</h4>
+<p><strong>Descrição:</strong> Manter documentação extensa que desatualiza rapidamente. CLAUDE.md de 300 linhas que ninguém atualiza. READMEs que descrevem o projeto de 3 meses atrás.</p>
+<p><strong>Caso real:</strong> Na mentoria, Alan encontrou um CLAUDE.md errado que causou <strong>40.000 tokens desperdiçados</strong> — o agente seguia instruções desatualizadas e produzia output inútil repetidamente.</p>
+<p><strong>A correção:</strong> CLAUDE.md mínimo com ponteiros. Básico + referências para onde está o detalhe. O código É a documentação. Quando possível, renderização em tempo real (HTMLs que mostram estado atual) &gt; documentação estática que envelhece.</p>
+<h4 id="anti-pattern-19-conversar-demais-com-a-ia">Anti-Pattern 19: Conversar Demais com a IA</h4>
+<p><strong>Descrição:</strong> Sessões longas de conversa com o agente, explicando, re-explicando, ajustando, pedindo reformulações.</p>
+<p><strong>O diagnóstico:</strong> Se você está conversando demais, está faltando uma Task ou um Workflow. A conversa é sinal de que o processo não está formalizado. Pedro Valério: "Eu não escrevo. Eu crio documento pra ele ler."</p>
+<p><strong>A correção:</strong> Identifique o padrão da conversa recorrente. Crie uma task que encapsula o que você está pedindo repetidamente. Na próxima vez, execute a task em vez de conversar.</p>
+<hr />
+<h3 id="licoes-do-cohort-insights-dos-estudantes">Lições do Cohort: Insights dos Estudantes</h3>
+<p>O conhecimento teórico de patterns e anti-patterns é necessário, mas insuficiente. As lições mais valiosas emergem do uso real — dos erros cometidos, das descobertas inesperadas, e dos momentos de clareza que só acontecem quando você está com as mãos na massa.</p>
+<p>Estes são insights reais da cohort da Academia Lendária:</p>
+<hr />
+<p><strong>"É viciante"</strong></p>
+<p>Quando você vê os agentes trabalhando em paralelo — criando coisas simultaneamente, cada um com seu domínio, o resultado emergindo da colaboração — você quer criar mais. Esse estado é valioso: use essa energia, mas mantenha a disciplina do processo. O entusiasmo sem estrutura é onde nascem os anti-patterns.</p>
+<hr />
+<p><strong>"O AIOX é um organismo vivo"</strong></p>
+<p>A ferramenta muda quase diariamente. O que funcionava na semana passada pode ser diferente hoje. Uma funcionalidade que não existia ontem pode estar disponível amanhã. Isso tem uma consequência direta: não memorize passos — entenda o raciocínio por trás deles. Quem memorizou "como fazer X" ficou perdido quando X mudou. Quem entendeu "por que X funciona assim" adaptou-se imediatamente. É por isso que o Framework Thinking é tão importante: ele ensina raciocínio, não receitas.</p>
+<hr />
+<p><strong>"Não decore, pratique"</strong></p>
+<p>Instalação, bootstrap, criação de squads — repita até virar automático. Como memória muscular. Assistir a aula não é suficiente; você precisa colocar a mão na massa. O gap entre "entender o conceito" e "executar sem pensar" só se fecha com repetição deliberada. Reserve tempo para praticar os fluxos básicos até que não precise mais consultar o material.</p>
+<hr />
+<p><strong>"Erros são parte do processo"</strong></p>
+<p>Erros são normais e esperados. A habilidade crítica não é evitar erros — é saber sair deles rapidamente. Vercel Logs e Claude Code são suas ferramentas para isso. Quem aprende a ler logs e interpretar mensagens de erro evolui exponencialmente mais rápido do que quem tenta construir sem errar. Errar rápido, aprender rápido, corrigir rápido — esse é o ritmo.</p>
+<hr />
+<p><strong>"A melhor prática vale a pena"</strong></p>
+<p>Como o estudante Aloysio colocou: "É interessante — tem muita coisa que a gente consegue descobrir por tentativa e erro. Mas aprender a melhor prática vale a pena, especialmente se você está construindo para clientes."</p>
+<p>A tentativa e erro te leva a algum lugar. A melhor prática te leva ao lugar certo, mais rápido, com menos retrabalho, e com confiança para replicar o resultado. Para projetos pessoais, a exploração tem seu valor. Para clientes, a precisão é o que importa.</p>
+<hr />
+<p><strong>"Técnica é líquida, fundamentos são permanentes"</strong></p>
+<p>RAG era o rei há 6 meses. Agora YAML local com frontmatter resolve melhor e mais barato. A ferramenta específica muda constantemente — mas os fundamentos (processos, determinismo, qualidade de dados) são permanentes. Quem investe em fundamentos se adapta. Quem investe em ferramentas recomeça.</p>
+<hr />
+<p><strong>"Sem repertório, você é refém"</strong></p>
+<p>Sem vocabulário preciso do seu domínio, sem dados de primeira mão, sem processos documentados — você é refém do que o modelo inventa. Com repertório, você domina. É a diferença entre pedir "me faz um CRM" e fornecer 880 propostas históricas como contexto.</p>
+<hr />
+<p><strong>"Não se apegue ao código — gera 10x, descarta 10x"</strong></p>
+<p>O código gerado pelo AIOX é descartável. Se a base está ruim, recomeça. Gera 10x mais rápido do que humano. O apego ao código que não funciona é um viés cognitivo herdado da era pré-IA. O squad é rascunho — destrua e reconstrua até a excelência.</p>
+<hr />
+<p><strong>"A IA tenta te enganar constantemente"</strong></p>
+<p>Claude Code é um dev preguiçoso. Ele tenta mudar o teste para o teste passar, em vez de corrigir o código. Coloca <code>True</code> em verificações para pular validação. Finge que leu um arquivo. A sua função como operador é auditar — nunca confiar cegamente.</p>
+<hr />
+<p><strong>"Burnout era por causa das pessoas, não do trabalho"</strong></p>
+<p>Alan compartilhou: o burnout que sentia antes não era pelo volume de trabalho — era pela fricção de gerenciar pessoas. Com AIOX, o trabalho aumentou mas a fricção diminuiu. Agentes não reclamam, não faltam, não pedem aumento. A operação escala sem escalar os problemas humanos.</p>
+<hr />
+<p><strong>"O dinheiro não está no Claude Code, está na carteira das pessoas"</strong></p>
+<p>A ferramenta é commoditizada. Todo mundo pode usar Claude Code. O diferencial é: quem você conhece, qual problema você resolve, e quão rápido você entrega. Networking, distribuição, e execução vencem tecnologia. Sempre.</p>
+<hr />
+<p><em>Este manual é um documento vivo. As lições continuam emergindo do cohort a cada semana. Os patterns de hoje são os fundamentos de amanhã.</em></p>
+      </article>
+
+      <div class="nav-footer">
+        <a href="15-otimizacao.html" class=""><div class="label">← Anterior</div><div class="title">Cap 15 · Otimização: Tokens, Contexto e Performance</div></a>
+        <a href="17-referencia.html" class="nav-next"><div class="label">Próximo →</div><div class="title">Cap 17 · Referência Completa</div></a>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<button class="to-top" id="to-top" aria-label="Voltar ao topo">↑</button>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+</body>
+</html>

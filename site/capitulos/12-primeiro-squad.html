@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap 12 — Montando Seu Primeiro Squad · AIOX Squad</title>
+<meta name="description" content="Guia prático: escolha de domínio, mapeamento de entidades, scaffolding com Python, persona writing em 4 camadas e os 5 estágios de maturidade.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="../assets/chat.css">
+<link rel="icon" type="image/svg+xml" href="../assets/logo-aiox.svg">
+</head>
+<body data-chapter="12">
+
+<div class="app">
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html"><img src="../assets/logo-aiox.svg" alt="AIOX Squad"></a>
+      <span class="sidebar-badge">Guia Técnico</span>
+      <div class="sidebar-title">AIOX Squad</div>
+      <div class="sidebar-subtitle">17 capítulos · Synkra</div>
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="sidebar-progress-label"><span>Progresso</span><span id="sb-pct">0/17</span></div>
+      <div class="progress-bar"><div id="sb-bar"></div></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Capítulos</div>
+      <div id="sidebar-chapters"></div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="../index.html">← Voltar à home</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="top-nav">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="../index.html">Capítulos</a>
+        <span class="sep">/</span>
+        <span class="current">Cap 12</span>
+      </div>
+      <div class="top-actions">
+        <button class="gsearch-trigger" data-gsearch-open aria-label="Buscar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <span class="hint">Buscar</span>
+          <kbd>/</kbd>
+        </button>
+        <a class="btn-sm" href="11-squad.html">← Anterior</a>
+        <a class="btn-sm" href="13-productizacao.html">Próximo →</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section class="hero">
+        <span class="hero-tag">Capítulo 12 · AVANCADO</span>
+        <h1 class="hero-title">Montando Seu Primeiro Squad</h1>
+        <p class="hero-subtitle">Guia prático: escolha de domínio, mapeamento de entidades, scaffolding com Python, persona writing em 4 camadas e os 5 estágios de maturidade.</p>
+        <div class="meta-row">
+          <span class="meta-chip">⏱ <strong>55 min</strong> de leitura</span>
+          <span class="meta-chip">🎯 <strong>4</strong> objetivos</span>
+          <span class="meta-chip">🧩 <strong>7</strong> conceitos-chave</span>
+          <span class="meta-chip">⌨ <strong>2</strong> comandos CLI</span>
+        </div>
+      </section>
+
+      <div class="tldr">
+        <div class="tldr-label">TL;DR</div>
+        <div class="tldr-text">Guia prático: escolha de domínio, mapeamento de entidades, scaffolding com Python, persona writing em 4 camadas e os 5 estágios de maturidade.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Você vai aprender</h3>
+          <ul><li>Montar um squad do zero</li><li>Mapear entidades sem sobreposição</li><li>Escrever personas em 4 camadas</li><li>Alimentar dados de primeiro partido</li></ul>
+        </div>
+        <div class="card">
+          <h3>Conceitos-chave</h3>
+          <div class="chips"><span class="chip">Domain Design</span><span class="chip">Entity Mapping</span><span class="chip">Scaffolding Python</span><span class="chip">4 Camadas de Persona</span><span class="chip">Golden Set</span><span class="chip">5 Fases de Maturidade</span><span class="chip">Board of Advisors</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin: 28px 0;"><h3>Comandos deste capítulo</h3><ul><li><code>python scaffold_squad.py {name}</code></li><li><code>@squad-name *{command}</code></li></ul></div>
+
+      <article class="prose">
+        <hr />
+<h3 id="introducao-da-teoria-a-pratica">Introdução: Da Teoria à Prática</h3>
+<p>O capítulo anterior explicou o que é um squad e por que o conceito existe. Este capítulo vai guiar você passo a passo pelo processo de montar um squad funcional, do zero até o primeiro output em produção.</p>
+<p>Vamos usar um exemplo concreto ao longo de todo o capítulo: um <strong>squad de análise de startups</strong> — uma equipe de agentes especializada em avaliar startups para investimento, parceria, ou due diligence.</p>
+<p>Por que esse exemplo? Porque ele é suficientemente complexo para ilustrar as decisões reais que você vai enfrentar (múltiplas perspectivas, dados de domínio específico, saídas que precisam ser confiáveis), mas suficientemente concreto para que os princípios sejam transferíveis para qualquer outro domínio.</p>
+<hr />
+<h3 id="121-escolhendo-o-dominio-a-decisao-mais-importante">12.1 Escolhendo o Domínio: A Decisão Mais Importante</h3>
+<p>Antes de criar qualquer arquivo, você precisa de clareza sobre o domínio do squad. Essa é a decisão mais importante do processo — e é onde a maioria dos squads mal projetados nasce.</p>
+<h4 id="as-4-perguntas-de-definicao-de-dominio">As 4 Perguntas de Definição de Domínio</h4>
+<p><strong>Pergunta 1: Qual é o problema específico que este squad resolve?</strong></p>
+<p>Errado: "Análise de empresas"
+Certo: "Avaliar startups em estágio early-stage (pré-seed a Series A) para decisão de investimento anjo, com foco em mercados de tecnologia B2B no Brasil"</p>
+<p>A especificidade não é limitação — é qualidade. Um squad com domínio bem definido tem agentes com expertise real. Um squad com domínio vago tem agentes com expertise superficial em tudo.</p>
+<p><strong>Pergunta 2: Quais são as perspectivas especializadas necessárias?</strong></p>
+<p>Para o nosso squad de startups: você precisa de alguém que entenda de mercado e competição, alguém que entenda de tecnologia e execução técnica, alguém que entenda de equipe e fundadores, e alguém que consolide as análises em uma recomendação coerente.</p>
+<p>Cada perspectiva que você identifica corresponde a um agente no squad.</p>
+<p><strong>Pergunta 3: Qual é o output esperado?</strong></p>
+<p>Um squad de análise de startups produz: memo de investimento, avaliação de risco, perfil de fundadores, análise de mercado. Saber os outputs antes de criar os agentes te ajuda a definir as skills de cada agente corretamente.</p>
+<p><strong>Pergunta 4: Qual é o grau de especialização necessário?</strong></p>
+<p>Para análise de startups de alto valor, você precisa de agentes que pareçam especialistas sérios — não assistentes genéricos que "sabem sobre startups". Isso vai impactar a profundidade das personas que você vai criar.</p>
+<h4 id="o-mapa-de-dominio">O Mapa de Domínio</h4>
+<p>Com as quatro perguntas respondidas, você tem o que chamamos de Mapa de Domínio:</p>
+<pre><code>Domínio: Análise de startups B2B early-stage (Brasil)
+Perspectivas: mercado, tecnologia, equipe, síntese
+Outputs: memo de investimento, avaliação de risco, perfil de equipe
+Especialização: alta (agentes precisam parecer especialistas credíveis)
+</code></pre>
+<hr />
+<h3 id="122-mapeando-as-entidades-do-squad">12.2 Mapeando as Entidades do Squad</h3>
+<p>Com o domínio definido, o próximo passo é mapear as entidades — os agentes que vão compor o squad.</p>
+<h4 id="principio-de-separacao-de-concerns">Princípio de Separação de Concerns</h4>
+<p>Cada agente em um squad deve ter uma perspectiva que não se sobrepõe significativamente com os demais. Não crie dois agentes que fazem a mesma coisa de formas ligeiramente diferentes. Crie agentes com perspectivas genuinamente diferentes que se complementam.</p>
+<p>Para o squad de startups:</p>
+<p><strong>Analista de Mercado (Marina):</strong>
+- Foco: TAM/SAM/SOM, competição, posicionamento, timing de mercado
+- Pergunta central: "O mercado existe e é grande o suficiente?"
+- Não analisa: tecnologia, equipe, financeiro</p>
+<p><strong>Avaliador de Tecnologia (Theo):</strong>
+- Foco: stack técnico, arquitetura, escalabilidade, velocidade de execução técnica
+- Pergunta central: "A tecnologia é defensável e executável?"
+- Não analisa: mercado, equipe fundadora, modelo de negócio</p>
+<p><strong>Analista de Equipe (Sofia):</strong>
+- Foco: background dos fundadores, dinâmica de equipe, track record, capacidade de execução
+- Pergunta central: "A equipe tem o que precisa para ir de 0 a 1?"
+- Não analisa: mercado, tecnologia</p>
+<p><strong>Sintetizador de Investimento (Victor):</strong>
+- Foco: consolida as análises das outras perspectivas em recomendação coerente
+- Pergunta central: "Vale o investimento? Em que termos?"
+- Depende dos outputs de Marina, Theo, e Sofia</p>
+<p>Essa é uma hierarquia natural: Marina, Theo, e Sofia são analistas especializados. Victor é o sintetizador que usa o trabalho deles para produzir a recomendação final.</p>
+<hr />
+<h3 id="123-scaffolding-com-python">12.3 Scaffolding com Python</h3>
+<p>O Princípio Code First se aplica diretamente aqui: a criação da estrutura de arquivos do squad é uma operação determinística. Não use IA para criar pastas e arquivos — escreva um script Python.</p>
+<h4 id="o-script-de-scaffolding">O Script de Scaffolding</h4>
+<pre><code class="language-python">#!/usr/bin/env python3
+&quot;&quot;&quot;
+scaffold_squad.py — Cria estrutura base de um squad AIOX
+Uso: python scaffold_squad.py startup-analysis
+&quot;&quot;&quot;
+import os
+import sys
+import yaml
+from pathlib import Path
+
+def scaffold_squad(squad_name: str, agents: list[dict]) -&gt; None:
+    &quot;&quot;&quot;Cria estrutura de diretórios e arquivos base para um squad.&quot;&quot;&quot;
+    base_path = Path(f&quot;squads/{squad_name}&quot;)
+
+    # Estrutura de diretórios
+    dirs = [
+        base_path,
+        base_path / &quot;agents&quot;,
+        base_path / &quot;data&quot; / &quot;knowledge&quot;,
+        base_path / &quot;data&quot; / &quot;examples&quot;,
+        base_path / &quot;data&quot; / &quot;references&quot;,
+        base_path / &quot;tasks&quot;,
+    ]
+
+    for d in dirs:
+        d.mkdir(parents=True, exist_ok=True)
+        print(f&quot;Criado: {d}&quot;)
+
+    # squad.yaml
+    manifest = {
+        &quot;name&quot;: squad_name,
+        &quot;version&quot;: &quot;1.0.0&quot;,
+        &quot;description&quot;: f&quot;Squad de {squad_name}&quot;,
+        &quot;agents&quot;: [
+            {&quot;id&quot;: a[&quot;id&quot;], &quot;persona&quot;: f&quot;agents/{a['id']}.md&quot;, &quot;role&quot;: a[&quot;role&quot;]}
+            for a in agents
+        ],
+        &quot;domain&quot;: {&quot;primary&quot;: squad_name},
+        &quot;commands&quot;: []
+    }
+
+    with open(base_path / &quot;squad.yaml&quot;, &quot;w&quot;) as f:
+        yaml.dump(manifest, f, default_flow_style=False, allow_unicode=True)
+    print(f&quot;Criado: {base_path}/squad.yaml&quot;)
+
+    # Templates de agentes
+    agent_template = &quot;&quot;&quot;# {name} — {role}
+
+## Persona
+
+{name} é um especialista em {specialty}.
+
+## Background
+
+[Descreva o background profissional e experiência do agente]
+
+## Skills
+
+- [Skill principal 1]
+- [Skill principal 2]
+- [Skill principal 3]
+
+## Perspectiva
+
+[Descreva a perspectiva única que este agente traz]
+
+## O Que Este Agente Analisa
+
+[Lista de aspectos que este agente avalia]
+
+## O Que Este Agente NÃO Analisa
+
+[Lista explícita do que está fora do escopo]
+
+## Output Esperado
+
+[Formato e conteúdo do output deste agente]
+&quot;&quot;&quot;
+
+    for agent in agents:
+        agent_path = base_path / &quot;agents&quot; / f&quot;{agent['id']}.md&quot;
+        content = agent_template.format(
+            name=agent[&quot;name&quot;],
+            role=agent[&quot;role&quot;],
+            specialty=agent.get(&quot;specialty&quot;, agent[&quot;role&quot;])
+        )
+        with open(agent_path, &quot;w&quot;) as f:
+            f.write(content)
+        print(f&quot;Criado: {agent_path}&quot;)
+
+    # MEMORY.md
+    memory_content = f&quot;&quot;&quot;# {squad_name} — Memória Compartilhada
+
+## Decisões de Análise
+[Registre aqui análises significativas e suas conclusões]
+
+## Padrões Identificados
+[Padrões observados ao longo do tempo no domínio]
+
+## Calibrações
+[Ajustes de critérios e preferências do operador]
+
+## Contexto Acumulado
+[Contexto relevante que os agentes devem carregar entre sessões]
+&quot;&quot;&quot;
+
+    with open(base_path / &quot;MEMORY.md&quot;, &quot;w&quot;) as f:
+        f.write(memory_content)
+    print(f&quot;Criado: {base_path}/MEMORY.md&quot;)
+
+    print(f&quot;\nSquad '{squad_name}' criado com sucesso em squads/{squad_name}/&quot;)
+    print(&quot;Próximo passo: configure as personas dos agentes em squads/{squad_name}/agents/&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    if len(sys.argv) &lt; 2:
+        print(&quot;Uso: python scaffold_squad.py &lt;squad-name&gt;&quot;)
+        sys.exit(1)
+
+    squad_name = sys.argv[1]
+
+    # Defina seus agentes aqui
+    agents = [
+        {&quot;id&quot;: &quot;market-analyst&quot;, &quot;name&quot;: &quot;Marina&quot;, &quot;role&quot;: &quot;Análise de mercado&quot;, &quot;specialty&quot;: &quot;análise de mercados e competição&quot;},
+        {&quot;id&quot;: &quot;tech-evaluator&quot;, &quot;name&quot;: &quot;Theo&quot;, &quot;role&quot;: &quot;Avaliação de tecnologia&quot;, &quot;specialty&quot;: &quot;arquitetura e execução técnica&quot;},
+        {&quot;id&quot;: &quot;team-analyst&quot;, &quot;name&quot;: &quot;Sofia&quot;, &quot;role&quot;: &quot;Análise de equipe&quot;, &quot;specialty&quot;: &quot;avaliação de fundadores e dinâmica de equipe&quot;},
+        {&quot;id&quot;: &quot;investment-synthesizer&quot;, &quot;name&quot;: &quot;Victor&quot;, &quot;role&quot;: &quot;Síntese de investimento&quot;, &quot;specialty&quot;: &quot;tomada de decisão de investimento&quot;},
+    ]
+
+    scaffold_squad(squad_name, agents)
+</code></pre>
+<p>Execute:</p>
+<pre><code class="language-bash">python scaffold_squad.py startup-analysis
+</code></pre>
+<p>Em segundos, você tem toda a estrutura de diretórios e arquivos base criada. Zero tokens de IA gastos nessa operação.</p>
+<hr />
+<h3 id="124-configurando-os-agentes-a-parte-que-exige-ia">12.4 Configurando os Agentes: A Parte que Exige IA</h3>
+<p>Com a estrutura criada, você vai preencher os templates de persona para cada agente. Esta é a parte que genuinamente exige inteligência artificial — criar personas convincentes, com background credível, skills específicas, e perspectiva distinta requer o tipo de julgamento que Python não pode fornecer.</p>
+<h4 id="anatomia-de-uma-persona-de-squad">Anatomia de uma Persona de Squad</h4>
+<p>Uma persona de squad bem escrita tem quatro camadas:</p>
+<p><strong>Camada 1: Identidade Profissional</strong>
+Quem é esta pessoa? Qual é sua trajetória? O que a torna especialista nesse domínio específico? Seja específico — não "30 anos de experiência em finanças" mas "10 anos como analista em fundos de venture capital early-stage no Brasil, passagem por Y Combinator como advisor, co-fundou duas startups antes de ir para o lado do investimento".</p>
+<p><strong>Camada 2: Perspectiva Característica</strong>
+Qual é o ângulo único que este agente traz? Quais são as perguntas que ele faz que outros não fazem? Quais são os sinais que ele busca que revelam insights que outros perderiam?</p>
+<p>Marina (nossa analista de mercado) sempre começa pela pergunta: "Por que agora? O que mudou no mercado que torna esse produto possível hoje quando não era cinco anos atrás?" Essa é uma perspectiva característica que informa o tipo de análise que ela vai produzir.</p>
+<p><strong>Camada 3: Skills Operacionais</strong>
+O que concretamente este agente sabe fazer? Não em termos abstratos mas em termos de operações específicas:
+- Marina sabe fazer análise de TAM bottom-up e top-down
+- Marina sabe mapear competidores diretos, indiretos, e substitutos
+- Marina sabe identificar dinâmicas de mercado que favorecem ou dificultam adoção</p>
+<p><strong>Camada 4: Limitações Explícitas</strong>
+O que este agente NÃO faz? Essa camada é frequentemente omitida e é crítica. Um agente sem limites explícitos vai tentar fazer tudo. Um agente com limites bem definidos vai saber quando dizer "isso não é meu domínio — Theo vai olhar a parte técnica".</p>
+<h4 id="exemplo-completo-persona-da-marina">Exemplo Completo: Persona da Marina</h4>
+<pre><code class="language-markdown"># Marina — Analista de Mercado
+
+## Persona
+
+Marina opera como uma analista de mercado sênior com 12 anos de experiência
+avaliando oportunidades de mercado para fundos de VC. Ela passou pelos dois lados:
+analista de mercado num fundo Tier 1 e depois como gerente de produto numa startup
+que escalou de zero a R$50M ARR. Essa dupla perspectiva a torna única: ela sabe
+tanto avaliar mercados quanto entender o que é necessário para capturá-los.
+
+## Perspectiva Característica
+
+Marina sempre começa pela pergunta de timing: &quot;Por que agora?&quot; Mercados existem
+há décadas; o que mudou que torna este produto viável, necessário, e capturável
+neste momento específico? Ela busca os &quot;unfair advantages estruturais&quot; — mudanças
+regulatórias, shifts tecnológicos, mudanças comportamentais — que criam janelas
+de oportunidade que se fecham.
+
+## Framework de Análise de Mercado
+
+Quando Marina avalia uma startup, ela estrutura a análise em quatro blocos:
+
+**Bloco 1: Tamanho e Segmentação**
+- TAM (Total Addressable Market) — top-down e bottom-up
+- SAM (Serviceable Addressable Market) — quem pode ser alcançado realisticamente
+- SOM (Serviceable Obtainable Market) — quem pode ser convertido nos próximos 3 anos
+- Dinâmica de crescimento (o mercado está crescendo, estável, ou contraindo?)
+
+**Bloco 2: Competição e Posicionamento**
+- Mapa competitivo completo (diretos, indiretos, substitutos, status quo)
+- Por que o usuário vai migrar do status quo ou do líder atual?
+- Qual é a vantagem diferencial sustentável?
+- Como os competidores estabelecidos vão reagir?
+
+**Bloco 3: Timing e Catalysadores**
+- Por que este produto é possível agora e não era antes?
+- Quais são os catalisadores que aceleram ou retardam a adoção?
+- Qual é o risco de &quot;too early&quot;? De &quot;too late&quot;?
+
+**Bloco 4: Modelo de Entrada**
+- Qual é o beachhead ideal? (segmento inicial mais fácil de penetrar)
+- Qual é a estratégia de expansão de mercado a partir do beachhead?
+- Qual é a dependência de canal de distribuição?
+
+## O Que Marina NÃO Analisa
+
+Marina não avalia:
+- Qualidade técnica do produto ou stack (isso é domínio de Theo)
+- Background e capacidade dos fundadores (isso é domínio de Sofia)
+- Valuation ou estrutura do deal (isso é domínio de Victor)
+- Financeiros detalhados além de métricas de mercado (Victor consolida)
+
+Se durante a análise Marina identificar questões de tecnologia ou equipe que
+impactam sua análise de mercado, ela vai notar explicitamente: &quot;Esta análise
+assume que a equipe tem capacidade técnica para executar o roadmap descrito —
+recomendo que Theo valide esta premissa.&quot;
+</code></pre>
+<p>Essa é uma persona que vai produzir análises de mercado reais, não genéricas. O tempo investido na criação dessa persona é o que diferencia um squad medíocre de um squad genuinamente útil.</p>
+<hr />
+<h3 id="125-alimentando-dados-de-primeiro-partido">12.5 Alimentando Dados de Primeiro Partido</h3>
+<p>Personas bem escritas são o fundamento. Os dados de primeiro partido são o que transforma um squad genérico num squad expert no seu contexto específico.</p>
+<h4 id="o-que-sao-dados-de-primeiro-partido">O Que São Dados de Primeiro Partido</h4>
+<p>Dados de primeiro partido são informações únicas e proprietárias que você coloca no squad e que não estão disponíveis publicamente. Exemplos:</p>
+<p><strong>Para o squad de startups:</strong>
+- Teses de investimento específicas da sua firma
+- Histórico de análises anteriores e seus resultados
+- Critérios de filtro que foram desenvolvidos internamente
+- Base de dados de startups analisadas com outcomes documentados
+- Templates de memo de investimento da sua firma</p>
+<p><strong>Para um squad de análise jurídica:</strong>
+- Jurisprudência relevante para o seu nicho
+- Contratos-modelo com cláusulas preferidas
+- Histórico de decisões de casos semelhantes</p>
+<p><strong>Para um squad de conteúdo:</strong>
+- Guia de voz e tom da marca
+- Exemplos de conteúdo aprovado
+- Contexto de audiência e persona</p>
+<h4 id="estrutura-dos-dados-no-squad">Estrutura dos Dados no Squad</h4>
+<pre><code>squads/startup-analysis/data/
+├── knowledge/
+│   ├── investment-thesis.md        # Tese de investimento da firma
+│   ├── evaluation-criteria.md      # Critérios de avaliação desenvolvidos
+│   └── market-definitions.md       # Definições e taxonomia do domínio
+├── examples/
+│   ├── strong-memo-example.md      # Exemplo de memo de investimento forte
+│   ├── weak-memo-example.md        # Exemplo de memo com problemas identificados
+│   └── analysis-examples/          # Análises anteriores (anonimizadas se necessário)
+└── references/
+    ├── market-benchmarks.md        # Benchmarks de mercado para contexto
+    └── term-glossary.md            # Glossário de termos do domínio
+</code></pre>
+<h4 id="como-os-agentes-usam-os-dados">Como os Agentes Usam os Dados</h4>
+<p>Os dados são referenciados nas personas dos agentes:</p>
+<pre><code class="language-markdown">## Contexto de Primeiro Partido
+
+Marina usa os seguintes dados proprietários ao analisar mercados:
+- `/data/knowledge/investment-thesis.md` — tese de investimento que deve guiar
+  o foco do mercado
+- `/data/knowledge/evaluation-criteria.md` — critérios calibrados para o
+  tamanho e estágio de mercado que buscamos
+- `/data/examples/` — exemplos de análises aprovadas que definem o padrão
+  esperado
+</code></pre>
+<p>Com esses dados, Marina não apenas sabe analisar mercados em geral — ela sabe analisar mercados da forma que sua firma específica analisa, com seus critérios, seus benchmarks, e seus padrões de qualidade.</p>
+<hr />
+<h3 id="126-testando-o-squad">12.6 Testando o Squad</h3>
+<p>Antes de usar o squad em situações reais, você precisa testá-lo. O teste de um squad tem quatro dimensões.</p>
+<h4 id="teste-1-coerencia-de-persona">Teste 1: Coerência de Persona</h4>
+<p>Cada agente deve responder de forma consistente com sua persona, independente do que você perguntar.</p>
+<p>Teste simples: faça a mesma pergunta para dois agentes diferentes. As respostas devem ser genuinamente diferentes — perspectivas diferentes, focos diferentes, conclusões possivelmente diferentes. Se as respostas parecerem intercambiáveis, as personas não estão suficientemente diferenciadas.</p>
+<h4 id="teste-2-respeito-de-limites">Teste 2: Respeito de Limites</h4>
+<p>Cada agente deve saber quando está fora de seu domínio e delegar adequadamente.</p>
+<p>Teste: peça para Marina avaliar o stack técnico de uma startup. A resposta correta é: "Stack técnico está fora do meu domínio de análise. Theo vai avaliar isso. O que posso dizer do ponto de vista de mercado é..."</p>
+<p>Se Marina tentar avaliar o stack técnico como se fosse expert em tecnologia, a persona está mal configurada.</p>
+<h4 id="teste-3-qualidade-de-output">Teste 3: Qualidade de Output</h4>
+<p>O output de cada agente deve ser utilizável, não apenas correto.</p>
+<p>Teste: dê um caso real (ou realista) para cada agente e avalie: o output tem a profundidade que você esperaria de um especialista real? Falta alguma dimensão importante? Há afirmações que parecem superficiais ou genéricas?</p>
+<h4 id="teste-4-colaboracao">Teste 4: Colaboração</h4>
+<p>Quando o squad opera como equipe (com Victor sintetizando os outputs de Marina, Theo, e Sofia), a síntese deve ser coerente e must refletir os inputs de forma balanceada.</p>
+<p>Teste: execute uma análise completa, observe como Victor incorpora os inputs dos outros agentes. Se Victor está ignorando perspectivas críticas levantadas pelos outros agentes, a configuração de síntese está errada.</p>
+<hr />
+<h3 id="127-comandos-do-squad">12.7 Comandos do Squad</h3>
+<p>Squads têm comandos, da mesma forma que agentes individuais têm comandos com o prefixo <code>*</code>.</p>
+<h4 id="definindo-comandos-no-squadyaml">Definindo Comandos no squad.yaml</h4>
+<pre><code class="language-yaml">commands:
+  - name: analyze-startup
+    description: &quot;Análise completa de uma startup&quot;
+    agents: [market-analyst, tech-evaluator, team-analyst, investment-synthesizer]
+    workflow: sequential  # ou parallel
+    output: investment-memo
+
+  - name: market-scan
+    description: &quot;Análise de mercado rápida&quot;
+    agents: [market-analyst]
+    output: market-brief
+
+  - name: team-check
+    description: &quot;Avaliação rápida de equipe fundadora&quot;
+    agents: [team-analyst]
+    output: team-profile
+</code></pre>
+<h4 id="invocando-comandos-do-squad">Invocando Comandos do Squad</h4>
+<pre><code>@startup-analysis *analyze-startup
+</code></pre>
+<p>Isso ativa o squad e executa o workflow <code>analyze-startup</code>, passando o input pelos agentes na sequência definida.</p>
+<p>Para um comando mais específico:</p>
+<pre><code>@startup-analysis *market-scan
+</code></pre>
+<p>Executa apenas a análise de mercado com Marina, sem os outros agentes.</p>
+<h4 id="workflow-sequential-vs-parallel">Workflow Sequential vs. Parallel</h4>
+<p><strong>Sequential:</strong> Os agentes executam em ordem. O output de cada agente é disponível para os agentes subsequentes. Victor recebe os outputs de Marina, Theo, e Sofia antes de sintetizar. Mais lento, mas permite que a síntese seja genuinamente informada pelos inputs especializados.</p>
+<p><strong>Parallel:</strong> Todos os agentes executam simultaneamente, sem ver os outputs uns dos outros antes. Victor então recebe todos os outputs ao mesmo tempo para sintetizar. Mais rápido, mas perde a riqueza de agentes que podem ajustar suas análises com base em perspectivas dos outros.</p>
+<p>Para análises de alta qualidade onde o custo de tempo é aceitável, sequential é recomendado. Para análises de triagem rápida onde velocidade importa mais que profundidade, parallel funciona bem.</p>
+<hr />
+<h3 id="128-o-caminho-simplificado-6-passos-para-criar-um-squad">12.8 O Caminho Simplificado: 6 Passos para Criar um Squad</h3>
+<p>Para quem está começando, existe um caminho simplificado que o Squad Creator automatiza:</p>
+<ol>
+<li><strong>Defina em uma frase</strong> o que o squad faz: "Analisa startups para investimento"</li>
+<li><strong>Chame o Squad Creator:</strong> <code>/squad-creator:squad-chief</code></li>
+<li><strong>Responda as perguntas</strong> de elicitação (domínio, especialistas, tasks)</li>
+<li><strong>Aguarde o processo automático</strong> — 6 fases internas: elicitação, pesquisa, advogado do diabo, definição de tiers, criação paralela de agentes, validação</li>
+<li><strong>Valide o resultado:</strong> <code>*validate-squad</code> verifica estrutura, schema, referências</li>
+<li><strong>Teste:</strong> Execute os commands do squad com dados reais</li>
+</ol>
+<h4 id="o-caminho-avancado-como-alan-faz">O Caminho Avançado: Como Alan Faz</h4>
+<p>Para squads de alta qualidade, Alan segue um processo mais rigoroso:</p>
+<ol>
+<li><strong>Round Table</strong> — Consulta o Board de Advisors (clones de Ray Dalio, Naval Ravikant, Charlie Munger, etc.) sobre a estratégia do squad</li>
+<li><strong>Tech Research</strong> — Pesquisa via <code>@analyst</code> as melhores ferramentas e MCPs para o domínio</li>
+<li><strong>Identificar especialistas via livros</strong> — Busca na Z-Library os autores referência do domínio, extrai frameworks e DNA de pensamento</li>
+<li><strong>Criar com documentação completa</strong> — Alimenta o Squad Creator com a pesquisa feita</li>
+<li><strong>Estressar por uma semana</strong> — Executa o squad repetidamente com cenários variados</li>
+<li><strong>Iterar</strong> — Ajusta personas, tasks e workflows baseado nos outputs reais</li>
+</ol>
+<p>A diferença entre os dois caminhos: o simplificado produz um squad funcional em minutos. O avançado produz um squad que supera consultores humanos no domínio.</p>
+<hr />
+<h3 id="129-maturidade-do-squad-as-5-fases">12.9 Maturidade do Squad: As 5 Fases</h3>
+<p>Como Pedro Valério diz: <strong>"O primeiro squad é cocô — é adubo."</strong> E isso é intencional. Squads nascem imperfeitos e amadurecem com uso:</p>
+<h4 id="fase-1-infancia-criacao">Fase 1: Infância (Criação)</h4>
+<p>O squad foi criado mas ainda não executou. Agentes têm personas básicas, tasks são genéricas. É um rascunho — destrua e reconstrua sem apego.</p>
+<h4 id="fase-2-adolescencia-validacao">Fase 2: Adolescência (Validação)</h4>
+<p>O squad está sendo testado com dados reais. Você identifica problemas, ajusta personas, refina tasks. Semanas 1-2 de uso ativo.</p>
+<h4 id="fase-3-maturidade-servicos-e-tools">Fase 3: Maturidade (Serviços e Tools)</h4>
+<p>O squad produz outputs consistentes. Você adiciona ferramentas (MCPs, Discovery Tools), conecta com outros squads. Semanas 3-4.</p>
+<h4 id="fase-4-adulto-produtizacao">Fase 4: Adulto (Produtização)</h4>
+<p>O squad opera com confiança. Meta: <strong>90%+ de consistência em 20+ execuções</strong>. Pronto para ser empacotado como serviço.</p>
+<h4 id="fase-5-empresa-escala">Fase 5: Empresa (Escala)</h4>
+<p>O squad atende múltiplos clientes/projetos. Tem monitoramento, métricas, e processo de melhoria contínua.</p>
+<hr />
+<h3 id="1210-squads-nascem-de-processos-validados">12.10 Squads Nascem de Processos Validados</h3>
+<p>Uma regra da Aula 07 que merece destaque: <strong>squads devem nascer de processos humanos validados</strong>.</p>
+<p>O fluxo correto:
+1. <strong>Execute manualmente</strong> — Faça o processo à mão primeiro
+2. <strong>Identifique conversas demais</strong> — Se está explicando muito para a IA, falta uma task
+3. <strong>Exporte o processo</strong> — Documente cada passo como POP (Processo Operacional Padrão)
+4. <strong>Quebre em tasks</strong> — Cada POP vira uma ou mais tasks do squad
+5. <strong>Itere</strong> — Execute o squad, compare com o resultado manual, ajuste</p>
+<p>Fontes ricas para POPs: podcasts do domínio, eventos gravados, livros técnicos, conversas com clientes.</p>
+<h4 id="regra-do-max-3-4-agentes">Regra do Max 3-4 Agentes</h4>
+<p>Talles, do cohort, validou: squads com <strong>máximo 3-4 agentes</strong> são mais eficientes. Squads grandes têm overhead de coordenação que degrada a qualidade. Se precisa de mais, segmente em squads menores e coordene entre eles.</p>
+<hr />
+<h3 id="exercicio-monte-seu-squad">Exercício: Monte Seu Squad</h3>
+<p>Escolha um domínio onde você tem expertise real ou onde você tem necessidade frequente de análise qualificada. Pode ser análise de concorrentes, criação de conteúdo especializado, avaliação de candidatos, pesquisa de produtos.</p>
+<p><strong>Passo 1:</strong> Responda as 4 Perguntas de Definição de Domínio para o seu domínio escolhido.</p>
+<p><strong>Passo 2:</strong> Mapeie as entidades — quantos agentes? Quais perspectivas? Quais os limites de cada um?</p>
+<p><strong>Passo 3:</strong> Execute o scaffold:</p>
+<pre><code class="language-bash">python scaffold_squad.py {seu-dominio}
+</code></pre>
+<p><strong>Passo 4:</strong> Escreva a persona do agente mais importante do seu squad. Use a estrutura de 4 camadas: identidade profissional, perspectiva característica, skills operacionais, limitações explícitas.</p>
+<p><strong>Passo 5:</strong> Adicione um dado de primeiro partido que torna o squad específico para o seu contexto.</p>
+<p><strong>Passo 6:</strong> Teste com um caso real. Avalie: a resposta é melhor do que o que você obteria de um agente genérico? Em que dimensões?</p>
+<p>O squad que você cria neste exercício é a base de algo que vai melhorar com o uso. Cada análise que você faz, cada ajuste de persona, cada dado de primeiro partido que você adiciona — tudo isso torna o squad progressivamente mais valioso.</p>
+      </article>
+
+      <div class="nav-footer">
+        <a href="11-squad.html" class=""><div class="label">← Anterior</div><div class="title">Cap 11 · O Conceito de Squad</div></a>
+        <a href="13-productizacao.html" class="nav-next"><div class="label">Próximo →</div><div class="title">Cap 13 · Productizando Squads: Do CLI ao Serviço</div></a>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<button class="to-top" id="to-top" aria-label="Voltar ao topo">↑</button>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+</body>
+</html>
