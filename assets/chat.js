@@ -254,7 +254,7 @@
                 bubble.innerHTML = renderMarkdown(acc);
                 scrollBottom();
               } else if (data.error) {
-                acc += '\n\n⚠️ ' + data.error;
+                acc += '\n\n**Erro:** ' + data.error;
                 bubble.innerHTML = renderMarkdown(acc);
               }
             } catch { /* ignore */ }
@@ -266,7 +266,7 @@
         saveHistory(history);
       } catch (err) {
         typing.remove();
-        appendBot('⚠️ Não consegui responder agora. Verifique se a função `/api/chat` está ativa e se a variável `GEMINI_API_KEY` foi configurada.\n\n`' + (err.message || err) + '`');
+        appendBot('**Erro:** não consegui responder agora. Verifique se a função `/api/chat` está ativa e se a variável `GEMINI_API_KEY` foi configurada.\n\n`' + (err.message || err) + '`');
       } finally {
         pending = false;
         sendEl.disabled = false;

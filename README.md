@@ -95,7 +95,7 @@ vercel env add GEMINI_API_KEY production
 
 ## Features
 
-### 🤖 AIOX Bot (chat)
+### AIOX Bot (chat)
 
 - **LLM:** Gemini `gemini-2.5-flash` (configurável via `GEMINI_MODEL`) via `@google/genai`
 - **Nota:** `gemini-2.0-flash` está com quota zero no free tier nessa conta Google. O `gemini-2.5-flash` é o sucessor direto (mesma família, mais novo) e funciona no free tier.
@@ -106,14 +106,14 @@ vercel env add GEMINI_API_KEY production
 - **Sugestões:** 5 perguntas iniciais para quebrar o gelo
 - **Visual:** robô SVG com roupa verde-limão e logo AIOX no peito, animação de pulse no FAB
 
-### 🔎 Busca Global
+### Busca Global
 
 - Atalho **`/`** ou **⌘/Ctrl + K** abre modal de busca
 - Indexa título, TL;DR, conceitos-chave e comandos de cada capítulo
 - Navegação por setas + Enter
 - Disponível em **todas as páginas** (home e capítulos)
 
-### 📚 Leitura Intuitiva
+### Leitura Intuitiva
 
 - 3 trilhas recomendadas (Fundamentos / Mão na Massa / Squads & Produção)
 - TL;DR no topo de cada capítulo

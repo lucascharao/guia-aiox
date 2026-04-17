@@ -111,9 +111,9 @@ TEMPLATE = """<!DOCTYPE html>
         <h1 class="hero-title">{title_esc}</h1>
         <p class="hero-subtitle">{tldr_esc}</p>
         <div class="meta-row">
-          <span class="meta-chip">⏱ <strong>{minutes} min</strong> de leitura</span>
-          <span class="meta-chip">🎯 <strong>{n_objectives}</strong> objetivos</span>
-          <span class="meta-chip">🧩 <strong>{n_concepts}</strong> conceitos-chave</span>
+          <span class="meta-chip"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <strong>{minutes} min</strong> de leitura</span>
+          <span class="meta-chip"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> <strong>{n_objectives}</strong> objetivos</span>
+          <span class="meta-chip"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z"/></svg> <strong>{n_concepts}</strong> conceitos-chave</span>
           {commands_chip}
         </div>
       </section>
@@ -176,7 +176,7 @@ def build_chapter(ch: dict, all_chapters: list) -> str:
     concepts_chips = "".join(f'<span class="chip">{esc(c)}</span>' for c in ch.get("concepts", []))
 
     commands = ch.get("commands") or []
-    commands_chip = f'<span class="meta-chip">⌨ <strong>{len(commands)}</strong> comandos CLI</span>' if commands else ""
+    commands_chip = f'<span class="meta-chip"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> <strong>{len(commands)}</strong> comandos CLI</span>' if commands else ""
 
     commands_block = ""
     if commands:
