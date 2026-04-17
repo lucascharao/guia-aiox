@@ -22,13 +22,12 @@ function loadManual() {
 const SYSTEM_INSTRUCTION = `Você é o AIOX Bot, um assistente conversacional oficial do framework Synkra AIOX. Fale em português brasileiro, de forma didática, curta e amigável. Sua missão é tirar dúvidas sobre o Manual AIOX que está abaixo.
 
 Regras:
-1. Baseie TODAS as respostas no conteúdo do Manual AIOX. Se não houver informação suficiente, diga claramente "Isso não está coberto no manual" e sugira onde o leitor pode olhar.
+1. RESPONDA DIRETAMENTE a pergunta do usuário com o conteúdo da resposta. Não diga "veja no capítulo X" ou "a resposta está em Y" — traga a resposta em si, com os detalhes concretos do manual. Só se absolutamente não houver informação, diga "Isso não está coberto no manual".
 2. NUNCA invente comandos, agentes, tasks ou features que não aparecem no manual (Artigo IV — No Invention).
-3. Quando citar algo específico, mencione o capítulo (ex: "No Capítulo 8 — SDC…").
+3. Não mencione número de capítulo ou localização na resposta, a menos que o usuário explicitamente pergunte "onde está" ou "em qual capítulo". Apenas entregue o conteúdo.
 4. Respostas curtas por padrão (3–6 linhas). Só alongue se o usuário pedir detalhes.
 5. Use markdown: **negrito** para termos-chave, \`código\` para comandos, listas quando ajudar.
-6. Termine respostas oferecendo uma próxima pergunta útil quando fizer sentido.
-7. Você conhece os 11 agentes oficiais: @pm (Morgan), @po (Pax), @sm (River), @dev (Dex), @qa (Quinn), @architect (Aria), @data-engineer (Dara), @analyst (Alex), @ux-design-expert (Uma), @devops (Gage), @aiox-master (Orion).
+6. Você conhece os 11 agentes oficiais: @pm (Morgan), @po (Pax), @sm (River), @dev (Dex), @qa (Quinn), @architect (Aria), @data-engineer (Dara), @analyst (Alex), @ux-design-expert (Uma), @devops (Gage), @aiox-master (Orion).
 
 =========================
 MANUAL AIOX COMPLETO
@@ -69,41 +68,69 @@ export default async function handler(req, res) {
       parts: [{ text: m.content }],
     }));
 
-  try {
-    const ai = new GoogleGenAI({ apiKey });
+  // Prepara SSE antes de tentar o modelo (headers precisam ir antes do primeiro write)
+  res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("Connection", "keep-alive");
+  res.setHeader("X-Accel-Buffering", "no");
 
-    // Prepara SSE
-    res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
-    res.setHeader("Cache-Control", "no-cache, no-transform");
-    res.setHeader("Connection", "keep-alive");
-    res.setHeader("X-Accel-Buffering", "no");
+  const ai = new GoogleGenAI({ apiKey });
+  const primaryModel = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  // Cadeia de fallback: tenta o primário; se 503/overloaded, cai pros alternativos
+  const modelChain = [primaryModel, "gemini-2.0-flash", "gemini-2.5-flash-lite"];
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-    const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
-    const stream = await ai.models.generateContentStream({
-      model,
-      contents,
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.4,
-        maxOutputTokens: 1024,
-      },
-    });
+  let lastErr = null;
+  let streamed = false;
 
-    for await (const chunk of stream) {
-      const text = chunk?.text;
-      if (text) {
-        res.write(`data: ${safeJson({ delta: text })}\n\n`);
+  for (const model of modelChain) {
+    // Até 3 tentativas por modelo com backoff (500ms, 1500ms)
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const stream = await ai.models.generateContentStream({
+          model,
+          contents,
+          config: {
+            systemInstruction: SYSTEM_INSTRUCTION,
+            temperature: 0.4,
+            maxOutputTokens: 1024,
+          },
+        });
+
+        for await (const chunk of stream) {
+          const text = chunk?.text;
+          if (text) {
+            streamed = true;
+            res.write(`data: ${safeJson({ delta: text })}\n\n`);
+          }
+        }
+        res.write(`data: ${safeJson({ done: true })}\n\n`);
+        res.end();
+        return;
+      } catch (err) {
+        lastErr = err;
+        const msg = err?.message || String(err);
+        const isOverloaded = /503|UNAVAILABLE|overload|high demand/i.test(msg);
+        // Se já começou a fazer stream, não dá pra recuperar com outro modelo
+        if (streamed) break;
+        // Se não é erro transitório, pula pro próximo modelo imediatamente
+        if (!isOverloaded) break;
+        // Backoff antes de retry no mesmo modelo
+        if (attempt < 2) await sleep(500 * (attempt + 1) * (attempt + 1));
       }
     }
-    res.write(`data: ${safeJson({ done: true })}\n\n`);
+    if (streamed) break;
+  }
+
+  // Esgotou todas as tentativas
+  const errMsg = lastErr?.message || String(lastErr || "unknown_error");
+  const friendly = /503|UNAVAILABLE|overload|high demand/i.test(errMsg)
+    ? "Os modelos do Gemini estão sobrecarregados no momento. Tente novamente em alguns segundos."
+    : errMsg;
+  try {
+    res.write(`data: ${safeJson({ error: friendly })}\n\n`);
     res.end();
-  } catch (err) {
-    const msg = err?.message || String(err);
-    try {
-      res.write(`data: ${safeJson({ error: msg })}\n\n`);
-      res.end();
-    } catch {
-      res.status(500).json({ error: msg });
-    }
+  } catch {
+    // Headers podem já estar enviados — melhor esforço
   }
 }
